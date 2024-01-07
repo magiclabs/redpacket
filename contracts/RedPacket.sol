@@ -10,7 +10,6 @@ contract RedPacket {
 
     // Storage
     uint256 public packetCount;
-    uint256 public claimedAmount;
     bool public expired;
     address[] public grabberAddresses;
     mapping(address => uint256) public grabberAmounts;
@@ -22,7 +21,6 @@ contract RedPacket {
         require(_packetCount > 0, "Packet count should be greater than 0.");
 
         packetCount = _packetCount;
-        claimedAmount = 0;
         expired = false;
         creator = msg.sender;
 
@@ -31,7 +29,7 @@ contract RedPacket {
 
     // Grab a random amount from the Red Packet
     function grab() external returns (uint256) {
-        uint256 grabberCount = getGrabberCount();
+        uint256 grabberCount = _getGrabberCount();
 
         require(!expired, "Packet has expired.");
         require(grabberCount < packetCount, "All packets have been grabbed.");
@@ -47,9 +45,8 @@ contract RedPacket {
         if (grabberCount == packetCount - 1 || grabAmount >= balance) {
             grabAmount = balance;
             expired = true;
+            emit PacketExpired(creator, balance);
         }
-
-        claimedAmount = claimedAmount + grabAmount;
 
         grabberAddresses.push(msg.sender);
         grabberAmounts[msg.sender] = grabAmount;
@@ -87,7 +84,8 @@ contract RedPacket {
         return address(this).balance;
     }
 
-    function getGrabberCount() private view returns (uint256) {
+    function _getGrabberCount() private view returns (uint256) {
         return grabberAddresses.length;
     }
+    
 }
