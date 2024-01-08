@@ -6,13 +6,6 @@ import { useCallback, useState } from "react";
 import { Hash, encodeFunctionData } from "viem";
 import RedPacketABI from "@/contracts/RedPacket.json";
 
-type MintStatus =
-  | "Mint"
-  | "Requesting"
-  | "Minting"
-  | "Received"
-  | "Error Minting";
-
 type GrabStatus =
   | "Grab"
   | "Requesting"
@@ -20,46 +13,10 @@ type GrabStatus =
   | "Received"
   | "Error Grabbing";
 
-export default function Hero() {
+export default function Hero({ contractAddress }: { contractAddress: string }) {
   const { isLoggedIn, provider } = useWalletContext();
-  const [mintTxHash, setMintTxHash] = useState<Hash>();
   const [grabTxHash, setGrabTxHash] = useState<Hash>();
-  const [mintStatus, setMintStatus] = useState<MintStatus>("Mint");
   const [grabStatus, setGrabStatus] = useState<GrabStatus>("Grab");
-
-  const handleMint = useCallback(async () => {
-    if (!provider) {
-      throw new Error("Provider not initialized");
-    }
-    setMintTxHash(undefined);
-    setMintStatus("Requesting");
-    const uoHash = await provider.sendUserOperation({
-      target: tokenContractAddress,
-      data: encodeFunctionData({
-        abi: AlchemyTokenAbi,
-        functionName: "mint",
-        args: [await provider.getAddress()],
-      }),
-    });
-
-    setMintStatus("Minting");
-    let txHash: Hash;
-    try {
-      txHash = await provider.waitForUserOperationTransaction(uoHash.hash);
-    } catch (e) {
-      setMintStatus("Error Minting");
-      setTimeout(() => {
-        setMintStatus("Mint");
-      }, 5000);
-      return;
-    }
-
-    setMintTxHash(txHash);
-    setMintStatus("Received");
-    setTimeout(() => {
-      setMintStatus("Mint");
-    }, 5000);
-  }, [provider, setMintTxHash]);
 
   const handleGrab = useCallback(async () => {
     if (!provider) {
@@ -68,7 +25,7 @@ export default function Hero() {
     setGrabTxHash(undefined);
     setGrabStatus("Requesting");
     const uoHash = await provider.sendUserOperation({
-      target: "0x882a8fc0e1bf6911b9d241c5325ae8484cc03512",
+      target: `0x${contractAddress}`,
       data: encodeFunctionData({
         abi: RedPacketABI,
         functionName: "grab"
@@ -128,16 +85,6 @@ export default function Hero() {
         </div>
         <div className="flex flex-row flex-wrap gap-[12px]">
           <button
-            disabled={!isLoggedIn || mintStatus !== "Mint"}
-            onClick={handleMint}
-            className="btn text-white bg-gradient-1 disabled:opacity-25 disabled:text-white transition ease-in-out duration-500 transform hover:scale-110 max-md:w-full"
-          >
-            {mintStatus} The ALCH Token
-            {(mintStatus === "Requesting" || mintStatus === "Minting") && (
-              <span className="loading loading-spinner loading-md"></span>
-            )}
-          </button>
-          <button
             disabled={!isLoggedIn || grabStatus !== "Grab"}
             onClick={handleGrab}
             className="btn text-white bg-gradient-1 disabled:opacity-25 disabled:text-white transition ease-in-out duration-500 transform hover:scale-110 max-md:w-full"
@@ -147,9 +94,9 @@ export default function Hero() {
               <span className="loading loading-spinner loading-md"></span>
             )}
           </button>
-          {mintTxHash && (
+          {grabTxHash && (
             <a
-              href={`https://sepolia.etherscan.io/tx/${mintTxHash}`}
+              href={`https://basescan.org/address/${grabTxHash}`}
               className="btn text-white bg-gradient-2 disabled:opacity-25 disabled:text-white transition ease-in-out duration-500 transform hover:scale-110 max-md:w-full"
             >
               Your Txn Details
