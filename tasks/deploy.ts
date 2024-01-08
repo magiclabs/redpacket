@@ -36,6 +36,7 @@ function saveContractABIFile() {
 
 // npx hardhat deploy --count 3 --balance 10 --network localhost
 // npx hardhat deploy --count 3 --balance 0.01 --network sepolia
+// npx hardhat deploy --count 3 --balance 0.005 --network base
 task("deploy", "Deploy a RedPacket contract with custom parameters")
   .addParam("count", "The total number of users who can claim the packet")
   .addParam("balance", "The total amount of ETH in the packet")

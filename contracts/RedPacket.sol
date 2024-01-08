@@ -35,7 +35,7 @@ contract RedPacket {
         require(grabberCount < packetCount, "All packets have been grabbed.");
         require(grabberAmounts[msg.sender] == 0, "You have already grabbed a packet.");
         require(creator != msg.sender, "Creator cannot grab a packet.");
-        require(msg.sender == tx.origin, "Only externally owned accounts can grab the packet.");
+        //require(msg.sender == tx.origin, "Only externally owned accounts can grab the packet.");
     
         uint256 randomNumber = uint256(keccak256(abi.encodePacked(msg.sender, block.timestamp)));
 

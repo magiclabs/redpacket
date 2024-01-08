@@ -44,7 +44,7 @@ export default function Navbar() {
       <div className="flex flex-row items-center gap-[12px] max-md:flex-col max-md:text-center">
         {isLoggedIn ? (
           <a
-            href={`https://sepolia.etherscan.io/address/${scaAddress}`}
+            href={`https://basescan.org/address/${scaAddress}`}
             target="_blank"
             className="btn text-white bg-gradient-1 disabled:text-white transition ease-in-out duration-500 transform hover:scale-110 max-md:w-full"
           >

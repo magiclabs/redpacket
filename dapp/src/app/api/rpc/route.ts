@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { serverEnv } from "@/env/server.mjs";
 
 export async function POST(req: Request) {
-  const res = await fetch(serverEnv.ALCHEMY_RPC_URL, {
+  const res = await fetch(serverEnv.ALCHEMY_RPC_URL_BASE, {
     method: "POST",
     headers: {
       ...req.headers,
