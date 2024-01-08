@@ -6,7 +6,6 @@ import { WalletContextProvider } from "@/context/wallet";
 
 export default function Grab() {
   const contractAddress = usePathname()?.replace('/', '').replace('0x', '');
-  console.log(contractAddress);
 
   return (
     <WalletContextProvider>

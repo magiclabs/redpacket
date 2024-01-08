@@ -4,19 +4,9 @@ export default function Footer() {
   return (
     <div className="flex flex-row flex-wrap items-center justify-center gap-[16px]">
       <FooterCard
-        title={"Account Kit Docs"}
-        subTitle="Check out Account Kit!"
-        link={"https://accountkit.alchemy.com"}
-      />
-      <FooterCard
-        title={"Alchemy Token"}
-        subTitle="Check out the contract on Etherscan!"
-        link={`https://sepolia.etherscan.io/address/#code`}
-      />
-      <FooterCard
-        title={"Alchemy.com"}
-        subTitle="Check out other Alchemy products!"
-        link={"https://alchemy.com"}
+        title={"Made with 💜 by Magic"}
+        subTitle="Learn to make with Magic!"
+        link={"https://magic.link"}
       />
     </div>
   );
