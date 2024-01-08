@@ -11,7 +11,8 @@ const config: Config = {
       {
         festive: {
           primary: "#E33333",
-          'primary-content': "#ffffff"
+          'primary-content': "#ffffff",
+          'base-100': "#ffffff"
         },
       },
     ]

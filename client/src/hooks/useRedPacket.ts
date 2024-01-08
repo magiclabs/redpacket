@@ -12,6 +12,7 @@ export function useRedPacket({ contractAddress, provider }: useRedPacketProps) {
     const [packetCount, setPacketCount] = useState<bigint>();
     const [grabberCount, setGrabberCount] = useState<bigint>();
     const [balance, setBalance] = useState<bigint>();
+    const [totalBalance, setTotalBalance] = useState<bigint>();
     const [grabberList, setGrabberList] = useState<Array<{ address: string; amount: bigint }>>([]);
     //const [contractInstance, setContractInstance] = useState<any>();
     const [grabStatus, setGrabStatus] = useState<string>('Grab');
@@ -37,13 +38,17 @@ export function useRedPacket({ contractAddress, provider }: useRedPacketProps) {
             if (_grabberCount as bigint > 0) {
                 const _grabberAddresses = await contractInstance.read.getGrabbers();
                 const _grabberList: Array<{ address: string; amount: bigint }> = [];
+                let _totalBalance: bigint = _balance as bigint;
                 for (const address of _grabberAddresses as string[]) {
                     const _grabbedAmount = await contractInstance.read.grabberAmounts([address]);
+                    _totalBalance += _grabbedAmount as bigint;
                     _grabberList.push({
                         address,
                         amount: _grabbedAmount as bigint,
                     });
                 }
+                console.log(_totalBalance);
+                setTotalBalance(_totalBalance);
                 setGrabberList(_grabberList);
             }
         }
@@ -83,7 +88,8 @@ export function useRedPacket({ contractAddress, provider }: useRedPacketProps) {
     
     return { 
         packetCount, 
-        balance, 
+        balance,
+        totalBalance,
         grabberCount, 
         grabberList,
         grabStatus,
