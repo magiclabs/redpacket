@@ -1,8 +1,9 @@
 "use client";
+
 import { useWalletContext } from "@/context/wallet";
-import Image from "next/image";
+import useRedPacket from "@/hooks/useRedPacket";
 import { useCallback, useState } from "react";
-import { Hash, encodeFunctionData } from "viem";
+import { Hash, encodeFunctionData, getContract, parseEther, formatEther } from "viem";
 import RedPacketABI from "@/contracts/RedPacket.json";
 
 type HeroProps = {
@@ -18,6 +19,7 @@ type GrabStatus =
 
 export default function Hero({ contractAddress }: HeroProps) {
   const { isLoggedIn, provider } = useWalletContext();
+  const { packetCount, balance, grabberCount } = useRedPacket({ contractAddress, provider });
   const [grabTxHash, setGrabTxHash] = useState<Hash>();
   const [grabStatus, setGrabStatus] = useState<GrabStatus>("Grab");
 
@@ -62,6 +64,12 @@ export default function Hero({ contractAddress }: HeroProps) {
         </div>
         <div className="text-2xl">
           Grab Some Red Packet!
+          Total Balance Left: {formatEther(balance ?? BigInt(0))} ETH
+          {(packetCount !== undefined && grabberCount !== undefined) && (
+            <div>
+              Grabs Remaining: {`${packetCount - grabberCount}`}
+            </div>
+          )}
         </div>
         <div className="flex flex-row flex-wrap gap-[12px]">
           <button

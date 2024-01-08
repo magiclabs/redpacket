@@ -29,7 +29,7 @@ contract RedPacket {
 
     // Grab a random amount from the Red Packet
     function grab() external returns (uint256) {
-        uint256 grabberCount = _getGrabberCount();
+        uint256 grabberCount = getGrabberCount();
 
         require(!expired, "Packet has expired.");
         require(grabberCount < packetCount, "All packets have been grabbed.");
@@ -84,7 +84,7 @@ contract RedPacket {
         return address(this).balance;
     }
 
-    function _getGrabberCount() private view returns (uint256) {
+    function getGrabberCount() public view returns (uint256) {
         return grabberAddresses.length;
     }
     
