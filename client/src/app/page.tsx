@@ -4,7 +4,7 @@ import { WalletContextProvider } from "@/context/wallet";
 export default function Home() {
   return (
     <WalletContextProvider>
-      <Root />
+      <h1>TEST</h1>
     </WalletContextProvider>
   );
 }

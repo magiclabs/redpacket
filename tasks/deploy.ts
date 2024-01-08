@@ -22,7 +22,7 @@ const getContractABI = () => {
 }
 
 function saveContractABIFile() {
-    const contractsDir = path.join(__dirname, "..", "dapp", "src", "contracts");
+    const contractsDir = path.join(__dirname, "..", "client", "src", "contracts");
 
     if (!fs.existsSync(contractsDir)) {
         fs.mkdirSync(contractsDir);

@@ -1,5 +1,5 @@
 {
-  "name": "redpacket-dapp",
+  "name": "redpacket-client",
   "version": "1.0.0",
   "private": true,
   "scripts": {

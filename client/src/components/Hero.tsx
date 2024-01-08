@@ -1,10 +1,13 @@
 "use client";
-import { AlchemyTokenAbi, tokenContractAddress } from "@/config/token-contract";
 import { useWalletContext } from "@/context/wallet";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import { Hash, encodeFunctionData } from "viem";
 import RedPacketABI from "@/contracts/RedPacket.json";
+
+type HeroProps = {
+  contractAddress: string;
+};
 
 type GrabStatus =
   | "Grab"
@@ -13,7 +16,7 @@ type GrabStatus =
   | "Received"
   | "Error Grabbing";
 
-export default function Hero({ contractAddress }: { contractAddress: string }) {
+export default function Hero({ contractAddress }: HeroProps) {
   const { isLoggedIn, provider } = useWalletContext();
   const [grabTxHash, setGrabTxHash] = useState<Hash>();
   const [grabStatus, setGrabStatus] = useState<GrabStatus>("Grab");

@@ -1,5 +1,4 @@
 "use client";
-import { tokenContractAddress } from "@/config/token-contract";
 
 export default function Footer() {
   return (
@@ -12,7 +11,7 @@ export default function Footer() {
       <FooterCard
         title={"Alchemy Token"}
         subTitle="Check out the contract on Etherscan!"
-        link={`https://sepolia.etherscan.io/address/${tokenContractAddress}#code`}
+        link={`https://sepolia.etherscan.io/address/#code`}
       />
       <FooterCard
         title={"Alchemy.com"}
