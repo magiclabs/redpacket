@@ -1,8 +1,6 @@
 "use client";
 
 import { usePathname } from 'next/navigation';
-import Root from "@/components/Root";
-import Navbar from "@/components/Navbar";
 import Packet from "@/components/Packet";
 import { WalletContextProvider } from "@/context/wallet";
 import { Address } from "@alchemy/aa-core";
@@ -12,7 +10,6 @@ export default function Claim() {
 
   return (
     <WalletContextProvider>
-      <Navbar />
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content">
           <div className="max-w-md">
@@ -20,7 +17,6 @@ export default function Claim() {
           </div>
         </div>
       </div>
-      {/* <Root contractAddress={contractAddress as string} /> */}
     </WalletContextProvider>
   );
 }

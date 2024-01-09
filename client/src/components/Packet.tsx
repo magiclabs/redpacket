@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect, useState, useCallback } from 'react';
 import { useWalletContext } from "@/context/wallet";
 import { useRedPacket } from "@/hooks/useRedPacket";
 import { formatEther } from "viem";
@@ -12,8 +12,10 @@ type PacketProps = {
 };
 
 export default function Packet({ contractAddress }: PacketProps) {
-    //const { isLoggedIn, provider, scaAddress } = useWalletContext();
+    const { isLoggedIn, login, logout, username, scaAddress } = useWalletContext();
     const { loading, isClaiming, expired, totalClaimCount, claimedCount, currentBalance, totalBalance, claimedAmount, claimTxnHash, handleClaim } = useRedPacket({ contractAddress });
+    const [email, setEmail] = useState<string>("");
+
     const remainingClaimCount = (totalClaimCount ?? BigInt(0)) - (claimedCount ?? BigInt(0));
 
     function formatEtherDisplay(ether: bigint) {
@@ -28,6 +30,23 @@ export default function Packet({ contractAddress }: PacketProps) {
         }
     }
 
+    const onEmailChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+          e.preventDefault();
+          setEmail(e.target.value);
+        },
+        []
+      );
+    
+    const handleLogin = useCallback(async () => {
+        await login(email);
+        setEmail("");
+    }, [login, email]);
+
+    const handleLogout = useCallback(async () => {
+        await logout();
+    }, [logout]);
+    
     return (
         <div className="card w-96 bg-base-100 shadow-xl">
             <figure><img src="/red-packet.png" alt="Red Packet" /></figure>
@@ -72,13 +91,22 @@ export default function Packet({ contractAddress }: PacketProps) {
                                             <progress className="progress progress-primary w-full progress-lg h-3 mt-6" value={`${currentBalance as bigint}`} max={`${totalBalance as bigint}`}></progress>
                                             <div className="text-xs">{`${formatEtherDisplay(currentBalance as bigint)} / ${formatEtherDisplay(totalBalance as bigint)} ETH left to claim by ${userDisplay(remainingClaimCount as bigint)}.`}</div>
                                             <div className="card-actions justify-end mt-6">
-                                                {isClaiming ? (
-                                                    <button disabled={true} className="btn btn-primary btn-block btn-lg">
-                                                        Claiming
-                                                        <span className="loading loading-infinity loading-lg"></span>
-                                                    </button>
+                                                {isLoggedIn ? (
+                                                    <div className="w-full">
+                                                        {isClaiming ? (
+                                                            <button disabled={true} className="btn btn-primary btn-block btn-lg">
+                                                                Claiming
+                                                                <span className="loading loading-infinity loading-lg"></span>
+                                                            </button>
+                                                        ) : (
+                                                            <button onClick={handleClaim} className="btn btn-primary btn-block btn-lg">Claim</button>
+                                                        )}
+                                                    </div>
                                                 ) : (
-                                                    <button onClick={handleClaim} className="btn btn-primary btn-block btn-lg">Claim</button>
+                                                    <div className="join">
+                                                        <input onChange={onEmailChange} className="input input-bordered join-item w-full" placeholder="Your Email"/>
+                                                        <button onClick={handleLogin} className="btn btn-primary join-item">Login to Claim</button>
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>
@@ -93,6 +121,16 @@ export default function Packet({ contractAddress }: PacketProps) {
                                     <a href={`https://basescan.org/tx/${claimTxnHash}`} target="_blank" className="btn btn-link text-base-300 btn-xs">
                                         View Transaction
                                     </a>
+                                )}
+                                {isLoggedIn && (
+                                    <div>
+                                        <a href={`https://basescan.org/address/${scaAddress}`} target="_blank" className="btn btn-link text-base-300 btn-xs">
+                                            View Wallet
+                                        </a>
+                                        <a onClick={handleLogout} target="_blank" className="btn btn-link text-base-300 btn-xs">
+                                            Logout: {username}
+                                        </a>
+                                    </div>
                                 )}
                             </div>
                         </div>

@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { getContract, Hash, encodeFunctionData } from 'viem';
 import RedPacketABI from "@/contracts/RedPacket.json";
 import { useWalletContext } from "@/context/wallet";
-import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { Address } from "@alchemy/aa-core";
-import { set } from 'zod';
 
 type useRedPacketProps = {
   contractAddress: Address;
@@ -29,7 +27,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
     }, [contractAddress, scaAddress, provider]);
 
     async function fetchContractData() {
-        if (contractAddress && scaAddress && provider) {
+        if (contractAddress && provider) {
             const contractInstance = getContract({
                 address: `0x${contractAddress}`,
                 abi: RedPacketABI,
@@ -46,11 +44,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
             const _expired = await contractInstance.read.expired();
             setExpired(_expired as boolean);
             const _creator = await contractInstance.read.creator();
-            if (scaAddress === _creator) {
-                setIsCreator(true);
-            } else {
-                setIsCreator(false);
-            }
+            setIsCreator(scaAddress === _creator);
             if (_claimedCount as bigint > 0) {
                 const _claimedAddresses = await contractInstance.read.getClaimedAddresses() as string[];
                 const _claimedList: Array<{ address: string; amount: bigint }> = [];
