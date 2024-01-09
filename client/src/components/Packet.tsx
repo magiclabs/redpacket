@@ -43,33 +43,46 @@ export default function Packet({ contractAddress }: PacketProps) {
                         </div>
                     ) : (
                         <div>
-                            {expired ? (
+                            {claimedAmount ? (
                                 <div>
-                                    <div className="text-md">
-                                        😭 No more red packets left to claim.
-                                    </div>
-                                </div>
-                            ) : (
-                                <div>
-                                    {claimedAmount ? (
-                                        <div>
-                                            <div className="text-md">
-                                                You've claimed this red packet already.
-                                            </div>
-                                            <div className="font-bold text-xl">{formatEtherDisplay(claimedAmount)} ETH</div>
+                                    <h1 className="card-title">You've claimed {formatEtherDisplay(claimedAmount)} ETH.</h1>
+                                    {expired ? (
+                                        <div className="text-md mt-3">
+                                            💸 All red packets have been claimed.
                                         </div>
                                     ) : (
                                         <div>
-                                            <h1 className="card-title">🧧 You received a Red Packet!</h1>
                                             <progress className="progress progress-primary w-full progress-lg h-6 mt-3" value={`${currentBalance as bigint}`} max={`${totalBalance as bigint}`}></progress>
-                                            <div className="text-sm">{`${formatEtherDisplay(currentBalance as bigint)} / ${formatEtherDisplay(totalBalance as bigint)} ETH left to claim by ${userDisplay(remainingClaimCount as bigint)}.`}</div>
+                                            <div className="text-xs">{`${formatEtherDisplay(currentBalance as bigint)} / ${formatEtherDisplay(totalBalance as bigint)} ETH left to claim by ${userDisplay(remainingClaimCount as bigint)}.`}</div>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div>
+                                    {expired ? (
+                                        <div>
+                                            <h1 className="card-title">You're too late!</h1>
+                                            <div className="text-md mt-3">
+                                                💸 All red packets have been claimed.
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <h1 className="card-title">🧧 You received a red packet!</h1>
+                                            <progress className="progress progress-primary w-full progress-lg h-6 mt-3" value={`${currentBalance as bigint}`} max={`${totalBalance as bigint}`}></progress>
+                                            <div className="text-xs">{`${formatEtherDisplay(currentBalance as bigint)} / ${formatEtherDisplay(totalBalance as bigint)} ETH left to claim by ${userDisplay(remainingClaimCount as bigint)}.`}</div>
                                             <div className="card-actions justify-end mt-6">
-                                                <button onClick={handleClaim} className="btn btn-primary btn-block btn-lg">Open</button>
+                                                <button onClick={handleClaim} className="btn btn-primary btn-block btn-lg">Claim</button>
                                             </div>
                                         </div>
                                     )}
                                 </div>
                             )}
+                            <div className="text-center mt-3">
+                                <a href={`https://basescan.org/address/${contractAddress}`} target="_blank" className="btn btn-link text-base-300 btn-xs">
+                                    View Contract
+                                </a>
+                            </div>
                         </div>
                     )}
                 </div>
