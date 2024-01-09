@@ -48,7 +48,7 @@ export const WalletContextProvider = ({
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const [magicSigner] = useState<Promise<MagicSigner | null>>(() =>
-    createMagicSigner()
+    createMagicSigner(),
   );
   const { provider, connectProviderToAccount, disconnectProviderFromAccount } =
     useAlchemyProvider();
@@ -80,7 +80,7 @@ export const WalletContextProvider = ({
       setOwnerAddress(metadata.publicAddress as Address);
       setScaAddress(await provider.getAddress());
     },
-    [connectProviderToAccount, magicSigner, provider]
+    [connectProviderToAccount, magicSigner, provider],
   );
 
   const logout = useCallback(async () => {

@@ -23,7 +23,7 @@ export default function Navbar() {
       e.preventDefault();
       setEmail(e.target.value);
     },
-    []
+    [],
   );
 
   const handleLogin = useCallback(async () => {

@@ -6,8 +6,7 @@ export default function Home() {
     <WalletContextProvider>
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content">
-          <div className="max-w-md">
-          </div>
+          <div className="max-w-md"></div>
         </div>
       </div>
     </WalletContextProvider>

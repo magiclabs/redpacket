@@ -17,7 +17,7 @@ export const useAlchemyProvider = () => {
     new AlchemyProvider({
       chain,
       rpcUrl: getRpcUrl(),
-    })
+    }),
   );
 
   const connectProviderToAccount = useCallback(
@@ -40,7 +40,7 @@ export const useAlchemyProvider = () => {
       setProvider(connectedProvider);
       return connectedProvider;
     },
-    [provider]
+    [provider],
   );
 
   const disconnectProviderFromAccount = useCallback(() => {
