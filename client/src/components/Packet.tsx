@@ -13,7 +13,7 @@ type PacketProps = {
 
 export default function Packet({ contractAddress }: PacketProps) {
     //const { isLoggedIn, provider, scaAddress } = useWalletContext();
-    const { loading, expired, totalClaimCount, claimedCount, currentBalance, totalBalance, claimedAmount, handleClaim } = useRedPacket({ contractAddress });
+    const { loading, isClaiming, expired, totalClaimCount, claimedCount, currentBalance, totalBalance, claimedAmount, claimTxnHash, handleClaim } = useRedPacket({ contractAddress });
     const remainingClaimCount = (totalClaimCount ?? BigInt(0)) - (claimedCount ?? BigInt(0));
 
     function formatEtherDisplay(ether: bigint) {
@@ -72,7 +72,14 @@ export default function Packet({ contractAddress }: PacketProps) {
                                             <progress className="progress progress-primary w-full progress-lg h-3 mt-6" value={`${currentBalance as bigint}`} max={`${totalBalance as bigint}`}></progress>
                                             <div className="text-xs">{`${formatEtherDisplay(currentBalance as bigint)} / ${formatEtherDisplay(totalBalance as bigint)} ETH left to claim by ${userDisplay(remainingClaimCount as bigint)}.`}</div>
                                             <div className="card-actions justify-end mt-6">
-                                                <button onClick={handleClaim} className="btn btn-primary btn-block btn-lg">Claim</button>
+                                                {isClaiming ? (
+                                                    <button disabled={true} className="btn btn-primary btn-block btn-lg">
+                                                        Claiming
+                                                        <span className="loading loading-infinity loading-lg"></span>
+                                                    </button>
+                                                ) : (
+                                                    <button onClick={handleClaim} className="btn btn-primary btn-block btn-lg">Claim</button>
+                                                )}
                                             </div>
                                         </div>
                                     )}
@@ -82,6 +89,11 @@ export default function Packet({ contractAddress }: PacketProps) {
                                 <a href={`https://basescan.org/address/${contractAddress}`} target="_blank" className="btn btn-link text-base-300 btn-xs">
                                     View Contract
                                 </a>
+                                {claimTxnHash && (
+                                    <a href={`https://basescan.org/tx/${claimTxnHash}`} target="_blank" className="btn btn-link text-base-300 btn-xs">
+                                        View Transaction
+                                    </a>
+                                )}
                             </div>
                         </div>
                     )}

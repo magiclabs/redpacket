@@ -13,14 +13,15 @@ type useRedPacketProps = {
 export function useRedPacket({ contractAddress }: useRedPacketProps) {
     const { provider, scaAddress } = useWalletContext();
     const [loading, setLoading] = useState<boolean>(true);
+    const [isClaiming, setIsClaiming] = useState<boolean>(false);
     const [expired, setExpired] = useState<boolean>(false);
     const [totalClaimCount, setTotalClaimCount] = useState<bigint>();
     const [claimedCount, setClaimedCount] = useState<bigint>();
     const [currentBalance, setCurrentBalance] = useState<bigint>();
     const [totalBalance, setTotalBalance] = useState<bigint>();
     const [claimedList, setClaimedList] = useState<Array<{ address: string; amount: bigint }>>([]);
-    const [claimStatus, setClaimStatus] = useState<string>('Claim');
     const [claimedAmount, setClaimedAmount] = useState<bigint>(BigInt(0));
+    const [claimTxnHash, setClaimTxnHash] = useState<Hash>();
     const [isCreator, setIsCreator] = useState<boolean>(false);
 
     useEffect(() => {
@@ -76,8 +77,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
         if (!provider) {
             throw new Error("Provider not initialized");
         }
-        //setGrabTxHash(undefined);
-        setClaimStatus("Requesting");
+        setIsClaiming(true);
         const uoHash = await provider.sendUserOperation({
             target: `0x${contractAddress}`,
             data: encodeFunctionData({
@@ -85,35 +85,30 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
                 functionName: "claim"
             }),
         });
-        setClaimStatus("Claiming");
-        let txHash: Hash;
+        let txnHash: Hash;
         try {
-            txHash = await provider.waitForUserOperationTransaction(uoHash.hash);
+            txnHash = await provider.waitForUserOperationTransaction(uoHash.hash);
+            setClaimTxnHash(txnHash);
             fetchContractData();
         } catch (e) {
-            setClaimStatus("Error Claiming");
             setTimeout(() => {
-                setClaimStatus("Claim");
+                setIsClaiming(false);
             }, 5000);
             return;
         }
-        //setGrabTxHash(txHash);
-        setClaimStatus("Received");
-        setTimeout(() => {
-            setClaimStatus("Claim");
-        }, 5000);
     }
     
     return { 
         loading,
+        isClaiming,
         expired,
         totalClaimCount, 
         currentBalance,
         totalBalance,
         claimedCount,
         claimedList,
-        claimStatus,
         claimedAmount,
+        claimTxnHash,
         isCreator,
         handleClaim
     };

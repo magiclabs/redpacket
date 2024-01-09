@@ -9,11 +9,23 @@ const config: Config = {
   daisyui: {
     themes: [
       {
-        festive: {
-          primary: "#E33333",
-          'primary-content': "#ffffff",
-          'base-100': "#ffffff"
-        },
+        'festive': {
+          'primary' : '#e33333',
+          'primary-content' : '#ffffff',
+
+          'base-100' : '#ffffff',
+
+          '--rounded-box': '0.6rem',          
+          '--rounded-btn': '.6rem',        
+          '--rounded-badge': '1.8rem',      
+
+          '--animation-btn': '.27s',       
+          '--animation-input': '.18s',       
+
+          '--btn-text-case': 'none',   
+          '--navbar-padding': '.3rem',      
+          '--border-btn': '0.3rem',            
+       },
       },
     ]
   },
