@@ -122,13 +122,13 @@ export default function Packet({ contractAddress }: PacketProps) {
                 <a href={`https://basescan.org/address/${contractAddress}`} target="_blank" className="btn btn-link btn-block text-base-300 btn-xs">
                     View Contract
                 </a>
-                {claimTxnHash && (
-                    <a href={`https://basescan.org/tx/${claimTxnHash}`} target="_blank" className="btn btn-link btn-block text-base-300 btn-xs">
-                        View Transaction
-                    </a>
-                )}
                 {isLoggedIn && (
                     <div>
+                        {claimTxnHash && (
+                            <a href={`https://basescan.org/tx/${claimTxnHash}`} target="_blank" className="btn btn-link btn-block text-base-300 btn-xs">
+                                View Transaction
+                            </a>
+                        )}
                         <a href={`https://basescan.org/address/${scaAddress}`} target="_blank" className="btn btn-link btn-block text-base-300 btn-xs">
                             View Wallet
                         </a>
