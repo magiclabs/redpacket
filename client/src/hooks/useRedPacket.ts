@@ -12,6 +12,8 @@ type useRedPacketProps = {
 
 export function useRedPacket({ contractAddress }: useRedPacketProps) {
     const { provider, scaAddress } = useWalletContext();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [expired, setExpired] = useState<boolean>(false);
     const [totalClaimCount, setTotalClaimCount] = useState<bigint>();
     const [claimedCount, setClaimedCount] = useState<bigint>();
     const [currentBalance, setCurrentBalance] = useState<bigint>();
@@ -40,6 +42,8 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
             setClaimedCount(_claimedCount as bigint);
             const _totalBalance = await contractInstance.read.totalBalance();
             setTotalBalance(_totalBalance as bigint);
+            const _expired = await contractInstance.read.expired();
+            setExpired(_expired as boolean);
             const _creator = await contractInstance.read.creator();
             if (scaAddress === _creator) {
                 setIsCreator(true);
@@ -64,7 +68,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
                 }
                 setClaimedList(_claimedList);
             }
-            
+            setLoading(false);
         }
     };
 
@@ -101,6 +105,8 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
     }
     
     return { 
+        loading,
+        expired,
         totalClaimCount, 
         currentBalance,
         totalBalance,

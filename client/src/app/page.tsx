@@ -1,4 +1,4 @@
-import PacketClosed from "@/components/PacketClosed";
+import PacketClosed from "@/components/Packet";
 import { WalletContextProvider } from "@/context/wallet";
 
 export default function Home() {
