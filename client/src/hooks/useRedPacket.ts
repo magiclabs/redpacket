@@ -11,31 +11,27 @@ type useRedPacketProps = {
 };
 
 export function useRedPacket({ contractAddress }: useRedPacketProps) {
-    const { isLoggedIn, provider, scaAddress } = useWalletContext();
+    const { provider, scaAddress } = useWalletContext();
     const [totalClaimCount, setTotalClaimCount] = useState<bigint>();
     const [claimedCount, setClaimedCount] = useState<bigint>();
     const [currentBalance, setCurrentBalance] = useState<bigint>();
     const [totalBalance, setTotalBalance] = useState<bigint>();
     const [claimedList, setClaimedList] = useState<Array<{ address: string; amount: bigint }>>([]);
-    //const [contractInstance, setContractInstance] = useState<any>();
     const [claimStatus, setClaimStatus] = useState<string>('Claim');
-    const [hasClaimed, setHasClaimed] = useState<boolean>(false);
+    const [claimedAmount, setClaimedAmount] = useState<bigint>(BigInt(0));
     const [isCreator, setIsCreator] = useState<boolean>(false);
-
-    console.log(scaAddress);
 
     useEffect(() => {
         fetchContractData();
-    }, [contractAddress, provider]);
+    }, [contractAddress, scaAddress, provider]);
 
     async function fetchContractData() {
-        if (contractAddress && provider) {
+        if (contractAddress && scaAddress && provider) {
             const contractInstance = getContract({
                 address: `0x${contractAddress}`,
                 abi: RedPacketABI,
                 publicClient: provider.rpcClient
             });
-            //setContractInstance(_contractInstance);
             const _totalClaimCount = await contractInstance.read.totalClaimCount();
             setTotalClaimCount(_totalClaimCount as bigint);
             const _currentBalance = await contractInstance.read.getCurrentBalance();
@@ -44,18 +40,31 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
             setClaimedCount(_claimedCount as bigint);
             const _totalBalance = await contractInstance.read.totalBalance();
             setTotalBalance(_totalBalance as bigint);
+            const _creator = await contractInstance.read.creator();
+            if (scaAddress === _creator) {
+                setIsCreator(true);
+            } else {
+                setIsCreator(false);
+            }
             if (_claimedCount as bigint > 0) {
-                const _claimedAddresses = await contractInstance.read.getClaimedAddresses();
+                const _claimedAddresses = await contractInstance.read.getClaimedAddresses() as string[];
                 const _claimedList: Array<{ address: string; amount: bigint }> = [];
-                for (const address of _claimedAddresses as string[]) {
+                for (const address of _claimedAddresses) {
                     const _claimedAmount = await contractInstance.read.claimedAmounts([address]);
                     _claimedList.push({
                         address,
                         amount: _claimedAmount as bigint,
                     });
                 }
+                const _claimedAmount = _claimedList.find(item => item.address === scaAddress)?.amount;
+                if (_claimedAmount) {
+                    setClaimedAmount(_claimedAmount);
+                } else {
+                    setClaimedAmount(BigInt(0));
+                }
                 setClaimedList(_claimedList);
             }
+            
         }
     };
 
@@ -98,7 +107,8 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
         claimedCount,
         claimedList,
         claimStatus,
-        //contractInstance,
+        claimedAmount,
+        isCreator,
         handleClaim
     };
 }

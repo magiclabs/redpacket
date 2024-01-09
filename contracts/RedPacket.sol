@@ -31,10 +31,10 @@ contract RedPacket {
 
     // Claim a random amount from the Red Packet
     function claim() external returns (uint256) {
-        uint256 currentClaimCount = getClaimedCount();
+        uint256 claimedCount = getClaimedCount();
 
         require(!expired, "Packet has expired.");
-        require(currentClaimCount < totalClaimCount, "All packets have been claimed.");
+        require(claimedCount < totalClaimCount, "All packets have been claimed.");
         require(claimedAmounts[msg.sender] == 0, "You have already claimed a packet.");
         require(creator != msg.sender, "Creator cannot claim a packet.");
     
@@ -43,7 +43,7 @@ contract RedPacket {
         uint256 balance = getCurrentBalance();
         uint256 claimAmount = randomNumber % balance;
 
-        if (currentClaimCount == totalClaimCount - 1 || claimAmount >= balance) {
+        if (claimedCount == totalClaimCount - 1 || claimAmount >= balance) {
             claimAmount = balance;
             expired = true;
             emit PacketExpired(creator, balance);
