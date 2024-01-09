@@ -9,10 +9,10 @@ describe("RedPacket", function () {
     async function deployRedPacketFixture() {
         const [creator, user1, user2, user3] = await hre.viem.getWalletClients();
 
-        const packetCount = 3n;
+        const totalClaimCount = 3n;
         const balance = parseEther("10");
   
-        const packet = await hre.viem.deployContract("RedPacket", [packetCount], {
+        const packet = await hre.viem.deployContract("RedPacket", [totalClaimCount], {
             value: balance,
         });
   
@@ -20,7 +20,7 @@ describe("RedPacket", function () {
   
         return {
             packet,
-            packetCount,
+            totalClaimCount,
             balance,
             creator,
             users: [user1, user2, user3],
@@ -29,13 +29,17 @@ describe("RedPacket", function () {
     }
 
     describe("Deployment", function () {
-        it("Should set the right packet count", async function () {
-            const { packet, packetCount } = await loadFixture(deployRedPacketFixture);
-            expect(await packet.read.packetCount()).to.equal(packetCount);
+        it("Should set the right total claim count", async function () {
+            const { packet, totalClaimCount } = await loadFixture(deployRedPacketFixture);
+            expect(await packet.read.totalClaimCount()).to.equal(totalClaimCount);
         });
-        it("Should set the right balance", async function () {
+        it("Should set the right current balance", async function () {
             const { packet, balance } = await loadFixture(deployRedPacketFixture);
-            expect(await packet.read.getBalance()).to.equal(balance);
+            expect(await packet.read.getCurrentBalance()).to.equal(balance);
+        });
+        it("Should set the right total balance", async function () {
+            const { packet, balance } = await loadFixture(deployRedPacketFixture);
+            expect(await packet.read.totalBalance()).to.equal(balance);
         });
         it("Should set the right creator", async function () {
             const { packet, creator } = await loadFixture(deployRedPacketFixture);
@@ -43,8 +47,8 @@ describe("RedPacket", function () {
         });
     });
 
-    describe("Grab", function () {
-        it("Should allow a single user to grab a red packet", async function () {
+    describe("Claim", function () {
+        it("Should allow a single user to claim a red packet", async function () {
             const { packet, users, balance } = await loadFixture(deployRedPacketFixture);
 
             const packetAsUser1 = await hre.viem.getContractAt(
@@ -52,44 +56,37 @@ describe("RedPacket", function () {
                 packet.address,
                 { walletClient: users[1] }
             );
-            await packetAsUser1.write.grab();
+            await packetAsUser1.write.claim();
 
-            const grabbedAmount = await packet.read.grabberAmounts([getAddress(users[1].account.address)]);
-            const remainingBalance = await packet.read.getBalance();
-            /*console.log(formatEther(grabbedAmount));
-            console.log(formatEther(remainingBalance));
-            console.log(formatEther(balance));*/
-            expect(grabbedAmount + remainingBalance).to.equal(balance);
+            const claimedAmount = await packet.read.claimedAmounts([getAddress(users[1].account.address)]);
+            const currentBalance = await packet.read.getCurrentBalance();
+            expect(claimedAmount + currentBalance).to.equal(balance);
         });
-        it("Should allow all users to draw a red packet", async function () {
+        it("Should allow all users to claim a red packet", async function () {
             const { packet, users, balance } = await loadFixture(deployRedPacketFixture);
 
-            let totalGrabbedAmount = 0n;
+            let totalClaimedAmount = 0n;
             for (const user of users) {
                 const packetAsUser = await hre.viem.getContractAt(
                     "RedPacket",
                     packet.address,
                     { walletClient: user }
                 );
-                await packetAsUser.write.grab();
+                await packetAsUser.write.claim();
         
-                const grabbedAmount = await packet.read.grabberAmounts([getAddress(user.account.address)]);
-                totalGrabbedAmount += grabbedAmount;
-                //console.log(formatEther(grabbedAmount))
+                const claimedAmount = await packet.read.claimedAmounts([getAddress(user.account.address)]);
+                totalClaimedAmount += claimedAmount;
             }
 
-            const remainingBalance = await packet.read.getBalance();
+            const remainingBalance = await packet.read.getCurrentBalance();
             const expired = await packet.read.expired();
-            /*console.log(formatEther(remainingBalance));
-            console.log(formatEther(balance));
-            console.log(expired);*/
-            expect(totalGrabbedAmount + remainingBalance).to.equal(balance);
+            expect(totalClaimedAmount + remainingBalance).to.equal(balance);
             expect(expired).to.equal(true);
         });
-        it("Should not allow the creator to grab a red packet", async function () {
+        it("Should not allow the creator to claim a red packet", async function () {
             const { packet, creator } = await loadFixture(deployRedPacketFixture);
     
-            await expect(packet.write.grab()).to.be.rejectedWith("Creator cannot grab a packet.");
+            await expect(packet.write.claim()).to.be.rejectedWith("Creator cannot claim a packet.");
         });
     });
 

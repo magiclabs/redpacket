@@ -3,12 +3,31 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_packetCount",
+        "name": "_totalClaimCount",
         "type": "uint256"
       }
     ],
     "stateMutability": "payable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "claimer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PacketClaimed",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -22,13 +41,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "totalAmount",
+        "name": "totalBalance",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "packetCount",
+        "name": "totalClaimCount",
         "type": "uint256"
       }
     ],
@@ -47,7 +66,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "remainingAmount",
+        "name": "remainingBalance",
         "type": "uint256"
       }
     ],
@@ -55,23 +74,55 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
+    "inputs": [],
+    "name": "claim",
+    "outputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "grabber",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
-        "name": "amount",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "PacketGrabbed",
-    "type": "event"
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "claimedAddresses",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "claimedAmounts",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -114,33 +165,7 @@
   },
   {
     "inputs": [],
-    "name": "getBalance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getGrabberCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getGrabbers",
+    "name": "getClaimedAddresses",
     "outputs": [
       {
         "internalType": "address[]",
@@ -153,45 +178,7 @@
   },
   {
     "inputs": [],
-    "name": "grab",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "grabberAddresses",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "grabberAmounts",
+    "name": "getClaimedCount",
     "outputs": [
       {
         "internalType": "uint256",
@@ -204,7 +191,33 @@
   },
   {
     "inputs": [],
-    "name": "packetCount",
+    "name": "getCurrentBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalClaimCount",
     "outputs": [
       {
         "internalType": "uint256",

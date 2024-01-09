@@ -4,58 +4,59 @@ pragma solidity ^0.8.20;
 contract RedPacket {
 
     // Events
-    event PacketCreated(address indexed creator, uint256 totalAmount, uint256 packetCount);
-    event PacketGrabbed(address indexed grabber, uint256 amount);
-    event PacketExpired(address indexed creator, uint256 remainingAmount);
+    event PacketCreated(address indexed creator, uint256 totalBalance, uint256 totalClaimCount);
+    event PacketClaimed(address indexed claimer, uint256 amount);
+    event PacketExpired(address indexed creator, uint256 remainingBalance);
 
     // Storage
-    uint256 public packetCount;
+    uint256 public totalClaimCount;
+    uint256 public totalBalance;
     bool public expired;
-    address[] public grabberAddresses;
-    mapping(address => uint256) public grabberAmounts;
+    address[] public claimedAddresses;
+    mapping(address => uint256) public claimedAmounts;
     address public creator;
 
     // Constructor
-    constructor(uint256 _packetCount) payable {
+    constructor(uint256 _totalClaimCount) payable {
         require(msg.value > 0, "No funds sent with transaction.");
-        require(_packetCount > 0, "Packet count should be greater than 0.");
+        require(_totalClaimCount > 0, "Total claims should be greater than 0.");
 
-        packetCount = _packetCount;
+        totalClaimCount = _totalClaimCount;
+        totalBalance = msg.value;
         expired = false;
         creator = msg.sender;
 
-        emit PacketCreated(creator, getBalance(), packetCount);
+        emit PacketCreated(creator, getCurrentBalance(), totalClaimCount);
     }
 
-    // Grab a random amount from the Red Packet
-    function grab() external returns (uint256) {
-        uint256 grabberCount = getGrabberCount();
+    // Claim a random amount from the Red Packet
+    function claim() external returns (uint256) {
+        uint256 currentClaimCount = getClaimedCount();
 
         require(!expired, "Packet has expired.");
-        require(grabberCount < packetCount, "All packets have been grabbed.");
-        require(grabberAmounts[msg.sender] == 0, "You have already grabbed a packet.");
-        require(creator != msg.sender, "Creator cannot grab a packet.");
-        //require(msg.sender == tx.origin, "Only externally owned accounts can grab the packet.");
+        require(currentClaimCount < totalClaimCount, "All packets have been claimed.");
+        require(claimedAmounts[msg.sender] == 0, "You have already claimed a packet.");
+        require(creator != msg.sender, "Creator cannot claim a packet.");
     
         uint256 randomNumber = uint256(keccak256(abi.encodePacked(msg.sender, block.timestamp)));
 
-        uint256 balance = getBalance();
-        uint256 grabAmount = randomNumber % balance;
+        uint256 balance = getCurrentBalance();
+        uint256 claimAmount = randomNumber % balance;
 
-        if (grabberCount == packetCount - 1 || grabAmount >= balance) {
-            grabAmount = balance;
+        if (currentClaimCount == totalClaimCount - 1 || claimAmount >= balance) {
+            claimAmount = balance;
             expired = true;
             emit PacketExpired(creator, balance);
         }
 
-        grabberAddresses.push(msg.sender);
-        grabberAmounts[msg.sender] = grabAmount;
+        claimedAddresses.push(msg.sender);
+        claimedAmounts[msg.sender] = claimAmount;
 
-        payable(msg.sender).transfer(grabAmount);
+        payable(msg.sender).transfer(claimAmount);
 
-        emit PacketGrabbed(msg.sender, grabAmount);
+        emit PacketClaimed(msg.sender, claimAmount);
 
-        return grabAmount;
+        return claimAmount;
     }
 
     // Expire the Red Packet
@@ -64,7 +65,7 @@ contract RedPacket {
         require(creator == msg.sender, "Only creator can expire a packet.");
 
         expired = true;
-        uint256 balance = getBalance();
+        uint256 balance = getCurrentBalance();
 
         if (balance > 0) {
             payable(creator).transfer(balance);
@@ -75,17 +76,16 @@ contract RedPacket {
         return balance;
     }
 
-    // Get the list of grabbers
-    function getGrabbers() external view returns (address[] memory) {
-        return grabberAddresses;
-    }
-
-    function getBalance() public view returns (uint256) {
+    function getCurrentBalance() public view returns (uint256) {
         return address(this).balance;
     }
 
-    function getGrabberCount() public view returns (uint256) {
-        return grabberAddresses.length;
+    function getClaimedAddresses() external view returns (address[] memory) {
+        return claimedAddresses;
     }
-    
+
+    function getClaimedCount() public view returns (uint256) {
+        return claimedAddresses.length;
+    }
+
 }
