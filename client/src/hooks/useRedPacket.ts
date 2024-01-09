@@ -47,7 +47,6 @@ export function useRedPacket({ contractAddress, provider }: useRedPacketProps) {
                         amount: _grabbedAmount as bigint,
                     });
                 }
-                console.log(_totalBalance);
                 setTotalBalance(_totalBalance);
                 setGrabberList(_grabberList);
             }
