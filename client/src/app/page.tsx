@@ -7,7 +7,6 @@ export default function Home() {
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content">
           <div className="max-w-md">
-            <PacketClosed contractAddress="123" />
           </div>
         </div>
       </div>

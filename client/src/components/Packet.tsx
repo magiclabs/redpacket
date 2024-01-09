@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useWalletContext } from "@/context/wallet";
 import { useRedPacket } from "@/hooks/useRedPacket";
 import { formatEther } from "viem";
 import { Address } from "@alchemy/aa-core";
+import Image from 'next/image';
 
 const rounding = require('significant-rounding');
 
@@ -50,7 +51,7 @@ export default function Packet({ contractAddress }: PacketProps) {
     return (
         <div>
             <div className="card w-96 bg-base-100 shadow-xl">
-                <figure><img src="/red-packet.png" alt="Red Packet" /></figure>
+                <figure><Image src="/red-packet.png" width={1424} height={832} alt="Red Packet" /></figure>
                     <div className="card-body">
                         {loading ? (
                             <div>
@@ -65,7 +66,7 @@ export default function Packet({ contractAddress }: PacketProps) {
                             <div>
                                 {claimedAmount ? (
                                     <div>
-                                        <h1 className="card-title">You've claimed {formatEtherDisplay(claimedAmount)} ETH.</h1>
+                                        <h1 className="card-title">You&apos;ve claimed {formatEtherDisplay(claimedAmount)} ETH.</h1>
                                         {expired ? (
                                             <div className="text-md mt-6">
                                                 💸 All red packets have been claimed.
@@ -81,7 +82,7 @@ export default function Packet({ contractAddress }: PacketProps) {
                                     <div>
                                         {expired ? (
                                             <div>
-                                                <h1 className="card-title">You're too late!</h1>
+                                                <h1 className="card-title">You&apos;re too late!</h1>
                                                 <div className="text-md mt-3">
                                                     💸 All red packets have been claimed.
                                                 </div>
