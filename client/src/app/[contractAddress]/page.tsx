@@ -7,7 +7,7 @@ import Packet from "@/components/Packet";
 import { WalletContextProvider } from "@/context/wallet";
 import { Address } from "@alchemy/aa-core";
 
-export default function Grab() {
+export default function Claim() {
   const contractAddress = usePathname()?.replace('/', '').replace('0x', '');
 
   return (
