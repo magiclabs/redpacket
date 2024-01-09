@@ -41,7 +41,8 @@ contract RedPacket {
         uint256 randomNumber = uint256(keccak256(abi.encodePacked(msg.sender, block.timestamp)));
 
         uint256 balance = getCurrentBalance();
-        uint256 claimAmount = randomNumber % balance;
+        uint256 maxClaimAmount = ((balance / (totalClaimCount - claimedCount)) * 15) / 10;
+        uint256 claimAmount = randomNumber % maxClaimAmount;
 
         if (claimedCount == totalClaimCount - 1 || claimAmount >= balance) {
             claimAmount = balance;
