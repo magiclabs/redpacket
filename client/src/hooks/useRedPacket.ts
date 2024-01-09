@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getContract, Hash, encodeFunctionData } from 'viem';
 import RedPacketABI from "@/contracts/RedPacket.json";
 import { useWalletContext } from "@/context/wallet";
@@ -22,11 +22,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
     const [claimTxnHash, setClaimTxnHash] = useState<Hash>();
     const [isCreator, setIsCreator] = useState<boolean>(false);
 
-    useEffect(() => {
-        fetchContractData();
-    }, [contractAddress, scaAddress, provider]);
-
-    async function fetchContractData() {
+    const fetchContractData = useCallback(async () => {
         if (contractAddress && provider) {
             const contractInstance = getContract({
                 address: `0x${contractAddress}`,
@@ -65,7 +61,11 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
             }
             setLoading(false);
         }
-    };
+    }, [contractAddress, provider, scaAddress]);
+
+    useEffect(() => {
+        fetchContractData();
+    }, [fetchContractData]);
 
     async function handleClaim() {
         if (!provider) {
