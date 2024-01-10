@@ -24,6 +24,7 @@ type WalletContextProps = {
   scaAddress?: Address;
   username?: string;
   isLoggedIn: boolean;
+  userBalance: bigint;
 };
 
 const defaultUnset: any = null;
@@ -33,6 +34,7 @@ const WalletContext = createContext<WalletContextProps>({
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   isLoggedIn: defaultUnset,
+  userBalance: BigInt(0),
 });
 
 export const useWalletContext = () => useContext(WalletContext);
@@ -46,6 +48,7 @@ export const WalletContextProvider = ({
   const [scaAddress, setScaAddress] = useState<Address>();
   const [username, setUsername] = useState<string>();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userBalance, setUserBalance] = useState<bigint>(BigInt(0));
 
   const [magicSigner] = useState<Promise<MagicSigner | null>>(() =>
     createMagicSigner(),
@@ -124,6 +127,14 @@ export const WalletContextProvider = ({
         throw new Error("Magic login failed");
       }
 
+      if (scaAddress) {
+        const _userBalance = await provider.rpcClient.getBalance({ 
+          address: scaAddress as Address,
+        })
+        console.log(_userBalance);
+        setUserBalance(_userBalance);
+      }
+
       setIsLoggedIn(isLoggedIn);
       connectProviderToAccount(signer);
       setUsername(metadata.email);
@@ -131,7 +142,7 @@ export const WalletContextProvider = ({
       setScaAddress(await provider.getAddress());
     }
     fetchData();
-  }, [connectProviderToAccount, magicSigner, provider]);
+  }, [connectProviderToAccount, magicSigner, provider, scaAddress]);
 
   return (
     <WalletContext.Provider
@@ -143,6 +154,7 @@ export const WalletContextProvider = ({
         ownerAddress,
         scaAddress,
         username,
+        userBalance
       }}
     >
       {children}

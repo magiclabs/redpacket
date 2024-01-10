@@ -10,7 +10,7 @@ export default function Claim() {
 
   return (
     <WalletContextProvider>
-      <div className="hero min-h-screen bg-base-200">
+      <div className="hero min-h-screen bg-base-100">
         <div className="hero-content">
           <div className="max-w-md">
             <Packet contractAddress={contractAddress as Address} />

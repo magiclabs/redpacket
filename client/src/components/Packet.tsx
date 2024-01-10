@@ -13,7 +13,7 @@ type PacketProps = {
 };
 
 export default function Packet({ contractAddress }: PacketProps) {
-  const { isLoggedIn, login, logout, username, scaAddress } =
+  const { isLoggedIn, login, logout, username, scaAddress, userBalance } =
     useWalletContext();
   const {
     loading,
@@ -204,7 +204,7 @@ export default function Packet({ contractAddress }: PacketProps) {
               target="_blank"
               className="btn btn-link btn-block text-base-300 btn-xs"
             >
-              View Wallet
+              Your Wallet {`${formatEtherDisplay(userBalance as bigint)} ETH`}
             </a>
             <a
               onClick={handleLogout}
