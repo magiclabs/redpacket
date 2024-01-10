@@ -33,7 +33,7 @@ export default function Packet({ contractAddress }: PacketProps) {
     (totalClaimCount ?? BigInt(0)) - (claimedCount ?? BigInt(0));
 
   function formatEtherDisplay(ether: bigint) {
-    return `${rounding(Number(formatEther(ether ?? BigInt(0))), 3)}`;
+    return `${rounding(Number(formatEther(ether ?? BigInt(0))), 5)}`;
   }
 
   function userDisplay(count: bigint) {
@@ -204,7 +204,7 @@ export default function Packet({ contractAddress }: PacketProps) {
               target="_blank"
               className="btn btn-link btn-block text-base-300 btn-xs"
             >
-              Your Wallet {`${formatEtherDisplay(userBalance as bigint)} ETH`}
+              Your Balance {`${formatEtherDisplay(userBalance as bigint)} ETH`}
             </a>
             <a
               onClick={handleLogout}

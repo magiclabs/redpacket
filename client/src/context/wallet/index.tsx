@@ -131,7 +131,6 @@ export const WalletContextProvider = ({
         const _userBalance = await provider.rpcClient.getBalance({ 
           address: scaAddress as Address,
         })
-        console.log(_userBalance);
         setUserBalance(_userBalance);
       }
 
