@@ -18,19 +18,23 @@ export default function Home() {
                 />
               </figure>
               <div className="card-body">
-                <h1 className="card-title mb-6">🧧 Create a red packet!</h1>
+                <h1 className="card-title mb-3">🧧 Create a red packet!</h1>
+                <div className="text-sm">How many packets?</div>
                 <input
                   type="number"
+                  min="0"
                   className="input input-bordered w-full"
-                  placeholder="How many packets?"
+                  placeholder="3"
                 />
+                <div className="text-sm">How much ETH to deposit?</div>
                 <input
                   type="number"
-                  step="0.05"
+                  step="0.01"
+                  min="0"
                   className="input input-bordered w-full"
-                  placeholder="ETH to deposit"
+                  placeholder="0.05"
                 />
-                <button className="btn btn-primary join-item">
+                <button className="btn btn-primary btn-lg mt-3">
                   Create Red Packet
                 </button>
               </div>
