@@ -128,9 +128,9 @@ export const WalletContextProvider = ({
       }
 
       if (scaAddress) {
-        const _userBalance = await provider.rpcClient.getBalance({ 
+        const _userBalance = await provider.rpcClient.getBalance({
           address: scaAddress as Address,
-        })
+        });
         setUserBalance(_userBalance);
       }
 
@@ -153,7 +153,7 @@ export const WalletContextProvider = ({
         ownerAddress,
         scaAddress,
         username,
-        userBalance
+        userBalance,
       }}
     >
       {children}
