@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { getContract, Hash, encodeFunctionData } from "viem";
-import RedPacketABI from "@/contracts/RedPacket.json";
+import RedPacketContract from "@/contracts/RedPacket.json";
 import { useWalletContext } from "@/context/wallet";
 import { Address } from "@alchemy/aa-core";
 
@@ -28,7 +28,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
     if (contractAddress && provider) {
       const contractInstance = getContract({
         address: `0x${contractAddress}`,
-        abi: RedPacketABI,
+        abi: RedPacketContract.abi,
         publicClient: provider.rpcClient,
       });
       const _totalClaimCount = await contractInstance.read.totalClaimCount();
@@ -82,7 +82,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
     const uoHash = await provider.sendUserOperation({
       target: `0x${contractAddress}`,
       data: encodeFunctionData({
-        abi: RedPacketABI,
+        abi: RedPacketContract.abi,
         functionName: "claim",
       }),
     });

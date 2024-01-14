@@ -1,4 +1,5 @@
 "use client";
+
 import { useAlchemyProvider } from "@/hooks/useAlchemyProvider";
 import { createMagicSigner } from "@/signer/createMagicSigner";
 import { AlchemyProvider } from "@alchemy/aa-alchemy";
@@ -12,6 +13,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { createWalletClient, custom, WalletClient } from 'viem';
 
 type WalletContextProps = {
   // Functions
@@ -25,6 +27,7 @@ type WalletContextProps = {
   username?: string;
   isLoggedIn: boolean;
   userBalance: bigint;
+  walletClient: WalletClient
 };
 
 const defaultUnset: any = null;
@@ -35,6 +38,7 @@ const WalletContext = createContext<WalletContextProps>({
   logout: () => Promise.resolve(),
   isLoggedIn: defaultUnset,
   userBalance: BigInt(0),
+  walletClient: defaultUnset
 });
 
 export const useWalletContext = () => useContext(WalletContext);
@@ -49,6 +53,7 @@ export const WalletContextProvider = ({
   const [username, setUsername] = useState<string>();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userBalance, setUserBalance] = useState<bigint>(BigInt(0));
+  const [walletClient, setWalletClient] = useState<any>(null);
 
   const [magicSigner] = useState<Promise<MagicSigner | null>>(() =>
     createMagicSigner(),
@@ -139,6 +144,14 @@ export const WalletContextProvider = ({
       setUsername(metadata.email);
       setOwnerAddress(metadata.publicAddress as Address);
       setScaAddress(await provider.getAddress());
+
+      if (provider) {
+        const _walletClient = createWalletClient({
+          chain: provider.rpcClient.chain,
+          transport: custom(provider.rpcClient.transport),
+        });
+        setWalletClient(_walletClient);
+      }
     }
     fetchData();
   }, [connectProviderToAccount, magicSigner, provider, scaAddress]);
@@ -154,6 +167,7 @@ export const WalletContextProvider = ({
         scaAddress,
         username,
         userBalance,
+        walletClient
       }}
     >
       {children}
