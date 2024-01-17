@@ -5,6 +5,7 @@ import { createMagicSigner } from "@/signer/createMagicSigner";
 import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { Address } from "@alchemy/aa-core";
 import { MagicSigner } from "@alchemy/aa-signers/magic";
+import { Wallet } from "ethers";
 import {
   ReactNode,
   createContext,
@@ -13,7 +14,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { createWalletClient, custom, WalletClient } from 'viem';
+import { createPublicClient, createWalletClient, custom, WalletClient, PublicClient } from 'viem';
 
 type WalletContextProps = {
   // Functions
@@ -27,7 +28,8 @@ type WalletContextProps = {
   username?: string;
   isLoggedIn: boolean;
   userBalance: bigint;
-  walletClient: WalletClient
+  walletClient: WalletClient;
+  publicClient: PublicClient;
 };
 
 const defaultUnset: any = null;
@@ -38,7 +40,8 @@ const WalletContext = createContext<WalletContextProps>({
   logout: () => Promise.resolve(),
   isLoggedIn: defaultUnset,
   userBalance: BigInt(0),
-  walletClient: defaultUnset
+  walletClient: defaultUnset,
+  publicClient: defaultUnset,
 });
 
 export const useWalletContext = () => useContext(WalletContext);
@@ -53,7 +56,8 @@ export const WalletContextProvider = ({
   const [username, setUsername] = useState<string>();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userBalance, setUserBalance] = useState<bigint>(BigInt(0));
-  const [walletClient, setWalletClient] = useState<any>(null);
+  const [walletClient, setWalletClient] = useState<WalletClient>(defaultUnset);
+  const [publicClient, setPublicClient] = useState<PublicClient>(defaultUnset);
 
   const [magicSigner] = useState<Promise<MagicSigner | null>>(() =>
     createMagicSigner(),
@@ -151,6 +155,11 @@ export const WalletContextProvider = ({
           transport: custom(provider.rpcClient.transport),
         });
         setWalletClient(_walletClient);
+        const _publicClient = createPublicClient({
+          chain: provider.rpcClient.chain,
+          transport: custom(provider.rpcClient.transport),
+        });
+        setPublicClient(_publicClient);
       }
     }
     fetchData();
@@ -167,7 +176,8 @@ export const WalletContextProvider = ({
         scaAddress,
         username,
         userBalance,
-        walletClient
+        walletClient,
+        publicClient,
       }}
     >
       {children}

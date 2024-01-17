@@ -5,23 +5,23 @@ import "./RedPacket.sol";
 
 contract RedPacketFactory {
     // Keep track of all deployed RedPackets
-    RedPacket[] public deployedRedPackets;
+    address[] public deployedRedPackets;
 
-    event RedPacketCreated(RedPacket redPacket);
+    event RedPacketCreated(address redPacketAddress, address indexed creator, uint256 totalClaimCount, uint256 totalBalance);
 
-    function createRedPacket(uint totalClaimCount) public payable returns (RedPacket) {
+    function createRedPacket(uint256 totalClaimCount) public payable returns (RedPacket) {
         // Create a new RedPacket
         RedPacket newRedPacket = (new RedPacket){value: msg.value}(totalClaimCount);
 
         // Store the address of the new RedPacket
-        deployedRedPackets.push(newRedPacket);
+        deployedRedPackets.push(address(newRedPacket));
 
-        emit RedPacketCreated(newRedPacket);
+        emit RedPacketCreated(address(newRedPacket), msg.sender, totalClaimCount, msg.value);
 
         return newRedPacket;
     }
 
-    function getDeployedRedPackets() public view returns (RedPacket[] memory) {
+    function getDeployedRedPackets() public view returns (address[] memory) {
         return deployedRedPackets;
     }
 }
