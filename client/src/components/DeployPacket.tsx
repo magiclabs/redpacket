@@ -17,9 +17,13 @@ import Footer from "@/components/Footer";
 import { useCallback, useState } from "react";
 
 export default function DeployPacket() {
-  const { isLoggedIn, scaAddress, provider, publicClient, isConnecting } = useWalletContext();
+  const { isLoggedIn, scaAddress, provider, publicClient, isConnecting } =
+    useWalletContext();
   const [totalClaimCount, setTotalClaimCount] = useState<bigint>(BigInt(0));
   const [totalBalance, setTotalBalance] = useState<bigint>(BigInt(0));
+  const [isDeploying, setIsDeploying] = useState<boolean>(false);
+  const [deployedRedPacketAddress, setDeployedRedPacketAddress] =
+    useState<Address>();
 
   const onTotalClaimCountChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,11 +63,14 @@ export default function DeployPacket() {
           data: logs[0].data,
           topics: logs[0].topics,
         });
-        console.log(logs);
         console.log(topics);
+        //@ts-ignore
+        setDeployedRedPacketAddress(topics.args.redPacketAddress);
+        //@ts-ignore
+        setIsDeploying(false);
       },
     });
-    //setIsClaiming(true);
+    setIsDeploying(true);
     const uoHash = await provider.sendUserOperation({
       target:
         clientEnv.NEXT_PUBLIC_REDPACKET_CONTRACT_FACTORY_ADDRESS as Address,
@@ -79,16 +86,18 @@ export default function DeployPacket() {
     try {
       txnHash = await provider.waitForUserOperationTransaction(uoHash.hash);
       console.log(txnHash);
-
-      //setClaimTxnHash(txnHash);
-      //fetchContractData();
     } catch (e) {
       setTimeout(() => {
-        //setIsClaiming(false);
+        setIsDeploying(false);
       }, 5000);
       return;
     }
   }
+
+  const copyLinkToClipboard = async () => {
+    const link = `https://magic-redpacket.vercel.app/${deployedRedPacketAddress}`;
+    await navigator.clipboard.writeText(link);
+  };
 
   return (
     <div>
@@ -116,6 +125,34 @@ export default function DeployPacket() {
             <div>
               {isLoggedIn ? (
                 <div className="w-full">
+                  {deployedRedPacketAddress && (
+                    <div role="alert" className="alert mb-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        className="stroke-info shrink-0 w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                      <span className="text-xs">
+                        Share the link to let your friends claim the red packet!
+                      </span>
+                      <div>
+                        <button
+                          onClick={copyLinkToClipboard}
+                          className="btn btn-xs btn-primary"
+                        >
+                          Copy Link
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   <label className="form-control w-full">
                     <div className="label">
                       <span className="label-text">How many packets?</span>
@@ -131,7 +168,9 @@ export default function DeployPacket() {
                   </label>
                   <label className="form-control w-full">
                     <div className="label">
-                      <span className="label-text">How much ETH to deposit?</span>
+                      <span className="label-text">
+                        How much ETH to deposit?
+                      </span>
                     </div>
                     <input
                       type="number"
@@ -143,12 +182,22 @@ export default function DeployPacket() {
                       onChange={onTotalBalanceChange}
                     />
                   </label>
-                  <button
-                    onClick={handleCreateRedPacket}
-                    className="btn btn-primary btn-lg mt-3 btn-block"
-                  >
-                    Create Red Packet
-                  </button>
+                  {isDeploying ? (
+                    <button
+                      disabled={true}
+                      className="btn btn-primary btn-block btn-lg mt-3"
+                    >
+                      Creating
+                      <span className="loading loading-infinity loading-lg"></span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleCreateRedPacket}
+                      className="btn btn-primary btn-lg mt-3 btn-block"
+                    >
+                      Create Red Packet
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div>

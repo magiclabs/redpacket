@@ -166,12 +166,17 @@ export const WalletContextProvider = ({
         });
         setPublicClient(_publicClient);
       }
-      
+
       setIsConnecting(false);
-      
     }
     fetchData();
-  }, [connectProviderToAccount, magicSigner, provider, scaAddress, isConnecting]);
+  }, [
+    connectProviderToAccount,
+    magicSigner,
+    provider,
+    scaAddress,
+    isConnecting,
+  ]);
 
   return (
     <WalletContext.Provider
@@ -186,7 +191,7 @@ export const WalletContextProvider = ({
         userBalance,
         walletClient,
         publicClient,
-        isConnecting
+        isConnecting,
       }}
     >
       {children}
