@@ -20,7 +20,13 @@ export default function RootLayout({
   return (
     <html data-theme="festive" lang="en">
       <body className={inter.className}>
-        <main>{children}</main>
+        <main>
+          <div className="hero min-h-screen bg-base-100">
+            <div className="hero-content">
+              <div className="max-w-md">{children}</div>
+            </div>
+          </div>
+        </main>
       </body>
     </html>
   );
