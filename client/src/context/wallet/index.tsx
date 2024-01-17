@@ -5,7 +5,7 @@ import { createMagicSigner } from "@/signer/createMagicSigner";
 import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { Address } from "@alchemy/aa-core";
 import { MagicSigner } from "@alchemy/aa-signers/magic";
-import { Wallet } from "ethers";
+
 import {
   ReactNode,
   createContext,
@@ -36,6 +36,7 @@ type WalletContextProps = {
   userBalance: bigint;
   walletClient: WalletClient;
   publicClient: PublicClient;
+  isConnecting: boolean;
 };
 
 const defaultUnset: any = null;
@@ -48,6 +49,7 @@ const WalletContext = createContext<WalletContextProps>({
   userBalance: BigInt(0),
   walletClient: defaultUnset,
   publicClient: defaultUnset,
+  isConnecting: true,
 });
 
 export const useWalletContext = () => useContext(WalletContext);
@@ -64,6 +66,7 @@ export const WalletContextProvider = ({
   const [userBalance, setUserBalance] = useState<bigint>(BigInt(0));
   const [walletClient, setWalletClient] = useState<WalletClient>(defaultUnset);
   const [publicClient, setPublicClient] = useState<PublicClient>(defaultUnset);
+  const [isConnecting, setIsConnecting] = useState<boolean>(true);
 
   const [magicSigner] = useState<Promise<MagicSigner | null>>(() =>
     createMagicSigner(),
@@ -154,6 +157,7 @@ export const WalletContextProvider = ({
       setUsername(metadata.email);
       setOwnerAddress(metadata.publicAddress as Address);
       setScaAddress(await provider.getAddress());
+      setIsConnecting(false);
 
       if (provider) {
         const _walletClient = createWalletClient({
@@ -167,9 +171,10 @@ export const WalletContextProvider = ({
         });
         setPublicClient(_publicClient);
       }
+      
     }
     fetchData();
-  }, [connectProviderToAccount, magicSigner, provider, scaAddress]);
+  }, [connectProviderToAccount, magicSigner, provider, scaAddress, isConnecting]);
 
   return (
     <WalletContext.Provider
@@ -184,6 +189,7 @@ export const WalletContextProvider = ({
         userBalance,
         walletClient,
         publicClient,
+        isConnecting
       }}
     >
       {children}

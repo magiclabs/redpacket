@@ -17,7 +17,7 @@ import Footer from "@/components/Footer";
 import { useCallback, useState } from "react";
 
 export default function DeployPacket() {
-  const { isLoggedIn, scaAddress, provider, publicClient } = useWalletContext();
+  const { isLoggedIn, scaAddress, provider, publicClient, isConnecting } = useWalletContext();
   const [totalClaimCount, setTotalClaimCount] = useState<bigint>(BigInt(0));
   const [totalBalance, setTotalBalance] = useState<bigint>(BigInt(0));
 
@@ -103,48 +103,61 @@ export default function DeployPacket() {
         </figure>
         <div className="card-body">
           <h1 className="card-title mb-3">🧧 Create a red packet!</h1>
-          {isLoggedIn ? (
-            <div className="w-full">
-              <label className="form-control w-full">
-                <div className="label">
-                  <span className="label-text">How many packets?</span>
-                </div>
-                <input
-                  type="number"
-                  min="0"
-                  className="input input-bordered w-full"
-                  placeholder="3"
-                  required
-                  onChange={onTotalClaimCountChange}
-                />
-              </label>
-              <label className="form-control w-full">
-                <div className="label">
-                  <span className="label-text">How much ETH to deposit?</span>
-                </div>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  className="input input-bordered w-full"
-                  placeholder="0.05"
-                  required
-                  onChange={onTotalBalanceChange}
-                />
-              </label>
-              <button
-                onClick={handleCreateRedPacket}
-                className="btn btn-primary btn-lg mt-3 btn-block"
-              >
-                Create Red Packet
-              </button>
+          {isConnecting ? (
+            <div>
+              <div className="flex flex-col gap-3 w-full">
+                <div className="skeleton h-3 w-full"></div>
+                <div className="skeleton h-3 w-full"></div>
+                <div className="skeleton h-3 w-full"></div>
+                <div className="skeleton h-12 w-full"></div>
+              </div>
             </div>
           ) : (
             <div>
-              <div className="text-md mb-6">
-                You need to be logged in to create a red packet.
-              </div>
-              <Login />
+              {isLoggedIn ? (
+                <div className="w-full">
+                  <label className="form-control w-full">
+                    <div className="label">
+                      <span className="label-text">How many packets?</span>
+                    </div>
+                    <input
+                      type="number"
+                      min="0"
+                      className="input input-bordered w-full"
+                      placeholder="3"
+                      required
+                      onChange={onTotalClaimCountChange}
+                    />
+                  </label>
+                  <label className="form-control w-full">
+                    <div className="label">
+                      <span className="label-text">How much ETH to deposit?</span>
+                    </div>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="input input-bordered w-full"
+                      placeholder="0.05"
+                      required
+                      onChange={onTotalBalanceChange}
+                    />
+                  </label>
+                  <button
+                    onClick={handleCreateRedPacket}
+                    className="btn btn-primary btn-lg mt-3 btn-block"
+                  >
+                    Create Red Packet
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <div className="text-md mb-6">
+                    You need to be logged in to create a red packet.
+                  </div>
+                  <Login />
+                </div>
+              )}
             </div>
           )}
         </div>
