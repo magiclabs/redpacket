@@ -132,34 +132,29 @@ export const WalletContextProvider = ({
 
       const isLoggedIn = await signer.inner.user.isLoggedIn();
 
-      if (!isLoggedIn) {
-        return;
-      }
-
-      await signer.authenticate({
-        authenticate: async () => {},
-      });
-
-      const metadata = await signer.getAuthDetails();
-      if (!metadata.publicAddress || !metadata.email) {
-        throw new Error("Magic login failed");
-      }
-
-      if (scaAddress) {
-        const _userBalance = await provider.rpcClient.getBalance({
-          address: scaAddress as Address,
+      if (provider && isLoggedIn) {
+        await signer.authenticate({
+          authenticate: async () => {},
         });
-        setUserBalance(_userBalance);
-      }
 
-      setIsLoggedIn(isLoggedIn);
-      connectProviderToAccount(signer);
-      setUsername(metadata.email);
-      setOwnerAddress(metadata.publicAddress as Address);
-      setScaAddress(await provider.getAddress());
-      setIsConnecting(false);
+        const metadata = await signer.getAuthDetails();
+        if (!metadata.publicAddress || !metadata.email) {
+          throw new Error("Magic login failed");
+        }
 
-      if (provider) {
+        if (scaAddress) {
+          const _userBalance = await provider.rpcClient.getBalance({
+            address: scaAddress as Address,
+          });
+          setUserBalance(_userBalance);
+        }
+
+        setIsLoggedIn(isLoggedIn);
+        connectProviderToAccount(signer);
+        setUsername(metadata.email);
+        setOwnerAddress(metadata.publicAddress as Address);
+        setScaAddress(await provider.getAddress());
+
         const _walletClient = createWalletClient({
           chain: provider.rpcClient.chain,
           transport: custom(provider.rpcClient.transport),
@@ -171,6 +166,8 @@ export const WalletContextProvider = ({
         });
         setPublicClient(_publicClient);
       }
+      
+      setIsConnecting(false);
       
     }
     fetchData();
