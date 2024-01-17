@@ -1,19 +1,20 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useWalletContext } from "@/context/wallet";
 import { useRedPacket } from "@/hooks/useRedPacket";
-import { formatEther } from "viem";
+import { Hash } from "viem";
 import { Address } from "@alchemy/aa-core";
 import Image from "next/image";
-
-const rounding = require("significant-rounding");
+import Login from "@/components/Login";
+import Footer from "@/components/Footer";
+import { formatEtherDisplay } from "@/utils/formatEtherDisplay";
 
 type PacketProps = {
   contractAddress: Address;
 };
 
 export default function Packet({ contractAddress }: PacketProps) {
-  const { isLoggedIn, login, logout, username, scaAddress, userBalance } =
+  const { isLoggedIn, logout, username, scaAddress, userBalance } =
     useWalletContext();
   const {
     loading,
@@ -27,14 +28,9 @@ export default function Packet({ contractAddress }: PacketProps) {
     claimTxnHash,
     handleClaim,
   } = useRedPacket({ contractAddress });
-  const [email, setEmail] = useState<string>("");
 
   const remainingClaimCount =
     (totalClaimCount ?? BigInt(0)) - (claimedCount ?? BigInt(0));
-
-  function formatEtherDisplay(ether: bigint) {
-    return `${rounding(Number(formatEther(ether ?? BigInt(0))), 5)}`;
-  }
 
   function userDisplay(count: bigint) {
     if (count > 1) {
@@ -43,24 +39,6 @@ export default function Packet({ contractAddress }: PacketProps) {
       return `${count} user`;
     }
   }
-
-  const onEmailChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      setEmail(e.target.value);
-    },
-    [],
-  );
-
-  const handleLogin = useCallback(async () => {
-    await login(email);
-    setEmail("");
-  }, [login, email]);
-
-  const handleLogout = useCallback(async () => {
-    await logout();
-  }, [logout]);
-
   return (
     <div>
       <div className="card bg-base-100 shadow-xl">
@@ -157,19 +135,7 @@ export default function Packet({ contractAddress }: PacketProps) {
                             )}
                           </div>
                         ) : (
-                          <div className="join">
-                            <input
-                              onChange={onEmailChange}
-                              className="input input-bordered join-item w-full"
-                              placeholder="Your Email"
-                            />
-                            <button
-                              onClick={handleLogin}
-                              className="btn btn-primary join-item"
-                            >
-                              Login to Claim
-                            </button>
-                          </div>
+                          <Login />
                         )}
                       </div>
                     </div>
@@ -180,42 +146,10 @@ export default function Packet({ contractAddress }: PacketProps) {
           )}
         </div>
       </div>
-      <div className="text-center mt-6">
-        <a
-          href={`https://basescan.org/address/${contractAddress}`}
-          target="_blank"
-          className="btn btn-link btn-block text-base-300 btn-xs"
-        >
-          View Contract
-        </a>
-        {isLoggedIn && (
-          <div>
-            {claimTxnHash && (
-              <a
-                href={`https://basescan.org/tx/${claimTxnHash}`}
-                target="_blank"
-                className="btn btn-link btn-block text-base-300 btn-xs"
-              >
-                View Transaction
-              </a>
-            )}
-            <a
-              href={`https://basescan.org/address/${scaAddress}`}
-              target="_blank"
-              className="btn btn-link btn-block text-base-300 btn-xs"
-            >
-              Your Balance {`${formatEtherDisplay(userBalance as bigint)} ETH`}
-            </a>
-            <a
-              onClick={handleLogout}
-              target="_blank"
-              className="btn btn-link text-base-300 btn-xs"
-            >
-              Logout: {username}
-            </a>
-          </div>
-        )}
-      </div>
+      <Footer
+        contractAddress={contractAddress}
+        claimTxnHash={claimTxnHash as Hash}
+      />
     </div>
   );
 }

@@ -2,33 +2,21 @@
 
 import Image from "next/image";
 import { useWalletContext } from "@/context/wallet";
-import RedPacketContract from "@/contracts/RedPacket.json";
 import RedPacketFactoryContract from "@/contracts/RedPacketFactory.json";
 import { Address } from "@alchemy/aa-core";
 import {
   parseEther,
-  encodeDeployData,
   Hash,
-  getContractAddress,
   encodeFunctionData,
-  fromHex,
   decodeEventLog,
   parseAbiItem,
 } from "viem";
 import { clientEnv } from "@/env/client.mjs";
+import Login from "@/components/Login";
+import Footer from "@/components/Footer";
 
 export default function DeployPacket() {
-  const {
-    isLoggedIn,
-    login,
-    logout,
-    username,
-    scaAddress,
-    userBalance,
-    provider,
-    walletClient,
-    publicClient,
-  } = useWalletContext();
+  const { isLoggedIn, scaAddress, provider, publicClient } = useWalletContext();
 
   async function handleCreateRedPacket() {
     if (!provider) {
@@ -95,29 +83,49 @@ export default function DeployPacket() {
             </figure>
             <div className="card-body">
               <h1 className="card-title mb-3">🧧 Create a red packet!</h1>
-              <div className="text-sm">How many packets?</div>
-              <input
-                type="number"
-                min="0"
-                className="input input-bordered w-full"
-                placeholder="3"
-              />
-              <div className="text-sm">How much ETH to deposit?</div>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                className="input input-bordered w-full"
-                placeholder="0.05"
-              />
-              <button
-                onClick={handleCreateRedPacket}
-                className="btn btn-primary btn-lg mt-3"
-              >
-                Create Red Packet
-              </button>
+              {isLoggedIn ? (
+                <div className="w-full">
+                  <label className="form-control w-full">
+                    <div className="label">
+                      <span className="label-text">How many packets?</span>
+                    </div>
+                    <input
+                      type="number"
+                      min="0"
+                      className="input input-bordered w-full"
+                      placeholder="3"
+                    />
+                </label>
+                <label className="form-control w-full">
+                    <div className="label">
+                      <span className="label-text">How much ETH to deposit?</span>
+                    </div>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="input input-bordered w-full"
+                      placeholder="0.05"
+                    />
+                </label>
+                  <button
+                    onClick={handleCreateRedPacket}
+                    className="btn btn-primary btn-lg mt-3 btn-block"
+                  >
+                    Create Red Packet
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <div className="text-md mb-6">
+                    You need to be logged in to create a red packet.
+                  </div>
+                  <Login />
+                </div>
+              )}
             </div>
           </div>
+          <Footer />
         </div>
       </div>
     </div>

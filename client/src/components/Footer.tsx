@@ -1,41 +1,61 @@
 "use client";
+import { useCallback } from "react";
+import { useWalletContext } from "@/context/wallet";
+import { Address } from "@alchemy/aa-core";
+import { formatEtherDisplay } from "@/utils/formatEtherDisplay";
+import { Hash } from "viem";
 
-export default function Footer() {
-  return (
-    <div className="flex flex-row flex-wrap items-center justify-center gap-[16px]">
-      <FooterCard
-        title={"Made with 💜 by Magic"}
-        subTitle="Learn to make with Magic!"
-        link={"https://magic.link"}
-      />
-    </div>
-  );
-}
+type FooterProps = {
+  contractAddress?: Address;
+  claimTxnHash?: Hash;
+};
 
-function FooterCard({
-  title,
-  subTitle,
-  link,
-}: {
-  title: string;
-  subTitle: string;
-  link: string;
-}) {
+export default function Footer({ contractAddress, claimTxnHash }: FooterProps) {
+  const { isLoggedIn, logout, username, scaAddress, userBalance } =
+    useWalletContext();
+
+  const handleLogout = useCallback(async () => {
+    await logout();
+  }, [logout]);
+
   return (
-    <div className="card w-[384px] glass shadow-xl max-lg:w-full">
-      <div className="card-body">
-        <h2 className="card-title">{title}</h2>
-        <p>{subTitle}</p>
-        <div className="card-actions justify-end">
+    <div className="text-center mt-6">
+      {contractAddress && (
+        <a
+          href={`https://basescan.org/address/${contractAddress}`}
+          target="_blank"
+          className="btn btn-link btn-block text-base-300 btn-xs"
+        >
+          View Contract
+        </a>
+      )}
+      {isLoggedIn && (
+        <div>
+          {claimTxnHash && (
+            <a
+              href={`https://basescan.org/tx/${claimTxnHash}`}
+              target="_blank"
+              className="btn btn-link btn-block text-base-300 btn-xs"
+            >
+              View Transaction
+            </a>
+          )}
           <a
-            href={link}
+            href={`https://basescan.org/address/${scaAddress}`}
             target="_blank"
-            className="btn text-white bg-gradient-1 transition ease-in-out duration-500 transform hover:scale-110"
+            className="btn btn-link btn-block text-base-300 btn-xs"
           >
-            Click Here
+            Your Balance {`${formatEtherDisplay(userBalance as bigint)} ETH`}
+          </a>
+          <a
+            onClick={handleLogout}
+            target="_blank"
+            className="btn btn-link text-base-300 btn-xs"
+          >
+            Logout: {username}
           </a>
         </div>
-      </div>
+      )}
     </div>
   );
 }
