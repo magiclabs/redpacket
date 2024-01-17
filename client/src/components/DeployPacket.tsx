@@ -14,13 +14,35 @@ import {
 import { clientEnv } from "@/env/client.mjs";
 import Login from "@/components/Login";
 import Footer from "@/components/Footer";
+import { useCallback, useState } from "react";
 
 export default function DeployPacket() {
   const { isLoggedIn, scaAddress, provider, publicClient } = useWalletContext();
+  const [totalClaimCount, setTotalClaimCount] = useState<bigint>(BigInt(0));
+  const [totalBalance, setTotalBalance] = useState<bigint>(BigInt(0));
+
+  const onTotalClaimCountChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      setTotalClaimCount(BigInt(e.target.value));
+    },
+    [],
+  );
+
+  const onTotalBalanceChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      setTotalBalance(parseEther(e.target.value));
+    },
+    [],
+  );
 
   async function handleCreateRedPacket() {
     if (!provider) {
       throw new Error("Provider not initialized");
+    }
+    if (!totalClaimCount || !totalBalance) {
+      throw new Error("Please input the required fields");
     }
     publicClient.watchEvent({
       address:
@@ -48,9 +70,9 @@ export default function DeployPacket() {
       data: encodeFunctionData({
         abi: RedPacketFactoryContract.abi,
         functionName: "createRedPacket",
-        args: [BigInt(3)],
+        args: [totalClaimCount],
       }),
-      value: parseEther("0.001"),
+      value: totalBalance,
     });
     console.log(uoHash);
     let txnHash: Hash;
@@ -92,6 +114,8 @@ export default function DeployPacket() {
                   min="0"
                   className="input input-bordered w-full"
                   placeholder="3"
+                  required
+                  onChange={onTotalClaimCountChange}
                 />
               </label>
               <label className="form-control w-full">
@@ -104,6 +128,8 @@ export default function DeployPacket() {
                   min="0"
                   className="input input-bordered w-full"
                   placeholder="0.05"
+                  required
+                  onChange={onTotalBalanceChange}
                 />
               </label>
               <button
