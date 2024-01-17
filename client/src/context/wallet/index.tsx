@@ -14,7 +14,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { createPublicClient, createWalletClient, custom, WalletClient, PublicClient } from 'viem';
+import {
+  createPublicClient,
+  createWalletClient,
+  custom,
+  WalletClient,
+  PublicClient,
+} from "viem";
 
 type WalletContextProps = {
   // Functions
