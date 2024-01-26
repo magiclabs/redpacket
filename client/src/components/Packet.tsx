@@ -59,7 +59,7 @@ export default function Packet({ contractAddress }: PacketProps) {
       </div>
     );
   }
-  
+
   return (
     <div>
       <div className="card bg-base-100 shadow-xl">
@@ -109,7 +109,9 @@ export default function Packet({ contractAddress }: PacketProps) {
                     <div>
                       {isCreator ? (
                         <div>
-                          <h1 className="card-title">🧧 Share URL your friends!</h1>
+                          <h1 className="card-title">
+                            🧧 Share URL with your friends!
+                          </h1>
                           <div className="text-md mt-3">
                             You can't claim your own red packet.
                           </div>
