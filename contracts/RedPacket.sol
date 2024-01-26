@@ -17,14 +17,14 @@ contract RedPacket {
     address public creator;
 
     // Constructor
-    constructor(uint256 _totalClaimCount) payable {
+    constructor(uint256 _totalClaimCount, address _creator) payable {
         require(msg.value > 0, "No funds sent with transaction.");
         require(_totalClaimCount > 0, "Total claims should be greater than 0.");
 
         totalClaimCount = _totalClaimCount;
         totalBalance = msg.value;
         expired = false;
-        creator = msg.sender;
+        creator = _creator;
 
         emit PacketCreated(creator, getCurrentBalance(), totalClaimCount);
     }

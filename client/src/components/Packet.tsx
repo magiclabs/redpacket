@@ -26,6 +26,7 @@ export default function Packet({ contractAddress }: PacketProps) {
     totalBalance,
     claimedAmount,
     claimTxnHash,
+    isCreator,
     handleClaim,
   } = useRedPacket({ contractAddress });
 
@@ -39,6 +40,26 @@ export default function Packet({ contractAddress }: PacketProps) {
       return `${count} user`;
     }
   }
+
+  function ClaimProgressBar() {
+    return (
+      <div>
+        <progress
+          className="progress progress-primary w-full progress-lg h-3 mt-6"
+          value={`${currentBalance as bigint}`}
+          max={`${totalBalance as bigint}`}
+        ></progress>
+        <div className="text-xs">{`${formatEtherDisplay(
+          currentBalance as bigint,
+        )} / ${formatEtherDisplay(
+          totalBalance as bigint,
+        )} ETH left to claim by ${userDisplay(
+          remainingClaimCount as bigint,
+        )}.`}</div>
+      </div>
+    );
+  }
+  
   return (
     <div>
       <div className="card bg-base-100 shadow-xl">
@@ -72,20 +93,7 @@ export default function Packet({ contractAddress }: PacketProps) {
                       💸 All red packets have been claimed.
                     </div>
                   ) : (
-                    <div>
-                      <progress
-                        className="progress progress-primary w-full progress-lg h-3 mt-6"
-                        value={`${currentBalance as bigint}`}
-                        max={`${totalBalance as bigint}`}
-                      ></progress>
-                      <div className="text-xs">{`${formatEtherDisplay(
-                        currentBalance as bigint,
-                      )} / ${formatEtherDisplay(
-                        totalBalance as bigint,
-                      )} ETH left to claim by ${userDisplay(
-                        remainingClaimCount as bigint,
-                      )}.`}</div>
-                    </div>
+                    <ClaimProgressBar />
                   )}
                 </div>
               ) : (
@@ -99,45 +107,46 @@ export default function Packet({ contractAddress }: PacketProps) {
                     </div>
                   ) : (
                     <div>
-                      <h1 className="card-title">
-                        🧧 You received a red packet!
-                      </h1>
-                      <progress
-                        className="progress progress-primary w-full progress-lg h-3 mt-6"
-                        value={`${currentBalance as bigint}`}
-                        max={`${totalBalance as bigint}`}
-                      ></progress>
-                      <div className="text-xs">{`${formatEtherDisplay(
-                        currentBalance as bigint,
-                      )} / ${formatEtherDisplay(
-                        totalBalance as bigint,
-                      )} ETH left to claim by ${userDisplay(
-                        remainingClaimCount as bigint,
-                      )}.`}</div>
-                      <div className="card-actions justify-end mt-6">
-                        {isLoggedIn ? (
-                          <div className="w-full">
-                            {isClaiming ? (
-                              <button
-                                disabled={true}
-                                className="btn btn-primary btn-block btn-lg"
-                              >
-                                Claiming
-                                <span className="loading loading-infinity loading-lg"></span>
-                              </button>
+                      {isCreator ? (
+                        <div>
+                          <h1 className="card-title">🧧 Share URL your friends!</h1>
+                          <div className="text-md mt-3">
+                            You can't claim your own red packet.
+                          </div>
+                          <ClaimProgressBar />
+                        </div>
+                      ) : (
+                        <div>
+                          <h1 className="card-title">
+                            🧧 You received a red packet!
+                          </h1>
+                          <ClaimProgressBar />
+                          <div className="card-actions justify-end mt-6">
+                            {isLoggedIn ? (
+                              <div className="w-full">
+                                {isClaiming ? (
+                                  <button
+                                    disabled={true}
+                                    className="btn btn-primary btn-block btn-lg"
+                                  >
+                                    Claiming
+                                    <span className="loading loading-infinity loading-lg"></span>
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={handleClaim}
+                                    className="btn btn-primary btn-block btn-lg"
+                                  >
+                                    Claim
+                                  </button>
+                                )}
+                              </div>
                             ) : (
-                              <button
-                                onClick={handleClaim}
-                                className="btn btn-primary btn-block btn-lg"
-                              >
-                                Claim
-                              </button>
+                              <Login />
                             )}
                           </div>
-                        ) : (
-                          <Login />
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

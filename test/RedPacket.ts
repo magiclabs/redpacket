@@ -12,7 +12,7 @@ describe("RedPacket", function () {
         const totalClaimCount = 3n;
         const balance = parseEther("10");
   
-        const packet = await hre.viem.deployContract("RedPacket", [totalClaimCount], {
+        const packet = await hre.viem.deployContract("RedPacket", [totalClaimCount, creator.account.address], {
             value: balance,
         });
   

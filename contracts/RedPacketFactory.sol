@@ -11,7 +11,7 @@ contract RedPacketFactory {
 
     function createRedPacket(uint256 totalClaimCount) public payable returns (RedPacket) {
         // Create a new RedPacket
-        RedPacket newRedPacket = (new RedPacket){value: msg.value}(totalClaimCount);
+        RedPacket newRedPacket = (new RedPacket){value: msg.value}(totalClaimCount, msg.sender);
 
         // Store the address of the new RedPacket
         deployedRedPackets.push(address(newRedPacket));
