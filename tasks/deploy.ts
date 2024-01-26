@@ -1,5 +1,6 @@
 import { task } from "hardhat/config";
 import { formatEther, parseEther } from "viem";
+import { vars } from "hardhat/config";
 
 const fs = require("fs");
 const path = require("path");
@@ -53,8 +54,9 @@ task("deploy", "Deploy a RedPacket contract with custom parameters")
 
     const count = taskArgs.count;
     const balance = parseEther(taskArgs.balance.toString());
-    
-    const packet = await hre.viem.deployContract("RedPacket", [count], {
+    const creatorAddress = vars.get("PUBLIC_KEY_BASE");
+
+    const packet = await hre.viem.deployContract("RedPacket", [count, creatorAddress], {
         value: balance,
     });
 
