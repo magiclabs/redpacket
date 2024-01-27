@@ -113,7 +113,7 @@ export default function Packet({ contractAddress }: PacketProps) {
                             🧧 Share URL with your friends!
                           </h1>
                           <div className="text-md mt-3">
-                            You can't claim your own red packet.
+                            You can&apos;t claim your own red packet.
                           </div>
                           <ClaimProgressBar />
                         </div>
