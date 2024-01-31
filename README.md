@@ -1,13 +1,34 @@
-# RedPacket Hardhat Project
+# Red Packet
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+## Getting started
 
-Try running some of the following tasks:
+- Install [ni](https://github.com/antfu/ni), [bun](https://bun.sh/)
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+```bash
+npm i -g @antfu/ni bun
+```
+
+- Install dependencies
+
+```bash
+ni
+```
+
+- Link the project to Vercel
+
+```bash
+nr vc link
+# And follow the instructions
+```
+
+- Pull environment variables
+
+```bash
+nr vc env pull
+```
+
+- Run the project
+
+```bash
+nr dev
 ```

@@ -1,11 +1,40 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
-  }
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "plugins": [
+      {
+        "name": "next",
+      },
+    ],
+    "baseUrl": ".",
+    "types": [],
+    "paths": {
+      "components/*": ["./src/components/*"],
+      "app/*": ["./src/app/*"],
+      "utils/*": ["./src/utils/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "signer/*": ["./src/signer/*"],
+      "lib/*": ["./src/lib/*"],
+      "env/*": ["./src/env/*"],
+      "context/*": ["./src/context/*"],
+      "config/*": ["./src/config/*"],
+      "contracts/*": ["./src/contracts/*"],
+      "scripts/*": ["./scripts/*"],
+    },
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"],
 }
