@@ -14,3 +14,9 @@ node_modules
 /coverage.json
 
 .DS_Store
+
+.next
+.vercel
+.env*.local
+
+certificates

@@ -1,3 +1,21 @@
 {
-    "solidity.compileUsingRemoteVersion": "v0.8.20+commit.a1b79de6"
+  "search.exclude": {
+    "**/node_modules": true,
+    ".next/**/*": true,
+    "**/dist": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.tslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "solidity.formatter": "prettier",
+  "[solidity]": {
+    "editor.defaultFormatter": "NomicFoundation.hardhat-solidity"
+  }
 }
