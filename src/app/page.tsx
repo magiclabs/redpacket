@@ -1,7 +1,28 @@
 import { GTSuper } from 'app/fonts'
 import { Button } from 'components/ui/button'
 import { Input } from 'components/ui/input'
+import { type Metadata } from 'next'
 import Image from 'next/image'
+
+const title = `Magic Lunar New Year`
+const description = `Happy New Year! Create an invisible wallet and open a red packet to claim your share of 1 ETH.`
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    images: [
+      {
+        url: '/og.png',
+        width: 1280,
+        height: 720,
+        alt: 'Red Packet',
+      },
+    ],
+  },
+}
 
 export default function Home() {
   return (

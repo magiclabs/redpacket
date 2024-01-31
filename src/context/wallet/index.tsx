@@ -2,7 +2,6 @@
 
 import { type AlchemyProvider } from '@alchemy/aa-alchemy'
 import { type Address } from '@alchemy/aa-core'
-import { type MagicSigner } from '@alchemy/aa-signers'
 import { useAlchemyProvider } from 'hooks/useAlchemyProvider'
 import {
   createContext,
@@ -67,9 +66,7 @@ export const WalletContextProvider = ({
   const [publicClient, setPublicClient] = useState<PublicClient>(defaultUnset)
   const [isConnecting, setIsConnecting] = useState<boolean>(true)
 
-  const [magicSigner] = useState<Promise<MagicSigner | null>>(() =>
-    createMagicSigner(),
-  )
+  const [magicSigner] = useState(() => createMagicSigner())
   const { provider, connectProviderToAccount, disconnectProviderFromAccount } =
     useAlchemyProvider()
 

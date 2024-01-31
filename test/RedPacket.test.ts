@@ -66,10 +66,10 @@ describe('RedPacket', function () {
       )
       await packetAsUser1.write.claim()
 
-      const claimedAmount = await packet.read.claimedAmounts([
+      const claimedAmount = (await packet.read.claimedAmounts([
         getAddress(users[1].account.address),
-      ])
-      const currentBalance = await packet.read.getCurrentBalance()
+      ])) as number
+      const currentBalance = (await packet.read.getCurrentBalance()) as number
 
       expect(claimedAmount + currentBalance).to.equal(balance)
     })
@@ -87,13 +87,13 @@ describe('RedPacket', function () {
         )
         await packetAsUser.write.claim()
 
-        const claimedAmount = await packet.read.claimedAmounts([
+        const claimedAmount = (await packet.read.claimedAmounts([
           getAddress(user.account.address),
-        ])
+        ])) as bigint
         totalClaimedAmount += claimedAmount
       }
 
-      const remainingBalance = await packet.read.getCurrentBalance()
+      const remainingBalance = (await packet.read.getCurrentBalance()) as bigint
       const expired = await packet.read.expired()
       expect(totalClaimedAmount + remainingBalance).to.equal(balance)
       expect(expired).to.equal(true)

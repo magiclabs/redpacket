@@ -13,7 +13,7 @@ import { useCallback, useState } from 'react'
 import { type Address } from 'viem'
 
 export const useAlchemyProvider = () => {
-  const [provider, setProvider] = useState<AlchemyProvider>(
+  const [provider, setProvider] = useState(
     new AlchemyProvider({
       chain,
       rpcUrl: getRpcUrl(),
