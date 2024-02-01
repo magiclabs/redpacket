@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from 'components/ui/button'
 import { Input } from 'components/ui/input'
 import { magic } from 'lib/magic'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -29,14 +30,18 @@ export function EmailForm() {
     mode: 'onChange',
   })
 
+  const { push } = useRouter()
+
   const onSubmit = handleSubmit(async ({ email }) => {
     if (isSubmitting) return
 
-    console.log(email)
-
     const result = await magic.auth.loginWithEmailOTP({ email })
 
-    console.log(result)
+    const isConnected = await magic.user.isLoggedIn()
+
+    console.log({ isConnected })
+
+    push(`/create`)
   })
 
   return (

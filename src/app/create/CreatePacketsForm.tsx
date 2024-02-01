@@ -2,17 +2,19 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TotalPacketsInput } from 'app/create/TotalPacketsInput'
+import { useETHPrice } from 'app/create/useETHPrice'
 import { AlertIcon } from 'components/icons/AlertIcon'
 import { Button } from 'components/ui/button'
 import { Form } from 'components/ui/form'
 import { Input } from 'components/ui/input'
 import { Label } from 'components/ui/label'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { formatEther } from 'viem'
 import { useAccount, useBalance } from 'wagmi'
 import { z } from 'zod'
 
-export const MAXIMUM_PACKETS = 99999
+export const MAXIMUM_PACKETS = 999
 export const MINIMUM_PACKETS = 1
 export const MINIMUM_ETH = 0.001
 
@@ -42,7 +44,7 @@ export function CreatePacketsForm() {
 
   const defaultValues = {
     packets: DEFAULT_PACKETS,
-    eth: Math.max(
+    eth: Math.min(
       MINIMUM_ETH,
       balance?.value ? Number(formatEther(balance.value)) : DEFAULT_ETH,
     ),
@@ -62,13 +64,18 @@ export function CreatePacketsForm() {
 
   const eth = watch('eth')
 
-  const onSubmit = handleSubmit((data) => {
+  const { push } = useRouter()
+
+  const onSubmit = handleSubmit(async (data) => {
     console.log(data)
+    push(`/share/0x123456`)
   })
 
   const isInsufficientFunds = balance?.value
     ? Number(formatEther(balance.value)) < eth
     : false
+
+  const { ethPrice } = useETHPrice()
 
   return (
     <Form {...form}>
@@ -105,13 +112,23 @@ export function CreatePacketsForm() {
           </div>
         </div>
 
+        <div className="mt-1 flex w-full justify-end pr-1">
+          {!ethPrice || isNaN(+ethPrice * eth) ? (
+            <div className="my-0.5 h-4 w-10 animate-pulse rounded-full bg-gray-500" />
+          ) : (
+            <span className="text-right text-sm tabular-nums opacity-60">
+              ≈ ${(+ethPrice * eth).toFixed(2)}
+            </span>
+          )}
+        </div>
+
         {isInsufficientFunds && balance?.value ? (
           <div className="mt-4 flex gap-3 rounded-2xl border-none bg-[#ff191e1f] px-4 py-3 sm:mt-5">
             <div className="flex flex-1 flex-col gap-0.5 leading-[150%] tracking-[-0.408px]">
               <h2 className="text-sm font-bold">Insufficient funds</h2>
               <span className="text-sm opacity-60">
                 Top up your wallet with Base ETH to continue. Current balance:{' '}
-                {formatEther(balance.value)} ETH
+                {Number(formatEther(balance.value)).toFixed(5)} ETH
               </span>
             </div>
             <AlertIcon className="aspect-square h-10 w-10 self-center" />
@@ -121,7 +138,7 @@ export function CreatePacketsForm() {
         <Button
           disabled={!isValid}
           type="submit"
-          className="mt-4 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
+          className="z-10 mt-4 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
         >
           Create Packets
         </Button>

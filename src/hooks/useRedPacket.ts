@@ -1,6 +1,7 @@
 import { type Address } from '@alchemy/aa-core'
 import { useWalletContext } from 'context/wallet'
 import RedPacketContract from 'contracts/RedPacket.json'
+import { publicClient } from 'lib/viem/publicClient'
 import { useCallback, useEffect, useState } from 'react'
 import { encodeFunctionData, getContract, type Hash } from 'viem'
 
@@ -29,7 +30,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
       const contractInstance = getContract({
         address: `0x${contractAddress}`,
         abi: RedPacketContract.abi,
-        publicClient: provider.rpcClient,
+        client: publicClient,
       })
       const _totalClaimCount = await contractInstance.read.totalClaimCount()
       setTotalClaimCount(_totalClaimCount as bigint)

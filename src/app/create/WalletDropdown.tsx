@@ -3,6 +3,7 @@
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCopyToClipboard } from '@uidotdev/usehooks'
+import { Loader } from 'components/Loader'
 import { CopyIcon } from 'components/icons/CopyIcon'
 import { LogoutIcon } from 'components/icons/LogoutIcon'
 import { QRCodeIcon } from 'components/icons/QRCodeIcon'
@@ -12,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu'
+import { WALLET_TYPE, useWalletType } from 'hooks/useWalletType'
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
@@ -20,9 +22,11 @@ import { useAccount, useBalance, useBlockNumber, useDisconnect } from 'wagmi'
 
 export function WalletDropdown() {
   const client = useQueryClient()
-  const { address, isDisconnected } = useAccount()
+  const { address, isConnecting, isDisconnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { data: blockNumber } = useBlockNumber({ watch: true })
+
+  const [walletType] = useWalletType()
 
   const { data: balance, queryKey } = useBalance({ address })
 
@@ -36,6 +40,10 @@ export function WalletDropdown() {
     redirect('/')
   }
 
+  if (isConnecting || !balance) {
+    return <Loader className="absolute right-4 top-4 aspect-square h-6 w-6" />
+  }
+
   return address && balance ? (
     <DropdownMenu>
       <DropdownMenuTrigger className="absolute right-4 top-4 z-10 flex h-10 justify-center gap-2 rounded-3xl border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF14] p-2 pr-4 font-mono text-base font-light text-white shadow-[0px_4px_28px_8px_rgba(0,0,0,0.25)] backdrop-blur-[18px] focus-visible:outline-none">
@@ -46,7 +54,7 @@ export function WalletDropdown() {
               'radial-gradient(66.02% 77.37% at 31.25% 32.81%, #FF2227 0%, #A30128 100%)',
           }}
         />
-        {formatEther(balance?.value)} ETH
+        {Number(formatEther(balance?.value)).toFixed(5)} ETH
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
@@ -62,19 +70,22 @@ export function WalletDropdown() {
           <CopyIcon className="opacity-80 hover:opacity-100" />
           Copy Address
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white">
-          <QRCodeIcon className="opacity-80 hover:opacity-100" />
-          QR Code
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white">
-          <WalletIcon className="opacity-80 hover:opacity-100" />
-          Open Wallet
-        </DropdownMenuItem>
+        {walletType === WALLET_TYPE.MAGIC ? (
+          <>
+            <DropdownMenuItem className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white">
+              <QRCodeIcon className="opacity-80 hover:opacity-100" />
+              QR Code
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white">
+              <WalletIcon className="opacity-80 hover:opacity-100" />
+              Open Wallet
+            </DropdownMenuItem>
+          </>
+        ) : null}
         <DropdownMenuItem
           className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
-          onClick={() => {
-            disconnect()
-            redirect('/')
+          onClick={async () => {
+            await disconnect()
           }}
         >
           <LogoutIcon className="opacity-80 hover:opacity-100" />
