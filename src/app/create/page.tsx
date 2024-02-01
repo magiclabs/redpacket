@@ -1,7 +1,7 @@
-import { ConnectWalletButton } from 'app/ConnectWalletButton'
 import { DemoByMagic } from 'app/DemoByMagic'
-import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
+import { CreatePacketsForm } from 'app/create/CreatePacketsForm'
+import { WalletDropdown } from 'app/create/WalletDropdown'
 import { GTSuper } from 'app/fonts'
 import Image from 'next/image'
 
@@ -14,7 +14,9 @@ export default function Home() {
           'radial-gradient(62.01% 50% at 50% 50%, #480016 0%, #03010B 100%), #FFF',
       }}
     >
-      <div className="pointer-events-none absolute h-full w-full justify-self-center overflow-hidden">
+      <WalletDropdown />
+
+      <div className="pointer-events-none absolute h-full w-full select-none justify-self-center overflow-hidden">
         <div className="relative flex justify-center">
           <Image
             priority
@@ -36,34 +38,18 @@ export default function Home() {
 
       <div className="flex flex-col gap-5 px-2">
         <h2
-          className={`${GTSuper.className} select-none self-center text-3xl sm:text-4xl md:text-[40px]`}
+          className={`${GTSuper.className} select-none self-center text-3xl tracking-[-0.408px] sm:text-4xl md:text-[40px]`}
           style={{
             background: 'linear-gradient(180deg, #FFF 20.02%, #FFACAC 100%)',
             backgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}
         >
-          Happy Lunar New Year
+          Create your red packets
         </h2>
-        <span className="max-w-[468px] text-balance text-center text-sm text-white opacity-80 sm:text-lg">
-          Celebrate the Year of the Dragon by creating digital red packets
-          (红包) filled with random amounts of ETH
-        </span>
       </div>
 
-      <div className="flex w-full max-w-[440px] flex-col justify-center gap-5 px-5">
-        <ConnectWalletButton />
-
-        <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-[#FFFFFF33]" />
-          <span className="text-sm font-medium text-white opacity-60">
-            Or, create a wallet
-          </span>
-          <div className="h-px flex-1 bg-[#FFFFFF33]" />
-        </div>
-
-        <EmailForm />
-      </div>
+      <CreatePacketsForm />
 
       <DemoByMagic />
     </main>
