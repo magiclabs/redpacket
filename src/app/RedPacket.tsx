@@ -1,6 +1,6 @@
-import Image from 'next/image'
+import Image, { type ImageProps } from 'next/image'
 
-export function RedPacket() {
+export function RedPacket(props: Omit<ImageProps, 'src' | 'alt'>) {
   return (
     <Image
       priority
@@ -11,6 +11,7 @@ export function RedPacket() {
       height="1000"
       quality={80}
       alt="Red Packet"
+      {...props}
     />
   )
 }
