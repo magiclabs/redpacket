@@ -1,4 +1,5 @@
 import { clientEnv } from 'env/client'
+import { CURRENT_CHAIN } from 'lib/web3modal/config'
 import { Magic, type EthNetworkConfiguration } from 'magic-sdk'
 import { isServer } from 'utils/isServer'
 import { base, baseSepolia } from 'viem/chains'
@@ -23,6 +24,6 @@ const NETWORK: {
 if (!isServer()) {
   if (!MAGIC_API_KEY) throw new Error('MAGIC_API_KEY is not defined')
   magic = new Magic(MAGIC_API_KEY, {
-    network: NETWORK['base'],
+    network: NETWORK[CURRENT_CHAIN],
   })
 }

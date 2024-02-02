@@ -15,6 +15,7 @@
     "no-unused-vars": "off",
     "prefer-const": "off",
     "no-extra-boolean-cast": "off",
+    "no-async-promise-executor": "off",
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/no-var-requires": "warn",
     "@typescript-eslint/no-unused-vars": "warn",

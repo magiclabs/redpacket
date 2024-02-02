@@ -1,15 +1,20 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TotalPacketsInput } from 'app/create/TotalPacketsInput'
+import { useCreateRedPacket } from 'app/create/useCreateRedPacket'
 import { useETHPrice } from 'app/create/useETHPrice'
 import { AlertIcon } from 'components/icons/AlertIcon'
+import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
+import { MinusIcon } from 'components/icons/MinusIcon'
+import { PlusIcon } from 'components/icons/PlusIcon'
 import { Button } from 'components/ui/button'
 import { Form } from 'components/ui/form'
 import { Input } from 'components/ui/input'
 import { Label } from 'components/ui/label'
+import { cn } from 'lib/utils'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { formatEther } from 'viem'
 import { useAccount, useBalance } from 'wagmi'
 import { z } from 'zod'
@@ -39,7 +44,7 @@ const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>
 
 export function CreatePacketsForm() {
-  const { address } = useAccount()
+  const { address, connector } = useAccount()
   const { data: balance } = useBalance({ address })
 
   const defaultValues = {
@@ -59,16 +64,33 @@ export function CreatePacketsForm() {
     handleSubmit,
     register,
     formState: { isValid },
+    setValue,
     watch,
   } = form
 
   const eth = watch('eth')
+  const packets = watch('packets')
+
+  const { createRedPacket, isWaitingApproval, isGenerating } =
+    useCreateRedPacket({ eth, packets })
+
+  const isLoading = isWaitingApproval || isGenerating
 
   const { push } = useRouter()
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log(data)
-    push(`/share/0x123456`)
+  const onSubmit = handleSubmit(async () => {
+    if (isLoading) return
+
+    try {
+      const address = await createRedPacket()
+
+      console.log(address)
+
+      push(`/share/${address.slice(2).split('').reverse().join('')}`)
+    } catch (e) {
+      toast.error('Failed to create red packets, please try again.')
+      console.error(e)
+    }
   })
 
   const isInsufficientFunds = balance?.value
@@ -83,7 +105,59 @@ export function CreatePacketsForm() {
         className="flex w-full max-w-[440px] flex-col px-5"
         onSubmit={onSubmit}
       >
-        <TotalPacketsInput />
+        <div className="grid w-full items-center gap-3 sm:grid-flow-col sm:justify-between">
+          <Label htmlFor="packets" className="text-lg font-medium">
+            Total Packets
+          </Label>
+          <div className="relative flex h-14 items-center sm:max-w-[180px]">
+            <Button
+              type="button"
+              className={cn(
+                'absolute left-2 flex aspect-square h-10 w-10 rounded-sm bg-[#FFFFFF1f] p-0 hover:bg-[#FFFFFF33]',
+                packets <= MINIMUM_PACKETS &&
+                  `cursor-not-allowed disabled:pointer-events-auto disabled:opacity-50`,
+              )}
+              disabled={packets <= MINIMUM_PACKETS}
+              onClick={() => {
+                if (packets > MINIMUM_PACKETS) {
+                  setValue('packets', packets - 1)
+                }
+              }}
+            >
+              <MinusIcon className="aspect-square h-5 w-5" />
+            </Button>
+            <Input
+              className="h-14 w-full rounded-lg border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF1F] text-center font-mono text-2xl font-light"
+              disabled={isLoading}
+              {...register('packets', {
+                required: true,
+                valueAsNumber: true,
+                min: MINIMUM_PACKETS,
+                max: MAXIMUM_PACKETS,
+              })}
+              type="number"
+              id="packets"
+              inputMode="numeric"
+              defaultValue={DEFAULT_PACKETS}
+            />
+            <Button
+              type="button"
+              disabled={packets >= MAXIMUM_PACKETS}
+              className={cn(
+                'absolute right-2 aspect-square h-10 w-10 rounded-sm bg-[#FFFFFF1f] p-0 hover:bg-[#FFFFFF33]',
+                packets >= MAXIMUM_PACKETS &&
+                  `cursor-not-allowed disabled:pointer-events-auto`,
+              )}
+              onClick={() => {
+                if (packets < MAXIMUM_PACKETS) {
+                  setValue('packets', Number(packets) + 1)
+                }
+              }}
+            >
+              <PlusIcon className="aspect-square h-5 w-5" />
+            </Button>
+          </div>
+        </div>
 
         <div className="mt-4 grid w-full items-center gap-3 sm:mt-5 sm:grid-flow-col sm:justify-between">
           <div className="flex flex-col gap-0.5">
@@ -97,6 +171,7 @@ export function CreatePacketsForm() {
           <div className="relative flex h-14 items-center sm:max-w-[180px]">
             <Input
               className="h-14 rounded-lg border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF1F] pr-14 text-right font-mono text-2xl font-light"
+              disabled={isLoading}
               id="eth"
               {...register('eth', {
                 required: true,
@@ -135,13 +210,26 @@ export function CreatePacketsForm() {
           </div>
         ) : null}
 
-        <Button
-          disabled={!isValid}
-          type="submit"
-          className="z-10 mt-4 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
-        >
-          Create Packets
-        </Button>
+        {isWaitingApproval || isGenerating ? (
+          <div className="mt-3 flex flex-col">
+            <InfiniteLoadingSpinner className="aspect-square h-12 w-12" />
+            <span className="-mt-1 text-center text-sm opacity-60">
+              {isWaitingApproval
+                ? 'Waiting for approval...'
+                : isGenerating
+                  ? 'Generating red packets....'
+                  : ''}
+            </span>
+          </div>
+        ) : (
+          <Button
+            disabled={!isValid}
+            type="submit"
+            className="z-10 mt-4 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
+          >
+            Create Packets
+          </Button>
+        )}
       </form>
     </Form>
   )

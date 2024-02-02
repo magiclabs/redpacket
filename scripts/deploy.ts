@@ -12,8 +12,8 @@ import { mnemonicToAccount } from 'viem/accounts'
 import { $ } from 'zx'
 
 const network: NETWORK = 'baseSepolia'
-const file = 'RedPacket.sol'
-const contractName = 'RedPacket'
+const file = 'RedPacketFactory.sol'
+const contractName = 'RedPacketFactory'
 
 const seedPhrase = process.env.TEST_SEED
 
@@ -44,8 +44,8 @@ async function main() {
     abi,
     bytecode,
     account,
-    args: [100, address],
-    value: 100n,
+    // args: [100, address],
+    // value: 100n,
   })
 
   const transaction = await pc.waitForTransactionReceipt({ hash: txHash })
