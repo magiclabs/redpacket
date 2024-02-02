@@ -3,19 +3,19 @@
 import { FestivitiesAreOver } from 'app/claim/packets/[claimId]/over/FestivitiesAreOver'
 import { RedLantern } from 'app/claim/packets/[claimId]/over/RedLantern'
 import { Button } from 'components/ui/button'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 export default function Over() {
   const { push } = useRouter()
-  const serach = useSearchParams()
+  const { claimId } = useParams<{ claimId: string }>()
 
   // const { logout, isLoggedIn } = useWalletContext()
   const isLoggedIn = true
+  console.log({ claimId })
 
   const handleLogout = async () => {
     // await logout()
 
-    const claimId = serach.get('claimId')
     push('/claim/login?claimId=' + claimId)
   }
   const handleCreatePackets = async () => {

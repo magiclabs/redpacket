@@ -2,14 +2,13 @@
 
 import { RedPacket } from 'app/RedPacket'
 import { Progress } from 'components/ui/progress'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 export default function ClaimPacket() {
   const { push } = useRouter()
-  const search = useSearchParams()
+  const { claimId } = useParams<{ claimId: string }>()
 
   const handleOpen = () => {
-    const claimId = search.get('claimId')
     push(`/claim/packets/${claimId}/lucky`)
   }
 

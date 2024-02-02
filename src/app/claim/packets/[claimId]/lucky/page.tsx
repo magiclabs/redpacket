@@ -4,16 +4,15 @@ import { RedEthereum } from 'app/claim/packets/[claimId]/lucky/RedEthereum'
 import { SpakleIcon } from 'app/claim/packets/[claimId]/lucky/SpakleIcon'
 import { Button } from 'components/ui/button'
 import { magic } from 'lib/magic'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 export default function Lucky() {
   const { push } = useRouter()
-  const serach = useSearchParams()
+  const { claimId } = useParams<{ claimId: string }>()
 
   const handleLogout = async () => {
     await magic.user.logout()
 
-    const claimId = serach.get('claimId')
     push('/claim/login?claimId=' + claimId)
   }
   const handleOpenWallet = async () => {
