@@ -12,10 +12,6 @@ export function BackLanturns(props: MotionImageProps) {
       height="412"
       quality={80}
       alt="Lanterns"
-      style={{
-        mask: `linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.11) 38.27%, rgba(0, 0, 0, 0.13) 63.16%, #000 100%)`,
-        maskMode: 'alpha',
-      }}
       {...props}
     />
   )
