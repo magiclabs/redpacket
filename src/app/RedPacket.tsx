@@ -5,7 +5,7 @@ export function RedPacket(props: Omit<ImageProps, 'src' | 'alt'>) {
     <Image
       priority
       key="red-packet"
-      className="mt-4 aspect-square h-56 w-56 rotate-[30deg] select-none sm:mt-12 md:h-64 md:w-64"
+      className="z-20 mt-4 aspect-square h-56 w-56 rotate-[30deg] select-none sm:mt-12 md:h-64 md:w-64"
       src="/Red_Envelope_1.png"
       width="1000"
       height="1000"

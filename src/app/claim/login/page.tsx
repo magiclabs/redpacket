@@ -2,7 +2,10 @@
 
 import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
+import BackLanturns from 'app/claim/BackLanterns'
+import { RedFocus } from 'app/claim/RedFocus'
 import { GTSuper } from 'app/fonts'
+import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 
 export default function Claim() {
@@ -16,9 +19,35 @@ export default function Claim() {
 
   return (
     <>
-      <RedPacket />
+      <motion.div
+        className="z-30"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <RedPacket />
+      </motion.div>
 
-      <div className="flex flex-col gap-5 px-2">
+      <BackLanturns
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      />
+
+      <RedFocus
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3, delay: 1 }}
+      />
+
+      <motion.div
+        className="z-30 flex flex-col gap-5 px-2"
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+        }}
+        transition={{ delay: 1 }}
+      >
         <h2
           className={`${GTSuper.className} select-none self-center text-3xl sm:text-4xl md:text-[40px]`}
           style={{
@@ -33,11 +62,18 @@ export default function Claim() {
           Happy Lunar New Year! You’ve received a special red packet. Log in to
           open it.
         </span>
-      </div>
+      </motion.div>
 
-      <div className="flex w-full max-w-[440px] flex-col justify-center gap-5 px-5">
+      <motion.div
+        className="mt-10 flex w-full max-w-[440px] flex-col justify-center gap-5 px-5"
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+        }}
+        transition={{ delay: 1.5 }}
+      >
         <EmailForm redirectUri={`/claim/packets/${claimId}`} />
-      </div>
+      </motion.div>
     </>
   )
 }

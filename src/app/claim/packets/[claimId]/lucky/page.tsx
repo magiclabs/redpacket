@@ -2,7 +2,7 @@
 
 import Fireworks from '@fireworks-js/react'
 import { RedEthereum } from 'app/claim/packets/[claimId]/lucky/RedEthereum'
-import { SpakleIcon } from 'app/claim/packets/[claimId]/lucky/SpakleIcon'
+import { SpakleIcon } from 'components/icons/SpakleIcon'
 import { Button } from 'components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
 import { magic } from 'lib/magic'
