@@ -34,7 +34,6 @@ export default function Lucky() {
     <>
       {isVisible ? (
         <motion.div
-          key="fireworks"
           className="fixed h-screen w-screen"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
@@ -44,8 +43,7 @@ export default function Lucky() {
         </motion.div>
       ) : (
         <motion.div
-          key="lucky"
-          className="z-30 flex w-[400px] flex-col items-center"
+          className="flex w-[400px] flex-col items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >

@@ -10,7 +10,7 @@ export default function ClaimPacketsLayout({ children }: PropsWithChildren) {
       <BackLanturns />
       <RedFocus />
 
-      <div className="z-20 flex flex-1 flex-col items-center">{children}</div>
+      <div className="z-30 flex flex-1 flex-col items-center">{children}</div>
     </>
   )
 }

@@ -225,7 +225,7 @@ export function CreatePacketsForm() {
           <Button
             disabled={!isValid}
             type="submit"
-            className="z-10 mt-4 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
+            className="mt-4 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
           >
             Create Packets
           </Button>

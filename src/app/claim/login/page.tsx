@@ -2,8 +2,6 @@
 
 import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
-import { BackLanturns } from 'app/claim/BackLanterns'
-import { RedFocus } from 'app/claim/RedFocus'
 import { GTSuper } from 'app/fonts'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
@@ -20,26 +18,10 @@ export default function Claim() {
 
   return (
     <>
-      <RedPacket
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        // transition={{ duration: 0.3 }}
-      />
-
-      <BackLanturns
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: ANIMATION_INTERVAL }}
-      />
-
-      <RedFocus
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: ANIMATION_INTERVAL * 2 }}
-      />
+      <RedPacket initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
 
       <motion.div
-        className="z-30 flex flex-col gap-5 px-2"
+        className="flex flex-col gap-5 px-2"
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
