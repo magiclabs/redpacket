@@ -1,7 +1,9 @@
 'use client'
 
+import { useMutation } from '@tanstack/react-query'
 import { RedEthereum } from 'app/claim/[key]/result/RedEthereum'
 import { RedPacketFireworks } from 'app/claim/[key]/result/RedPacketFireworks'
+import { Spinner } from 'components/Spinner'
 import { SpakleIcon } from 'components/icons/SpakleIcon'
 import { Button } from 'components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -14,14 +16,19 @@ export default function Lucky() {
   const { push } = useRouter()
   const { key } = useParams<{ key: string }>()
 
-  const handleLogout = async () => {
-    await magic.user.logout()
+  const { mutateAsync: handleLogout, isPending: isLoggingOut } = useMutation({
+    mutationFn: async () => {
+      await magic.user.logout()
 
-    push(`/claim/login?id=${key}`)
-  }
-  const handleOpenWallet = async () => {
-    await magic.wallet.showUI()
-  }
+      push(`/claim/login?id=${key}`)
+    },
+  })
+
+  const { mutateAsync: handleOpenWallet, isPending } = useMutation({
+    mutationFn: async () => {
+      await magic.wallet.showUI()
+    },
+  })
 
   const [isVisible, setIsVisible] = useState(true)
 
@@ -110,15 +117,23 @@ export default function Lucky() {
             >
               <Button
                 className="h-14 flex-1 bg-[#FFFFFF1F] text-lg hover:bg-[#FFFFFF33]"
-                onClick={handleLogout}
+                onClick={() => handleLogout()}
               >
-                Log Out
+                {isLoggingOut ? (
+                  <Spinner className="aspect-square h-7 w-7" />
+                ) : (
+                  'Log Out'
+                )}
               </Button>
               <Button
                 className="h-14 flex-1 text-lg"
-                onClick={handleOpenWallet}
+                onClick={() => handleOpenWallet()}
               >
-                Open Wallet
+                {isPending ? (
+                  <Spinner className="aspect-square h-7 w-7" />
+                ) : (
+                  'Open Wallet'
+                )}
               </Button>
             </motion.div>
 

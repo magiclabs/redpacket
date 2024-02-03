@@ -47,7 +47,7 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
 
     console.log({ isConnected })
 
-    push(redirectUri)
+    await push(redirectUri)
   })
 
   return (

@@ -1,7 +1,7 @@
 'use client'
 
-import { FestivitiesAreOver } from 'app/claim/packets/[claimId]/over/FestivitiesAreOver'
-import { RedLantern } from 'app/claim/packets/[claimId]/over/RedLantern'
+import { FestivitiesAreOver } from 'app/claim/[key]/over/FestivitiesAreOver'
+import { RedLantern } from 'app/claim/[key]/over/RedLantern'
 import { Button } from 'components/ui/button'
 import { motion } from 'framer-motion'
 import { ANIMATION_INTERVAL } from 'lib/constants'

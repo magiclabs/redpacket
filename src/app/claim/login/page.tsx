@@ -45,7 +45,7 @@ export default function Claim() {
       </motion.div>
 
       <motion.div
-        className="mt-10 flex w-full max-w-[440px] flex-col justify-center gap-5 px-5"
+        className="mt-10 flex w-full flex-col justify-center gap-5 px-5 sm:px-0"
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
