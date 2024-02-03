@@ -11,7 +11,7 @@ export const useIsLoggedIn = () => {
         return false
       }
 
-      return !!magic.user.isLoggedIn()
+      return magic.user.isLoggedIn()
     },
   })
 

@@ -43,7 +43,7 @@ export default function Lucky() {
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            className="fixed h-screen w-screen"
+            className="absolute h-dvh w-screen"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 1 } }}

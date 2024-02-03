@@ -9,11 +9,6 @@ export default function Home() {
 
   const { isLoggedIn, isPending } = useIsLoggedIn()
 
-  console.log({
-    isLoggedIn,
-    isPending,
-  })
-
   if (isPending) {
     return <div></div>
   }
