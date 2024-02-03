@@ -1,8 +1,8 @@
-import Image, { type ImageProps } from 'next/image'
+import { MotionImage, type MotionImageProps } from 'components/MotionImage'
 
-export function RedEthereum(props: Omit<ImageProps, 'src' | 'alt'>) {
+export function RedEthereum(props: MotionImageProps) {
   return (
-    <Image
+    <MotionImage
       priority
       key="red-packet"
       className="mt-4 aspect-square h-[198px] w-[194px] select-none sm:mt-12 md:h-64 md:w-64"
