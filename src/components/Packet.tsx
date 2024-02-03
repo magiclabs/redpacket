@@ -3,7 +3,7 @@
 import { type Address } from '@alchemy/aa-core'
 import Footer from 'components/Footer'
 import Login from 'components/Login'
-import { useWalletContext } from 'context/wallet'
+import { useWalletContext } from 'context/wallet/index.test'
 import { useRedPacket } from 'hooks/useRedPacket'
 import Image from 'next/image'
 import { formatEtherDisplay } from 'utils/formatEtherDisplay'

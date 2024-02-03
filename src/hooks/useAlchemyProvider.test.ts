@@ -1,16 +1,27 @@
-import {
-  LightSmartContractAccount,
-  getDefaultLightAccountFactoryAddress,
-} from '@alchemy/aa-accounts'
+import { getDefaultLightAccountFactoryAddress } from '@alchemy/aa-accounts'
 import { AlchemyProvider } from '@alchemy/aa-alchemy'
 import {
   getDefaultEntryPointAddress,
   type SmartAccountSigner,
 } from '@alchemy/aa-core'
-import { chain, gasManagerPolicyId } from 'config/client'
+import { gasManagerPolicyId } from 'config/client'
 import { getRpcUrl } from 'config/rpc'
 import { useCallback, useState } from 'react'
-import { type Address } from 'viem'
+import { type Address, type Chain } from 'viem'
+import { baseSepolia } from 'viem/chains'
+
+// const chain = sepolia
+
+const chain: Chain = {
+  ...baseSepolia,
+  rpcUrls: {
+    ...baseSepolia.rpcUrls,
+    alchemy: {
+      http: ['https://opt-sepolia.g.alchemy.com/v2'],
+      webSocket: ['wss://opt-sepolia.g.alchemy.com/v2'],
+    },
+  },
+}
 
 export const useAlchemyProvider = () => {
   const [provider, setProvider] = useState(

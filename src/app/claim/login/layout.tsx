@@ -1,9 +1,8 @@
-'use client'
-
+import { DemoByMagic } from 'app/DemoByMagic'
 import { BackLanturns } from 'app/claim/BackLanterns'
 import { RedFocus } from 'app/claim/RedFocus'
+import { ANIMATION_INTERVAL } from 'lib/constants'
 import { type PropsWithChildren } from 'react'
-import { ANIMATION_INTERVAL } from 'src/constants'
 
 export default function ClaimLoginLayout({ children }: PropsWithChildren) {
   return (
@@ -20,6 +19,8 @@ export default function ClaimLoginLayout({ children }: PropsWithChildren) {
       />
 
       <div className="z-30 flex flex-1 flex-col items-center">{children}</div>
+
+      <DemoByMagic />
     </>
   )
 }

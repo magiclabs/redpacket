@@ -84,9 +84,7 @@ export function CreatePacketsForm() {
     try {
       const address = await createRedPacket()
 
-      console.log(address)
-
-      push(`/share/${address.slice(2).split('').reverse().join('')}`)
+      push(`/share/${address.slice(2)}`)
     } catch (e) {
       toast.error('Failed to create red packets, please try again.')
       console.error(e)

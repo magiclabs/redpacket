@@ -1,5 +1,5 @@
 import { type Address } from '@alchemy/aa-core'
-import { useWalletContext } from 'context/wallet'
+import { useWalletContext } from 'context/wallet/index.test'
 import RedPacketContract from 'contracts/RedPacket.json'
 import { publicClient } from 'lib/viem/publicClient'
 import { useCallback, useEffect, useState } from 'react'

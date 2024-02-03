@@ -1,3 +1,5 @@
+'use client'
+
 import { motion, type MotionProps } from 'framer-motion'
 import Image, { type ImageProps } from 'next/image'
 

@@ -2,7 +2,7 @@
 
 import { type AlchemyProvider } from '@alchemy/aa-alchemy'
 import { type Address } from '@alchemy/aa-core'
-import { useAlchemyProvider } from 'hooks/useAlchemyProvider'
+import { useAlchemyProvider } from 'hooks/useAlchemyProvider.test'
 import {
   createContext,
   useCallback,
@@ -152,12 +152,12 @@ export const WalletContextProvider = ({
         setScaAddress(await provider.getAddress())
 
         const _walletClient = createWalletClient({
-          chain: provider.rpcClient.chain,
+          // chain: provider.rpcClient.chain,
           transport: custom(provider.rpcClient.transport),
         })
         setWalletClient(_walletClient)
         const _publicClient = createPublicClient({
-          chain: provider.rpcClient.chain,
+          // chain: provider.rpcClient.chain,
           transport: custom(provider.rpcClient.transport),
         })
         setPublicClient(_publicClient)

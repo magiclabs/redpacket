@@ -4,9 +4,9 @@ import { FestivitiesAreOver } from 'app/claim/packets/[claimId]/over/Festivities
 import { RedLantern } from 'app/claim/packets/[claimId]/over/RedLantern'
 import { Button } from 'components/ui/button'
 import { motion } from 'framer-motion'
+import { ANIMATION_INTERVAL } from 'lib/constants'
 import { magic } from 'lib/magic'
 import { useParams, useRouter } from 'next/navigation'
-import { ANIMATION_INTERVAL } from 'src/constants'
 
 export default function Over() {
   const { push } = useRouter()

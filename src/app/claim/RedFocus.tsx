@@ -1,3 +1,5 @@
+'use client'
+
 import { motion, type MotionProps } from 'framer-motion'
 
 export const RedFocus = (props: MotionProps) => {

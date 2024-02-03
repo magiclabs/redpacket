@@ -3,7 +3,7 @@ import Fireworks from '@fireworks-js/react'
 export const RedPacketFireworks = () => {
   return (
     <Fireworks
-      className="h-full w-full"
+      className="absolute inset-0 h-dvh w-full"
       options={{
         hue: {
           min: 0,

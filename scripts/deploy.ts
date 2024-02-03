@@ -9,7 +9,6 @@ import { run } from 'hardhat'
 import { getContract } from 'scripts/fns/getContract'
 import { getAddress } from 'viem'
 import { mnemonicToAccount } from 'viem/accounts'
-import { $ } from 'zx'
 
 const network: NETWORK = 'baseSepolia'
 const file = 'RedPacketFactory.sol'
@@ -44,8 +43,6 @@ async function main() {
     abi,
     bytecode,
     account,
-    // args: [100, address],
-    // value: 100n,
   })
 
   const transaction = await pc.waitForTransactionReceipt({ hash: txHash })
@@ -69,7 +66,7 @@ async function main() {
 
   console.log(`Verifying ...`)
 
-  await $`nr hardhat verify --contract contracts/${file}:${contractName} --network ${network} ${contractAddress} ${address}`
+  // await $`nr hardhat verify --contract contracts/${file}:${contractName} --network ${network} ${contractAddress} ${address}`
 
   console.log(`Verified!!`)
 }

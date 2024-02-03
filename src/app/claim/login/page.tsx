@@ -4,15 +4,15 @@ import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
 import { GTSuper } from 'app/fonts'
 import { motion } from 'framer-motion'
+import { ANIMATION_INTERVAL } from 'lib/constants'
 import { useSearchParams } from 'next/navigation'
-import { ANIMATION_INTERVAL } from 'src/constants'
 
 export default function Claim() {
   const search = useSearchParams()
 
-  const claimId = search.get('claimId')
+  const key = search.get('id')
 
-  if (typeof claimId !== 'string') {
+  if (typeof key !== 'string') {
     throw new Error('claimId is required')
   }
 
@@ -29,7 +29,7 @@ export default function Claim() {
         transition={{ delay: ANIMATION_INTERVAL * 2 }}
       >
         <h2
-          className={`${GTSuper.className} select-none self-center text-3xl sm:text-4xl md:text-[40px]`}
+          className={`${GTSuper.className} mt-5 select-none self-center text-3xl sm:text-4xl md:text-[40px]`}
           style={{
             background: 'linear-gradient(180deg, #FFF 20.02%, #FFACAC 100%)',
             backgroundClip: 'text',
@@ -52,7 +52,7 @@ export default function Claim() {
         }}
         transition={{ delay: ANIMATION_INTERVAL * 3 }}
       >
-        <EmailForm redirectUri={`/claim/packets/${claimId}`} />
+        <EmailForm redirectUri={`/claim/${key}`} />
       </motion.div>
     </>
   )

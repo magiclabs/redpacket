@@ -18,17 +18,20 @@ import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { isServer } from 'utils/isServer'
 import { formatEther, type Address } from 'viem'
 import { useReadContracts } from 'wagmi'
 
 export default function Home() {
   const { key } = useParams<{ key: string }>()
 
-  const address: Address = `0x${key.split('').reverse().join('')}`
+  const address: Address = `0x${key}`
 
   const [, copyToClipboard] = useCopyToClipboard()
 
-  const link = `${URL.replace(`https://`, '')}/claim/${key}`
+  const link = isServer()
+    ? `${URL.replace(`https://`, '')}/claim/${key}`
+    : `${location.host.replace(`https://`, '')}/claim/${key}`
 
   const [copied, setCopied] = useState(false)
 

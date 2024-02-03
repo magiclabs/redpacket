@@ -23,7 +23,7 @@ export function Web3ModalProvider({ children, initialState }: Props) {
     <WagmiProvider
       config={wagmiConfig}
       initialState={initialState}
-      reconnectOnMount
+      // reconnectOnMount
     >
       {children}
     </WagmiProvider>

@@ -1,6 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
 import { Input } from 'components/ui/input'
 import { magic } from 'lib/magic'
@@ -13,6 +14,7 @@ const formSchema = z.object({
     return (
       typeof v === 'string' &&
       z.string().email().safeParse(v).success &&
+      // Prevent user from entering a "+" in their email (aliasing)
       !v.includes('+')
     )
   }),
@@ -60,10 +62,14 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
       />
 
       <Button
-        disabled={!isValid}
+        disabled={!isValid || isSubmitting}
         className="absolute right-[6px] h-10 w-20 self-center text-base font-semibold"
       >
-        Log in
+        {isSubmitting ? (
+          <Spinner className="aspect-square h-5 w-5" />
+        ) : (
+          <>Log in</>
+        )}
       </Button>
     </form>
   )
