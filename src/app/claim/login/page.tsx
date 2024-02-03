@@ -2,11 +2,12 @@
 
 import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
-import BackLanturns from 'app/claim/BackLanterns'
+import { BackLanturns } from 'app/claim/BackLanterns'
 import { RedFocus } from 'app/claim/RedFocus'
 import { GTSuper } from 'app/fonts'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
+import { ANIMATION_INTERVAL } from 'src/constants'
 
 export default function Claim() {
   const search = useSearchParams()
@@ -19,25 +20,22 @@ export default function Claim() {
 
   return (
     <>
-      <motion.div
-        className="z-30"
+      <RedPacket
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <RedPacket />
-      </motion.div>
+        // transition={{ duration: 0.3 }}
+      />
 
       <BackLanturns
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: ANIMATION_INTERVAL }}
       />
 
       <RedFocus
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 1 }}
+        transition={{ duration: 0.3, delay: ANIMATION_INTERVAL * 2 }}
       />
 
       <motion.div
@@ -46,7 +44,7 @@ export default function Claim() {
         animate={{
           opacity: 1,
         }}
-        transition={{ delay: 1 }}
+        transition={{ delay: ANIMATION_INTERVAL * 2 }}
       >
         <h2
           className={`${GTSuper.className} select-none self-center text-3xl sm:text-4xl md:text-[40px]`}
@@ -70,7 +68,7 @@ export default function Claim() {
         animate={{
           opacity: 1,
         }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: ANIMATION_INTERVAL * 3 }}
       >
         <EmailForm redirectUri={`/claim/packets/${claimId}`} />
       </motion.div>

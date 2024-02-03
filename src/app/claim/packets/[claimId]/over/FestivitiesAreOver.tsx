@@ -1,8 +1,8 @@
-import Image, { type ImageProps } from 'next/image'
+import { MotionImage, type MotionImageProps } from 'components/MotionImage'
 
-export function FestivitiesAreOver(props: Omit<ImageProps, 'src' | 'alt'>) {
+export function FestivitiesAreOver(props: MotionImageProps) {
   return (
-    <Image
+    <MotionImage
       priority
       key="red-packet"
       className="h-[34px] w-[378px] select-none"

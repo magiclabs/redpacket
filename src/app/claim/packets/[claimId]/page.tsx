@@ -1,8 +1,6 @@
 'use client'
 
 import { RedPacket } from 'app/RedPacket'
-import BackLanturns from 'app/claim/BackLanterns'
-import { RedFocus } from 'app/claim/RedFocus'
 import { Progress } from 'components/ui/progress'
 import { motion } from 'framer-motion'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn'
@@ -35,13 +33,10 @@ export default function ClaimPacket() {
 
   return (
     <>
-      <BackLanturns />
-      <RedFocus />
-
       <div className="flex flex-1 flex-col items-center justify-center">
         <div
           role="button"
-          className="relative z-50 cursor-pointer transition-all duration-300 ease-in-out hover:translate-y-[-8px] hover:transform"
+          className="relative cursor-pointer transition-all duration-300 ease-in-out hover:translate-y-[-8px] hover:transform"
           onClick={handleOpen}
         >
           <motion.div
@@ -72,7 +67,7 @@ export default function ClaimPacket() {
           </span>
 
           <div className="mt-2">
-            <span className="font-mono font-medium leading-normal tracking-[-0.408px] text-black">
+            <span className="font-mono font-medium leading-normal tracking-[-0.408px] text-white">
               1.00000 ETH
             </span>{' '}
             <span className="text-white opacity-70">/ 1 ETH up for grabs</span>
