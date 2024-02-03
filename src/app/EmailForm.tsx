@@ -20,7 +20,11 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-export function EmailForm() {
+type Props = {
+  redirectUri?: string
+}
+
+export function EmailForm({ redirectUri = '/create' }: Props) {
   const {
     register,
     formState: { isValid, isSubmitting },
@@ -41,7 +45,7 @@ export function EmailForm() {
 
     console.log({ isConnected })
 
-    push(`/create`)
+    push(redirectUri)
   })
 
   return (
