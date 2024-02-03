@@ -1,11 +1,12 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { magic } from 'lib/magic'
+import { isServer } from 'utils/isServer'
 
 export const useIsLoggedIn = () => {
-  const { data: isLoggedIn } = useSuspenseQuery({
+  const { data: isLoggedIn, ...rest } = useQuery({
     queryKey: ['is-logged-in'],
     queryFn: async () => {
-      if (!magic) {
+      if (isServer()) {
         console.log('Called server side')
         return false
       }
@@ -14,5 +15,5 @@ export const useIsLoggedIn = () => {
     },
   })
 
-  return { isLoggedIn }
+  return { isLoggedIn, ...rest }
 }

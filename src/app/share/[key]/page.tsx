@@ -150,7 +150,7 @@ export default function Home() {
         <div className="mt-14">
           <Progress
             value={isSuccess ? (remainingBalance / totalBalance) * 100 : 0}
-            className="overflow-auto shadow-[0px_3px_10px_2px_rgba(255,52,52,0.30)]"
+            className="overflow-auto shadow-[0px_3px_10px_2px_rgba(255,52,52,0.30)] duration-1000"
           />
         </div>
 

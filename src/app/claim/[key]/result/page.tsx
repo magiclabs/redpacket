@@ -20,7 +20,7 @@ export default function Lucky() {
     mutationFn: async () => {
       await magic.user.logout()
 
-      push(`/claim/login?id=${key}`)
+      await push(`/claim/login?id=${key}`)
     },
   })
 

@@ -3,8 +3,11 @@
 import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
 import { GTSuper } from 'app/fonts'
+import { Button } from 'components/ui/button'
 import { motion } from 'framer-motion'
+import { useIsLoggedIn } from 'hooks/useIsLoggedIn'
 import { ANIMATION_INTERVAL } from 'lib/constants'
+import { magic } from 'lib/magic'
 import { useSearchParams } from 'next/navigation'
 
 export default function Claim() {
@@ -12,8 +15,12 @@ export default function Claim() {
 
   const key = search.get('id')
 
+  const { isLoggedIn } = useIsLoggedIn()
+
+  console.log({ isLoggedIn })
+
   if (typeof key !== 'string') {
-    throw new Error('claimId is required')
+    throw new Error('key is required')
   }
 
   return (
@@ -54,6 +61,14 @@ export default function Claim() {
       >
         <EmailForm redirectUri={`/claim/${key}`} />
       </motion.div>
+
+      <Button
+        onClick={async () => {
+          await magic.user.logout()
+        }}
+      >
+        Logout
+      </Button>
     </>
   )
 }
