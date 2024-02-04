@@ -9,6 +9,7 @@ import { run } from 'hardhat'
 import { getContract } from 'scripts/fns/getContract'
 import { getAddress } from 'viem'
 import { mnemonicToAccount } from 'viem/accounts'
+import { $ } from 'zx'
 
 const network: NETWORK = 'mumbai'
 const file = 'RedPacketFactory.sol'
@@ -17,6 +18,10 @@ const contractName = 'RedPacketFactory'
 const seedPhrase = process.env.TEST_SEED
 
 async function main() {
+  // Cleanup
+  await $`rm -rf ./artifacts`
+  await $`rm -rf ./cache`
+
   await run('compile')
 
   const wc = getWalletClient(network)
@@ -68,7 +73,8 @@ async function main() {
 
   // await $`nr hardhat verify --contract contracts/${file}:${contractName} --network ${network} ${contractAddress} ${address}`
 
-  console.log(`Verified!!`)
+  await $`rm -rf ./src/contracts`
+  await $`cp -rf ./artifacts/contracts ./src/contracts`
 }
 
 main().catch((error) => {

@@ -1,6 +1,6 @@
 import { type Address } from '@alchemy/aa-core'
 import { useWalletContext } from 'context/wallet'
-import RedPacketContract from 'contracts/RedPacket.json'
+import RedPacketContract from 'contracts/RedPacket.sol/RedPacket.json'
 import { publicClient } from 'lib/viem/publicClient'
 import { useCallback, useEffect, useState } from 'react'
 import { encodeFunctionData, getContract, type Hash } from 'viem'

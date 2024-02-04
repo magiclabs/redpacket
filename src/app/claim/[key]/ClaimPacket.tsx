@@ -7,7 +7,6 @@ import {
 } from '@alchemy/aa-alchemy'
 import {
   createBundlerClient,
-  type BatchUserOperationCallData,
   type UserOperationCallData,
 } from '@alchemy/aa-core'
 // @ts-ignore
@@ -164,12 +163,12 @@ export function ClaimPacket() {
 
     const contractAddress: Address = `0x${key}`
 
-    const uo: UserOperationCallData | BatchUserOperationCallData = {
+    const uo: UserOperationCallData = {
       target: contractAddress,
       data: encodeFunctionData({
         abi: REDPACKET_ABI,
         functionName: 'claim',
-        args: [publicAddress],
+        // args: [publicAddress],
       }),
       // value: 50000n,
     }

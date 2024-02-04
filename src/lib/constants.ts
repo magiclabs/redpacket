@@ -1,5 +1,5 @@
-import RedPacket from 'contracts/RedPacket.json'
-import RedPacketFactory from 'contracts/RedPacketFactory.json'
+import RedPacket from 'contracts/RedPacket.sol/RedPacket.json'
+import RedPacketFactory from 'contracts/RedPacketFactory.sol/RedPacketFactory.json'
 import { isProd } from 'utils/isProd'
 import { base, baseSepolia, polygonMumbai } from 'viem/chains'
 
