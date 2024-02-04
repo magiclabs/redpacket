@@ -15,7 +15,7 @@ import { cn } from 'lib/utils'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { formatEther } from 'viem'
+import { formatEther, parseEther } from 'viem'
 import { useAccount, useBalance } from 'wagmi'
 import { z } from 'zod'
 
@@ -27,17 +27,35 @@ export const DEFAULT_PACKETS = 10
 export const DEFAULT_ETH = 0.02
 
 const formSchema = z.object({
-  packets: z
-    .number()
-    .int()
-    .max(MAXIMUM_PACKETS, {
-      message: `Total packets must be at most ${MAXIMUM_PACKETS}.`,
-    })
-    .min(MINIMUM_PACKETS, {
-      message: `Total packets must be at least ${MINIMUM_PACKETS}.`,
-    }),
-  eth: z.number().min(MINIMUM_ETH, {
-    message: `Total ETH must be at least ${MINIMUM_ETH}.`,
+  packets: z.custom<string>((v) => {
+    if (typeof v !== 'string') {
+      return false
+    }
+
+    if (Number(v) < MINIMUM_PACKETS) {
+      return false
+    }
+
+    if (Number(v) > MAXIMUM_PACKETS) {
+      return false
+    }
+
+    return true
+  }),
+  eth: z.custom<string>((v) => {
+    if (typeof v !== 'string') {
+      return false
+    }
+
+    if (Number(v) < MINIMUM_ETH) {
+      return false
+    }
+
+    if (!parseEther(v)) {
+      return false
+    }
+
+    return true
   }),
 })
 
@@ -48,11 +66,11 @@ export function CreatePacketsForm() {
   const { data: balance } = useBalance({ address })
 
   const defaultValues = {
-    packets: DEFAULT_PACKETS,
-    eth: Math.min(
+    packets: `${DEFAULT_PACKETS}`,
+    eth: `${Math.min(
       MINIMUM_ETH,
       balance?.value ? Number(formatEther(balance.value)) : DEFAULT_ETH,
-    ),
+    )}`,
   }
 
   const form = useForm<FormValues>({
@@ -63,16 +81,22 @@ export function CreatePacketsForm() {
   const {
     handleSubmit,
     register,
-    formState: { isValid },
+    formState: { isValid: isFormValid },
     setValue,
     watch,
   } = form
 
-  const eth = watch('eth')
-  const packets = watch('packets')
+  const eth = +watch('eth')
+  const packets = +watch('packets')
+
+  const isInsufficientFunds = balance?.value
+    ? Number(formatEther(balance.value)) < +eth
+    : false
+
+  const isValid = isFormValid && !isInsufficientFunds
 
   const { createRedPacket, isWaitingApproval, isGenerating } =
-    useCreateRedPacket({ eth, packets })
+    useCreateRedPacket({ eth, packets, isValid })
 
   const isLoading = isWaitingApproval || isGenerating
 
@@ -90,10 +114,6 @@ export function CreatePacketsForm() {
       console.error(e)
     }
   })
-
-  const isInsufficientFunds = balance?.value
-    ? Number(formatEther(balance.value)) < eth
-    : false
 
   const { ethPrice } = useETHPrice()
 
@@ -118,7 +138,7 @@ export function CreatePacketsForm() {
               disabled={packets <= MINIMUM_PACKETS}
               onClick={() => {
                 if (packets > MINIMUM_PACKETS) {
-                  setValue('packets', packets - 1)
+                  setValue('packets', `${packets - 1}`)
                 }
               }}
             >
@@ -129,11 +149,8 @@ export function CreatePacketsForm() {
               disabled={isLoading}
               {...register('packets', {
                 required: true,
-                valueAsNumber: true,
-                min: MINIMUM_PACKETS,
-                max: MAXIMUM_PACKETS,
               })}
-              type="number"
+              maxLength={4}
               id="packets"
               inputMode="numeric"
               defaultValue={DEFAULT_PACKETS}
@@ -148,7 +165,7 @@ export function CreatePacketsForm() {
               )}
               onClick={() => {
                 if (packets < MAXIMUM_PACKETS) {
-                  setValue('packets', Number(packets) + 1)
+                  setValue('packets', `${packets + 1}`)
                 }
               }}
             >
@@ -173,9 +190,9 @@ export function CreatePacketsForm() {
               id="eth"
               {...register('eth', {
                 required: true,
-                valueAsNumber: true,
-                min: MINIMUM_ETH,
+                maxLength: 9,
               })}
+              maxLength={9}
               inputMode="numeric"
               defaultValue={defaultValues.eth}
             />
@@ -186,11 +203,11 @@ export function CreatePacketsForm() {
         </div>
 
         <div className="mt-1 flex w-full justify-end pr-1">
-          {!ethPrice || isNaN(+ethPrice * eth) ? (
+          {!ethPrice || isNaN(+ethPrice * +eth) ? (
             <div className="my-0.5 h-4 w-10 animate-pulse rounded-full bg-gray-500" />
           ) : (
             <span className="text-right text-sm tabular-nums opacity-60">
-              ≈ ${(+ethPrice * eth).toFixed(2)}
+              ≈ ${(+ethPrice * +eth).toFixed(2)}
             </span>
           )}
         </div>

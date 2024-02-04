@@ -5,6 +5,7 @@ import { DemoByMagic } from 'app/DemoByMagic'
 import { WalletDropdown } from 'app/create/WalletDropdown'
 import { GTSuper } from 'app/fonts'
 import { RedDragon } from 'app/share/[key]/RedDragon'
+import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { BackIcon } from 'components/icons/Backicon'
 import { CheckIcon } from 'components/icons/CheckIcon'
 import { ExternalIcon } from 'components/icons/ExternalIcon'
@@ -13,14 +14,14 @@ import { Input } from 'components/ui/input'
 import { Progress } from 'components/ui/progress'
 import { CHAINS } from 'config/client'
 import { URL } from 'config/url'
-import { CURRENT_CHAIN_KEY, REDPACKET_ABI } from 'lib/constants'
+import { CURRENT_CHAIN_KEY } from 'lib/constants'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { isProd } from 'utils/isProd'
 import { isServer } from 'utils/isServer'
-import { formatEther, type Address } from 'viem'
-import { useReadContracts } from 'wagmi'
+import { type Address } from 'viem'
 
 export default function Home() {
   const { key } = useParams<{ key: string }>()
@@ -37,36 +38,13 @@ export default function Home() {
 
   const { push } = useRouter()
 
-  const contract = {
-    address,
-    abi: REDPACKET_ABI,
-  }
-
-  const { data, isSuccess } = useReadContracts({
-    contracts: [
-      { ...contract, functionName: `totalClaimCount` },
-      { ...contract, functionName: `getClaimedCount` },
-      { ...contract, functionName: `totalBalance` },
-      { ...contract, functionName: `getCurrentBalance` },
-      { ...contract, functionName: `getClaimedAddresses` },
-      { ...contract, functionName: `expired` },
-      { ...contract, functionName: `creator` },
-    ],
-  })
-
-  const totalClaimCount = isSuccess ? Number(data?.[0].result) : 0
-
-  const totalBalance = isSuccess
-    ? Number(formatEther(data?.[2].result as bigint))
-    : 0
-
-  const remainingPackets = isSuccess
-    ? Number((data[0].result as bigint) - (data[1].result as bigint))
-    : 0
-
-  const remainingBalance = isSuccess
-    ? Number(formatEther(BigInt(Number(data[2].result))))
-    : 0
+  const {
+    totalBalance,
+    totalClaimCount,
+    remainingBalance,
+    remainingPackets,
+    isSuccess,
+  } = useRedPacket({ contractAddress: address })
 
   return (
     <main
@@ -131,7 +109,7 @@ export default function Home() {
                 '0px 4px 20px 0px rgba(0, 0, 0, 0.10), 0px 4px 36px -8px rgba(0, 0, 0, 0.25), 0px 3px 10px 2px rgba(255, 52, 52, 0.30)',
             }}
             onClick={async () => {
-              const text = `https://${link}`
+              const text = `http${isProd() ? 's' : ''}://${link}`
               await copyToClipboard(text)
               setCopied(true)
               toast.success('Link copied to clipboard')
@@ -159,7 +137,9 @@ export default function Home() {
           <div className="flex items-center gap-3 text-base">
             <span className="">{remainingPackets} packets</span>
             <div className="h-1 w-1 rounded-full bg-white opacity-30" />
-            <span className="">{remainingBalance} ETH</span>
+            <span className="">
+              {parseFloat(remainingBalance.toFixed(5))} ETH
+            </span>
           </div>
         </div>
 

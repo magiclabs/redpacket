@@ -14,6 +14,7 @@ import {
 } from '@alchemy/aa-core'
 import { MagicSigner } from '@alchemy/aa-signers/magic'
 import { RedPacket } from 'app/RedPacket'
+import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { Progress } from 'components/ui/progress'
 import { CHAINS } from 'config/client'
 import { motion } from 'framer-motion'
@@ -34,6 +35,12 @@ const chain = CURRENT_CHAIN
 export function ClaimPacket() {
   const { push } = useRouter()
   const { key } = useParams<{ key: string }>()
+
+  const address: Address = `0x${key}`
+
+  const { remainingBalance, totalBalance } = useRedPacket({
+    contractAddress: address,
+  })
 
   const handleOpen = async () => {
     const owner = new MagicSigner({ inner: magic })
@@ -262,16 +269,19 @@ export function ClaimPacket() {
 
           <div className="mt-2 text-white">
             <span className="font-mono font-medium leading-normal tracking-[-0.408px]">
-              {Number(1).toFixed(5)} ETH
+              {parseFloat(remainingBalance.toFixed(5))} ETH
             </span>
-            <span className="opacity-70">{` / 1 ETH up for grabs`}</span>
+            <span className="opacity-70">{` / ${totalBalance} ETH up for grabs`}</span>
           </div>
 
           <Progress
-            value={100}
-            className="mt-[19px] w-full"
+            value={
+              remainingBalance > 0 ? (remainingBalance / totalBalance) * 100 : 0
+            }
+            // max={100}
+            className="mt-5 w-full"
             style={{
-              background: 'linear-gradient(90deg, #DF0005 0%, #FF3C40 100%)',
+              // background: 'linear-gradient(90deg, #DF0005 0%, #FF3C40 100%)',
               boxShadow: '0px 3px 10px 2px rgba(255, 52, 52, 0.30)',
             }}
           />

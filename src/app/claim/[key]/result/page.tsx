@@ -3,6 +3,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { RedEthereum } from 'app/claim/[key]/result/RedEthereum'
 import { RedPacketFireworks } from 'app/claim/[key]/result/RedPacketFireworks'
+import { useETHPrice } from 'app/create/useETHPrice'
+import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { Spinner } from 'components/Spinner'
 import { SpakleIcon } from 'components/icons/SpakleIcon'
 import { Button } from 'components/ui/button'
@@ -11,10 +13,16 @@ import { ANIMATION_INTERVAL } from 'lib/constants'
 import { magic } from 'lib/magic'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { type Address } from 'viem'
 
 export default function Lucky() {
   const { push } = useRouter()
   const { key } = useParams<{ key: string }>()
+
+  const contractAddress: Address = `0x${key}`
+
+  const { ethPrice } = useETHPrice()
+  const { totalBalance } = useRedPacket({ contractAddress })
 
   const { mutateAsync: handleLogout, isPending: isLoggingOut } = useMutation({
     mutationFn: async () => {
@@ -89,7 +97,11 @@ export default function Lucky() {
               Happy Net Year! <br />
               You won 0.0015 ETH ($3.43) <br />
               <span className="font-normal opacity-70">
-                Total prize pool: 1 ETH ($2,331.63)
+                Total prize pool:{' '}
+                {totalBalance ? parseFloat(totalBalance.toFixed(5)) : 0} ETH
+                {` `}
+                {ethPrice &&
+                  `($${parseFloat((totalBalance * +ethPrice).toFixed(2)).toLocaleString()})`}
               </span>
             </motion.p>
 

@@ -54,7 +54,7 @@ export function WalletDropdown() {
               'radial-gradient(66.02% 77.37% at 31.25% 32.81%, #FF2227 0%, #A30128 100%)',
           }}
         />
-        {Number(formatEther(balance?.value)).toFixed(5)} ETH
+        {parseFloat(Number(formatEther(balance?.value)).toFixed(5))} ETH
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"

@@ -5,7 +5,6 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
-import { type FormValues } from 'app/create/CreatePacketsForm'
 import { CHAINS } from 'config/client'
 import { CURRENT_CHAIN_KEY, REDPACKET_FACTORY_ABI } from 'lib/constants'
 import { publicClient } from 'lib/viem/publicClient'
@@ -17,7 +16,13 @@ import {
 } from 'viem'
 import { useAccount, useSimulateContract, useWriteContract } from 'wagmi'
 
-export function useCreateRedPacket({ eth, packets }: FormValues) {
+type Params = {
+  isValid: boolean
+  eth: number
+  packets: number
+}
+
+export function useCreateRedPacket({ eth, packets, isValid }: Params) {
   const { writeContractAsync, isPending } = useWriteContract()
 
   const { address } = useAccount()
@@ -27,7 +32,10 @@ export function useCreateRedPacket({ eth, packets }: FormValues) {
     abi: REDPACKET_FACTORY_ABI,
     functionName: 'createRedPacket',
     args: [packets],
-    value: parseEther(`${eth}`),
+    value: isValid ? parseEther(`${eth}`) : undefined,
+    query: {
+      enabled: isValid,
+    },
   })
 
   const client = useQueryClient()

@@ -7,6 +7,7 @@ import { Input } from 'components/ui/input'
 import { magic } from 'lib/magic'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { isLocal } from 'utils/isLocal'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -15,7 +16,7 @@ const formSchema = z.object({
       typeof v === 'string' &&
       z.string().email().safeParse(v).success &&
       // Prevent user from entering a "+" in their email (aliasing)
-      !v.includes('+')
+      (isLocal() ? true : !v.includes('+'))
     )
   }),
 })
