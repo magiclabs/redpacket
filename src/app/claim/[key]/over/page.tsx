@@ -24,7 +24,7 @@ export default function Over() {
   }
 
   return (
-    <div className="flex w-[400px] flex-col items-center">
+    <div className="z-30 flex w-[400px] flex-col items-center">
       <RedLantern />
 
       <FestivitiesAreOver

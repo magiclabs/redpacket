@@ -14,8 +14,6 @@ import {
 } from '@alchemy/aa-core'
 import { MagicSigner } from '@alchemy/aa-signers/magic'
 import { RedPacket } from 'app/RedPacket'
-import { BackLanturns } from 'app/claim/BackLanterns'
-import { RedFocus } from 'app/claim/RedFocus'
 import { Progress } from 'components/ui/progress'
 import { CHAINS } from 'config/client'
 import { motion } from 'framer-motion'
@@ -229,22 +227,19 @@ export function ClaimPacket() {
 
   return (
     <>
-      <BackLanturns />
-      <RedFocus />
-
       <div className="z-10 flex flex-1 flex-col items-center justify-center">
         <div
           role="button"
           className="relative z-50 cursor-pointer transition-all duration-300 ease-in-out hover:translate-y-[-8px] hover:transform"
           onClick={handleOpen}
         >
-          <motion.div
+          <RedPacket
+            className="rotate-0 md:h-[480px] md:w-[480px]"
             initial={{ scale: 0.55, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.7, ease: 'easeInOut' }}
-          >
-            <RedPacket className="h-[480px] w-[480px] rotate-0" />
-          </motion.div>
+            transition={{ duration: 0.7 }}
+          />
+
           <motion.div
             className="pointer-events-none absolute left-1/2 top-1/2 inline-flex h-14 shrink-0 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-xl border border-solid border-[rgba(255,255,255,0.20)] px-10 py-[19px] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.14),0px_6px_44px_8px_rgba(0,0,0,0.28)] backdrop-blur [background:rgba(255,255,255,0.08)]"
             initial={{ opacity: 0 }}
