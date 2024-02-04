@@ -7,11 +7,10 @@ import {
 } from '@alchemy/aa-alchemy'
 import {
   createBundlerClient,
-  createSmartAccountClient,
-  createSmartAccountClientFromExisting,
   type BatchUserOperationCallData,
   type UserOperationCallData,
 } from '@alchemy/aa-core'
+// @ts-ignore
 import { MagicSigner } from '@alchemy/aa-signers/magic'
 import { RedPacket } from 'app/RedPacket'
 import { useRedPacket } from 'app/share/[key]/useRedPacket'
@@ -59,7 +58,9 @@ export function ClaimPacket() {
     //   chain,
     // })
 
-    const { publicAddress } = await magic.user.getInfo()
+    const info = await magic.user.getInfo()
+
+    const publicAddress = info.publicAddress as Address
 
     console.log({ publicAddress })
 
@@ -115,48 +116,33 @@ export function ClaimPacket() {
     //   },
     // })
 
-    const c1 = createSmartAccountClient({
-      transport: http(ALCHEMY_RPC_URL[CURRENT_CHAIN_KEY]),
-      chain,
-      account,
-      opts: {
-        feeOptions: {
-          maxPriorityFeePerGas: {
-            min: 1575000000n,
-          },
-        },
-      },
-    })
-
     const initCode = await account.getInitCode()
 
-    console.log({ initCode })
+    console.log({ initCode, CURRENT_CHAIN_KEY })
 
-    const cl = await createLightAccountAlchemyClient({
+    const client = await createLightAccountAlchemyClient({
       rpcUrl: ALCHEMY_RPC_URL[CURRENT_CHAIN_KEY],
       owner,
+      chain,
       // useSimulation: true,
       // accountAddress: addr,
-      initCode,
-      accountAddress: account.address,
-      chain,
+      // initCode,
+      // accountAddress: account.address,
       // entrypointAddress: getDefaultEntryPointAddress(chain),
       // factoryAddress: getDefaultLightAccountFactoryAddress(chain),
       // useSimulation: true,
       // opts: {
       //   feeOptions: {
       //     preVerificationGas: {
-      //       min: 1500000n,
+      //       min: 44076,
+      //       percentage: 1,
       //     },
       //   },
       // },
-      ...(isProd()
-        ? {
-            gasManagerConfig: {
-              policyId: ALCHEMY_GASMANAGER_POLICY_ID,
-            },
-          }
-        : {}),
+      gasManagerConfig: {
+        policyId: ALCHEMY_GASMANAGER_POLICY_ID[CURRENT_CHAIN_KEY],
+      },
+      ...(isProd() ? {} : {}),
     })
 
     const c = createBundlerClient({
@@ -164,11 +150,11 @@ export function ClaimPacket() {
       chain,
     })
 
-    const client = createSmartAccountClientFromExisting({
-      // @ts-ignore
-      client: c,
-      account,
-    })
+    // const client = createSmartAccountClientFromExisting({
+    //   // @ts-ignore
+    //   client: c,
+    //   account,
+    // })
 
     console.log({ client })
 
@@ -179,19 +165,21 @@ export function ClaimPacket() {
       data: encodeFunctionData({
         abi: REDPACKET_ABI,
         functionName: 'claim',
+        args: [],
       }),
-      // value: 8615874391696200n,
+      // value: 50000n,
     }
 
-    // const elligibility = await client.checkGasSponsorshipEligibility({
-    //   uo,
-    //   account: client.account,
-    // })
+    const elligibility = await client.checkGasSponsorshipEligibility({
+      uo,
+      // account: client.account,
+    })
 
-    // console.log({ elligibility })
+    console.log({ elligibility })
 
     const { hash, request } = await client.sendUserOperation({
       uo,
+      overrides: elligibility ? undefined : { paymasterAndData: '0x' },
     })
 
     // const { hash, request } = await c.sendUserOperation({
@@ -204,6 +192,14 @@ export function ClaimPacket() {
     const tx = await client.waitForUserOperationTransaction({ hash })
 
     console.log(CHAINS[CURRENT_CHAIN_KEY].getTxURL(tx))
+
+    const txHash = await client.sendTransaction({
+      chain,
+      to: publicAddress,
+      value: await client.getBalance({ address: client.getAddress() }),
+    })
+
+    console.log(CHAINS[CURRENT_CHAIN_KEY].getTxURL(txHash))
 
     console.table([
       {
@@ -237,11 +233,11 @@ export function ClaimPacket() {
       <div className="z-10 flex flex-1 flex-col items-center justify-center">
         <div
           role="button"
-          className="relative z-50 cursor-pointer transition-all duration-300 ease-in-out hover:translate-y-[-8px] hover:transform"
+          className="relative z-50 aspect-square w-full cursor-pointer transition-all duration-300 ease-in-out hover:translate-y-[-8px] hover:transform"
           onClick={handleOpen}
         >
           <RedPacket
-            className="rotate-0 md:h-[480px] md:w-[480px]"
+            className="h-full w-full rotate-0 md:h-[480px] md:w-[480px]"
             initial={{ scale: 0.55, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.7 }}

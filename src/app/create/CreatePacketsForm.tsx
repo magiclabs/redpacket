@@ -19,7 +19,7 @@ import { formatEther, parseEther } from 'viem'
 import { useAccount, useBalance } from 'wagmi'
 import { z } from 'zod'
 
-export const MAXIMUM_PACKETS = 999
+export const MAXIMUM_PACKETS = 9999
 export const MINIMUM_PACKETS = 1
 export const MINIMUM_ETH = 0.001
 

@@ -20,7 +20,7 @@ export const wagmiConfig = defaultWagmiConfig({
     name: 'Red Packet',
     description: 'Red Packet',
     url: URL,
-    icons: ['https://avatars.githubusercontent.com/u/37784886'],
+    icons: [`${URL}/apple-icon.png`],
   },
   ssr: true,
   storage: createStorage({

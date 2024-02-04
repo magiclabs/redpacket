@@ -26,7 +26,7 @@ import { type Address } from 'viem'
 export default function Home() {
   const { key } = useParams<{ key: string }>()
 
-  const address: Address = `0x${key}`
+  const contractAddress: Address = `0x${key}`
 
   const [, copyToClipboard] = useCopyToClipboard()
 
@@ -44,7 +44,7 @@ export default function Home() {
     remainingBalance,
     remainingPackets,
     isSuccess,
-  } = useRedPacket({ contractAddress: address })
+  } = useRedPacket({ contractAddress })
 
   return (
     <main
@@ -158,7 +158,7 @@ export default function Home() {
             className="h-10 flex-1 gap-2 bg-[#FFFFFF1F] hover:bg-[#FFFFFF33]"
           >
             <a
-              href={`${CHAINS[CURRENT_CHAIN_KEY].getAccountURL(address)}`}
+              href={`${CHAINS[CURRENT_CHAIN_KEY].getAccountURL(contractAddress)}`}
               target="_blank"
               rel="noreferrer"
             >

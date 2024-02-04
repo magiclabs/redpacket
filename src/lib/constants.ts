@@ -8,7 +8,10 @@ export const REDPACKET_ABI = RedPacket.abi
 
 export const ANIMATION_INTERVAL = 0.5
 
-export const ALCHEMY_GASMANAGER_POLICY_ID = `79f1a5ce-71ac-46ec-b026-2e17b7015656`
+export const ALCHEMY_GASMANAGER_POLICY_ID = {
+  base: ``,
+  mumbai: `652ddbb1-2159-4926-8ea4-1effaa2b7658`,
+} as const
 
 export const ALCHEMY_RPC_URL = {
   base: `https://base-mainnet.g.alchemy.com/v2/mgAiAkPBUrNakqSTikVs4IYvve4AVh07`,
@@ -16,7 +19,7 @@ export const ALCHEMY_RPC_URL = {
   mumbai: `https://polygon-mumbai.g.alchemy.com/v2/Sj_KlZV6R-XvaKewU9KTuSOvZXVNSL4j`,
 } as const
 
-export const CURRENT_CHAIN_KEY = isProd() ? 'base' : 'baseSepolia'
+export const CURRENT_CHAIN_KEY = isProd() ? 'base' : 'mumbai'
 
 export const CURRENT_CHAIN = (
   {

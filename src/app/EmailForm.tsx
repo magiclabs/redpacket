@@ -1,6 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQueryClient } from '@tanstack/react-query'
 import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
 import { Input } from 'components/ui/input'
@@ -39,6 +40,8 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
 
   const { push } = useRouter()
 
+  const client = useQueryClient()
+
   const onSubmit = handleSubmit(async ({ email }) => {
     if (isSubmitting) return
 
@@ -46,7 +49,7 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
 
     const isConnected = await magic.user.isLoggedIn()
 
-    console.log({ isConnected })
+    await client.setQueryData(['is-logged-in'], isConnected)
 
     await push(redirectUri)
   })
