@@ -1,6 +1,6 @@
 'use client'
 
-import { useWalletContext } from 'context/wallet/index.test'
+import { useWalletContext } from 'context/wallet'
 import { useCallback, useState } from 'react'
 
 export default function Login() {

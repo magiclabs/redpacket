@@ -1,5 +1,5 @@
 import { type Address } from '@alchemy/aa-core'
-import { useWalletContext } from 'context/wallet/index.test'
+import { useWalletContext } from 'context/wallet'
 import RedPacketContract from 'contracts/RedPacket.json'
 import { publicClient } from 'lib/viem/publicClient'
 import { useCallback, useEffect, useState } from 'react'
@@ -10,7 +10,7 @@ type useRedPacketProps = {
 }
 
 export function useRedPacket({ contractAddress }: useRedPacketProps) {
-  const { provider, scaAddress } = useWalletContext()
+  const { client, scaAddress } = useWalletContext()
   const [loading, setLoading] = useState<boolean>(true)
   const [isClaiming, setIsClaiming] = useState<boolean>(false)
   const [expired, setExpired] = useState<boolean>(false)
@@ -26,7 +26,7 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
   const [isCreator, setIsCreator] = useState<boolean>(false)
 
   const fetchContractData = useCallback(async () => {
-    if (contractAddress && provider) {
+    if (contractAddress && client) {
       const contractInstance = getContract({
         address: `0x${contractAddress}`,
         abi: RedPacketContract.abi,
@@ -69,27 +69,29 @@ export function useRedPacket({ contractAddress }: useRedPacketProps) {
       }
       setLoading(false)
     }
-  }, [contractAddress, provider, scaAddress])
+  }, [contractAddress, client, scaAddress])
 
   useEffect(() => {
     fetchContractData()
   }, [fetchContractData])
 
   async function handleClaim() {
-    if (!provider) {
+    if (!client) {
       throw new Error('Provider not initialized')
     }
     setIsClaiming(true)
-    const uoHash = await provider.sendUserOperation({
-      target: `0x${contractAddress}`,
-      data: encodeFunctionData({
-        abi: RedPacketContract.abi,
-        functionName: 'claim',
-      }),
+    const { hash } = await client.sendUserOperation({
+      uo: {
+        target: `0x${contractAddress}`,
+        data: encodeFunctionData({
+          abi: RedPacketContract.abi,
+          functionName: 'claim',
+        }),
+      },
     })
     let txnHash: Hash
     try {
-      txnHash = await provider.waitForUserOperationTransaction(uoHash.hash)
+      txnHash = await client.waitForUserOperationTransaction({ hash })
       setClaimTxnHash(txnHash)
       fetchContractData()
     } catch (e) {

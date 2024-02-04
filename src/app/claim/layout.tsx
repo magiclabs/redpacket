@@ -18,7 +18,7 @@ export default function ClaimLayout({ children }: PropsWithChildren) {
         transition={{ duration: 0.3, delay: ANIMATION_INTERVAL * 2 }}
       />
 
-      <div className="z-30 flex h-dvh w-full max-w-[400px] flex-col items-center">
+      <div className="flex h-dvh w-full max-w-[400px] flex-col items-center">
         {children}
       </div>
 

@@ -21,7 +21,7 @@ export default function Claim() {
       <RedPacket initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
 
       <motion.div
-        className="flex flex-col gap-5 px-2"
+        className="z-10 flex flex-col gap-5 px-2"
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,

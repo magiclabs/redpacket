@@ -7,9 +7,8 @@ import {
 } from '@tanstack/react-query'
 import { type FormValues } from 'app/create/CreatePacketsForm'
 import { CHAINS } from 'config/client'
-import { REDPACKET_FACTORY_ABI } from 'lib/constants'
+import { CURRENT_CHAIN_KEY, REDPACKET_FACTORY_ABI } from 'lib/constants'
 import { publicClient } from 'lib/viem/publicClient'
-import { CURRENT_CHAIN } from 'lib/web3modal/config'
 import ms from 'ms'
 import {
   decodeEventLog,
@@ -24,7 +23,7 @@ export function useCreateRedPacket({ eth, packets }: FormValues) {
   const { address } = useAccount()
 
   const { data, queryKey } = useSimulateContract({
-    address: CHAINS[CURRENT_CHAIN].getRedPacketFactoryAddress(),
+    address: CHAINS[CURRENT_CHAIN_KEY].getRedPacketFactoryAddress(),
     abi: REDPACKET_FACTORY_ABI,
     functionName: 'createRedPacket',
     args: [packets],
@@ -39,7 +38,7 @@ export function useCreateRedPacket({ eth, packets }: FormValues) {
         new Promise<string>(async (resolve, reject) => {
           const unwatch = publicClient.watchContractEvent({
             pollingInterval: ms('1s'),
-            address: CHAINS[CURRENT_CHAIN].getRedPacketFactoryAddress(),
+            address: CHAINS[CURRENT_CHAIN_KEY].getRedPacketFactoryAddress(),
             abi: REDPACKET_FACTORY_ABI,
             eventName: 'RedPacketCreated',
             args: { creator: address },

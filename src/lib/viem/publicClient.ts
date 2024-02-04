@@ -1,7 +1,11 @@
+import {
+  ALCHEMY_RPC_URL,
+  CURRENT_CHAIN,
+  CURRENT_CHAIN_KEY,
+} from 'lib/constants'
 import { createPublicClient, http } from 'viem'
-import { baseSepolia } from 'viem/chains'
 
 export const publicClient = createPublicClient({
-  chain: baseSepolia,
-  transport: http(),
+  chain: CURRENT_CHAIN,
+  transport: http(ALCHEMY_RPC_URL[CURRENT_CHAIN_KEY]),
 })

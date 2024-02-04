@@ -56,7 +56,7 @@ export default function Lucky() {
       <AnimatePresence>
         {!isVisible && (
           <motion.div
-            className="flex w-full max-w-[400px] flex-col items-center"
+            className="z-10 flex w-full max-w-[400px] flex-col items-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >

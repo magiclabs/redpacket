@@ -1,17 +1,16 @@
 'use client'
 
 import { createWeb3Modal } from '@web3modal/wagmi/react'
+import { CURRENT_CHAIN } from 'lib/constants'
 import { projectId, wagmiConfig } from 'lib/web3modal/config'
 import { type PropsWithChildren } from 'react'
-import { isProd } from 'utils/isProd'
-import { base, baseSepolia } from 'viem/chains'
 import { WagmiProvider, type State } from 'wagmi'
 
 createWeb3Modal({
   wagmiConfig,
   projectId,
   enableAnalytics: true,
-  defaultChain: isProd() ? base : baseSepolia,
+  defaultChain: CURRENT_CHAIN,
 })
 
 type Props = PropsWithChildren<{

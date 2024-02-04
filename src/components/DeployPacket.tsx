@@ -3,7 +3,7 @@
 import { type Address } from '@alchemy/aa-core'
 import Footer from 'components/Footer'
 import Login from 'components/Login'
-import { useWalletContext } from 'context/wallet/index.test'
+import { useWalletContext } from 'context/wallet'
 import RedPacketFactoryContract from 'contracts/RedPacketFactory.json'
 import { clientEnv } from 'env/client'
 import Image from 'next/image'
@@ -17,8 +17,13 @@ import {
 } from 'viem'
 
 export default function DeployPacket() {
-  const { isLoggedIn, scaAddress, provider, publicClient, isConnecting } =
-    useWalletContext()
+  const {
+    isLoggedIn,
+    scaAddress,
+    client: provider,
+    publicClient,
+    isConnecting,
+  } = useWalletContext()
   const [totalClaimCount, setTotalClaimCount] = useState<bigint>(BigInt(0))
   const [totalBalance, setTotalBalance] = useState<bigint>(BigInt(0))
   const [isDeploying, setIsDeploying] = useState<boolean>(false)

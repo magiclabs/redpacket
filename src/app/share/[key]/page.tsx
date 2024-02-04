@@ -13,7 +13,7 @@ import { Input } from 'components/ui/input'
 import { Progress } from 'components/ui/progress'
 import { CHAINS } from 'config/client'
 import { URL } from 'config/url'
-import { REDPACKET_ABI } from 'lib/constants'
+import { CURRENT_CHAIN_KEY, REDPACKET_ABI } from 'lib/constants'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -65,9 +65,7 @@ export default function Home() {
     : 0
 
   const remainingBalance = isSuccess
-    ? Number(
-        formatEther(BigInt(Number(data[3].result) - Number(data[4].result))),
-      )
+    ? Number(formatEther(BigInt(Number(data[2].result))))
     : 0
 
   return (
@@ -180,7 +178,7 @@ export default function Home() {
             className="h-10 flex-1 gap-2 bg-[#FFFFFF1F] hover:bg-[#FFFFFF33]"
           >
             <a
-              href={`${CHAINS['baseSepolia'].getAccountURL(address)}`}
+              href={`${CHAINS[CURRENT_CHAIN_KEY].getAccountURL(address)}`}
               target="_blank"
               rel="noreferrer"
             >

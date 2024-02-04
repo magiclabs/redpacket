@@ -1,29 +1,31 @@
 import { clientEnv } from 'env/client'
-import { CURRENT_CHAIN } from 'lib/web3modal/config'
-import { Magic, type EthNetworkConfiguration } from 'magic-sdk'
+import { ALCHEMY_RPC_URL, CURRENT_CHAIN_KEY } from 'lib/constants'
+import { Magic } from 'magic-sdk'
 import { isServer } from 'utils/isServer'
-import { base, baseSepolia } from 'viem/chains'
+import { base, baseSepolia, polygonMumbai } from 'viem/chains'
 
 export let magic: Magic
 
-const MAGIC_API_KEY = clientEnv.NEXT_PUBLIC_MAGIC_API_KEY
+export const MAGIC_API_KEY = clientEnv.NEXT_PUBLIC_MAGIC_API_KEY
 
-const NETWORK: {
-  [network: string]: EthNetworkConfiguration
-} = {
+export const NETWORK = {
   base: {
-    rpcUrl: `https://base-mainnet.g.alchemy.com/v2/mgAiAkPBUrNakqSTikVs4IYvve4AVh07`,
+    rpcUrl: ALCHEMY_RPC_URL['base'],
     chainId: base.id,
   },
   baseSepolia: {
-    rpcUrl: `https://base-sepolia.g.alchemy.com/v2/nbir66s6vPoL5xBuuZfXg5ZIyzN1958V`,
+    rpcUrl: ALCHEMY_RPC_URL['baseSepolia'],
     chainId: baseSepolia.id,
+  },
+  mumbai: {
+    rpcUrl: ALCHEMY_RPC_URL['mumbai'],
+    chainId: polygonMumbai.id,
   },
 } as const
 
 if (!isServer()) {
   if (!MAGIC_API_KEY) throw new Error('MAGIC_API_KEY is not defined')
   magic = new Magic(MAGIC_API_KEY, {
-    network: NETWORK[CURRENT_CHAIN],
+    network: NETWORK[CURRENT_CHAIN_KEY],
   })
 }

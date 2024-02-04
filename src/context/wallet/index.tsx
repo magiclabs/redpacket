@@ -1,8 +1,8 @@
 'use client'
 
-import { type AlchemyProvider } from '@alchemy/aa-alchemy'
+import { type createLightAccountAlchemyClient } from '@alchemy/aa-alchemy'
 import { type Address } from '@alchemy/aa-core'
-import { useAlchemyProvider } from 'hooks/useAlchemyProvider.test'
+import { useAlchemyProvider } from 'hooks/useAlchemyProvider'
 import {
   createContext,
   useCallback,
@@ -26,7 +26,7 @@ type WalletContextProps = {
   logout: () => Promise<void>
 
   // Properties
-  provider: AlchemyProvider
+  client: Awaited<ReturnType<typeof createLightAccountAlchemyClient>>
   ownerAddress?: Address
   scaAddress?: Address
   username?: string
@@ -40,7 +40,7 @@ type WalletContextProps = {
 const defaultUnset: any = null
 const WalletContext = createContext<WalletContextProps>({
   // Default Values
-  provider: defaultUnset,
+  client: defaultUnset,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   isLoggedIn: defaultUnset,
@@ -67,7 +67,7 @@ export const WalletContextProvider = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(true)
 
   const [magicSigner] = useState(() => createMagicSigner())
-  const { provider, connectProviderToAccount, disconnectProviderFromAccount } =
+  const { client, connectedClient, connectClientToAccount } =
     useAlchemyProvider()
 
   const login = useCallback(
@@ -92,12 +92,12 @@ export const WalletContextProvider = ({
       }
 
       setIsLoggedIn(true)
-      connectProviderToAccount(signer)
+      connectClientToAccount(signer)
       setUsername(metadata.email)
       setOwnerAddress(metadata.publicAddress as Address)
-      setScaAddress(await provider.getAddress())
+      setScaAddress(connectedClient.account?.address)
     },
-    [connectProviderToAccount, magicSigner, provider],
+    [connectClientToAccount, magicSigner, client],
   )
 
   const logout = useCallback(async () => {
@@ -112,11 +112,10 @@ export const WalletContextProvider = ({
     }
 
     setIsLoggedIn(false)
-    disconnectProviderFromAccount()
     setUsername(undefined)
     setOwnerAddress(undefined)
     setScaAddress(undefined)
-  }, [magicSigner, disconnectProviderFromAccount])
+  }, [magicSigner])
 
   useEffect(() => {
     async function fetchData() {
@@ -128,7 +127,7 @@ export const WalletContextProvider = ({
 
       const isLoggedIn = await signer.inner.user.isLoggedIn()
 
-      if (provider && isLoggedIn) {
+      if (client && isLoggedIn) {
         await signer.authenticate({
           authenticate: async () => {},
         })
@@ -139,26 +138,26 @@ export const WalletContextProvider = ({
         }
 
         if (scaAddress) {
-          const _userBalance = await provider.rpcClient.getBalance({
+          const _userBalance = await connectedClient.getBalance({
             address: scaAddress as Address,
           })
           setUserBalance(_userBalance)
         }
 
         setIsLoggedIn(isLoggedIn)
-        connectProviderToAccount(signer)
+        connectClientToAccount(signer)
         setUsername(metadata.email)
         setOwnerAddress(metadata.publicAddress as Address)
-        setScaAddress(await provider.getAddress())
+        setScaAddress(connectedClient.account?.address)
 
         const _walletClient = createWalletClient({
-          // chain: provider.rpcClient.chain,
-          transport: custom(provider.rpcClient.transport),
+          chain: connectedClient.chain,
+          transport: custom(connectedClient.transport),
         })
         setWalletClient(_walletClient)
         const _publicClient = createPublicClient({
-          // chain: provider.rpcClient.chain,
-          transport: custom(provider.rpcClient.transport),
+          chain: connectedClient.chain,
+          transport: custom(connectedClient.transport),
         })
         setPublicClient(_publicClient)
       }
@@ -166,13 +165,7 @@ export const WalletContextProvider = ({
       setIsConnecting(false)
     }
     fetchData()
-  }, [
-    connectProviderToAccount,
-    magicSigner,
-    provider,
-    scaAddress,
-    isConnecting,
-  ])
+  }, [connectClientToAccount, magicSigner, client, scaAddress, isConnecting])
 
   return (
     <WalletContext.Provider
@@ -180,7 +173,7 @@ export const WalletContextProvider = ({
         login,
         logout,
         isLoggedIn,
-        provider,
+        client: connectedClient,
         ownerAddress,
         scaAddress,
         username,

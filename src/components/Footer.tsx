@@ -1,7 +1,7 @@
 'use client'
 
 import { type Address } from '@alchemy/aa-core'
-import { useWalletContext } from 'context/wallet/index.test'
+import { useWalletContext } from 'context/wallet'
 import { useCallback } from 'react'
 import { formatEtherDisplay } from 'utils/formatEtherDisplay'
 import { type Hash } from 'viem'
