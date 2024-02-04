@@ -47,7 +47,7 @@ export const CHAINS = {
     getAccountURL: (address: string) =>
       `https://mumbai.polygonscan.com/address/${address}`,
     getRedPacketFactoryAddress: (): Address =>
-      `0xFf3EcfE59AbF9426814E171e77F6fa370F7Af45b`,
+      `0x82Ea6aA5d528A280844C6419769aeFc72ffe60A8`,
     // `0xD00b1AcF6FC6b375e984C6B71B740Bb8e9b0a4CF`,
   },
 } as const
