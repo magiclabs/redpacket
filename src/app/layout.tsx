@@ -1,3 +1,6 @@
+import './globals.css'
+
+import { Analytics } from '@vercel/analytics/react'
 import { QueryProvider } from 'components/QueryProvider'
 import { Web3ModalProvider } from 'components/Web3Modal'
 import { Toaster } from 'components/ui/sonner'
@@ -8,7 +11,6 @@ import { type Metadata } from 'next'
 import { headers } from 'next/headers'
 import { type PropsWithChildren } from 'react'
 import { cookieToInitialState } from 'wagmi'
-import './globals.css'
 
 const title = `Magic Lunar New Year`
 const description = `Happy New Year! Create an invisible wallet and open a red packet to claim your share of 1 ETH.`
@@ -52,6 +54,7 @@ export default function RootLayout({ children }: Props) {
           <QueryProvider>{children}</QueryProvider>
         </Web3ModalProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   )
