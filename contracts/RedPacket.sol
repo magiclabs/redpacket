@@ -33,19 +33,20 @@ contract RedPacket {
   }
 
   // Claim a random amount from the Red Packet
-  function claim() external returns (uint256) {
+  function claim(address receiver) external returns (uint256) {
     uint256 claimedCount = getClaimedCount();
 
     require(!expired, 'Packet has expired.');
     require(claimedCount < totalClaimCount, 'All packets have been claimed.');
     require(
-      claimedAmounts[msg.sender] == 0,
+      claimedAmounts[receiver] == 0,
       'You have already claimed a packet.'
     );
-    require(creator != msg.sender, 'Creator cannot claim a packet.');
+    require(creator != receiver, 'Creator cannot claim a packet.');
+    require(receiver != address(0), 'Receiver address cannot be 0x0');
 
     uint256 randomNumber = uint256(
-      keccak256(abi.encodePacked(msg.sender, block.timestamp))
+      keccak256(abi.encodePacked(receiver, block.timestamp))
     );
 
     uint256 balance = getCurrentBalance();
@@ -59,12 +60,12 @@ contract RedPacket {
       emit PacketExpired(creator, balance);
     }
 
-    claimedAddresses.push(msg.sender);
-    claimedAmounts[msg.sender] = claimAmount;
+    claimedAddresses.push(receiver);
+    claimedAmounts[receiver] = claimAmount;
 
-    payable(msg.sender).transfer(claimAmount);
+    payable(receiver).transfer(claimAmount);
 
-    emit PacketClaimed(msg.sender, claimAmount);
+    emit PacketClaimed(receiver, claimAmount);
 
     return claimAmount;
   }

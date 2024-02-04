@@ -25,7 +25,7 @@ import {
   REDPACKET_ABI,
 } from 'lib/constants'
 import { magic } from 'lib/magic'
-import { useParams, useRouter } from 'next/navigation'
+import { redirect, useParams, useRouter } from 'next/navigation'
 import { isProd } from 'utils/isProd'
 import { encodeFunctionData, formatEther, http, type Address } from 'viem'
 
@@ -37,9 +37,13 @@ export function ClaimPacket() {
 
   const address: Address = `0x${key}`
 
-  const { remainingBalance, totalBalance } = useRedPacket({
+  const { remainingBalance, totalBalance, isExpired } = useRedPacket({
     contractAddress: address,
   })
+
+  if (isExpired) {
+    redirect(`/claim/${key}/over`)
+  }
 
   const handleOpen = async () => {
     const owner = new MagicSigner({ inner: magic })
@@ -165,7 +169,7 @@ export function ClaimPacket() {
       data: encodeFunctionData({
         abi: REDPACKET_ABI,
         functionName: 'claim',
-        args: [],
+        args: [publicAddress],
       }),
       // value: 50000n,
     }
@@ -193,13 +197,21 @@ export function ClaimPacket() {
 
     console.log(CHAINS[CURRENT_CHAIN_KEY].getTxURL(tx))
 
-    const txHash = await client.sendTransaction({
-      chain,
-      to: publicAddress,
-      value: await client.getBalance({ address: client.getAddress() }),
-    })
+    // const value = await client.getBalance({ address: client.getAddress() })
 
-    console.log(CHAINS[CURRENT_CHAIN_KEY].getTxURL(txHash))
+    // console.log({ value })
+
+    // const { hash: txHash } = await client.sendUserOperation({
+    //   uo: {
+    //     target: publicAddress,
+    //     data: '0x',
+    //     value: parseEther(`${+formatEther(value) - 0.00001}`),
+    //   },
+    // })
+
+    // const tx2 = await client.waitForUserOperationTransaction({ hash: txHash })
+
+    // console.log(CHAINS[CURRENT_CHAIN_KEY].getTxURL(tx2))
 
     console.table([
       {

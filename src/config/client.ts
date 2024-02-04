@@ -1,5 +1,5 @@
 import { clientEnv } from 'env/client'
-import { CURRENT_CHAIN_KEY } from 'lib/constants'
+import { ALCHEMY_RPC_URL, CURRENT_CHAIN_KEY } from 'lib/constants'
 import {
   createPublicClient,
   createWalletClient,
@@ -22,7 +22,7 @@ export const gasManagerPolicyId =
 export const CHAINS = {
   base: {
     chain: base,
-    transport: http(),
+    transport: http(ALCHEMY_RPC_URL['base']),
     scanURL: `https://basescan.org`,
     getTxURL: (hash: string) => `https://basescan.org/tx/${hash}`,
     getAccountURL: (address: string) =>
@@ -31,7 +31,7 @@ export const CHAINS = {
   },
   baseSepolia: {
     chain: baseSepolia,
-    transport: http(),
+    transport: http(ALCHEMY_RPC_URL['baseSepolia']),
     scanURL: `https://sepolia.basescan.org`,
     getTxURL: (hash: string) => `https://sepolia.basescan.org/tx/${hash}`,
     getAccountURL: (address: string) =>
@@ -41,13 +41,14 @@ export const CHAINS = {
   },
   mumbai: {
     chain: mumbai,
-    transport: http(),
+    transport: http(ALCHEMY_RPC_URL['mumbai']),
     scanURL: `https://mumbai.polygonscan.com`,
     getTxURL: (hash: string) => `https://mumbai.polygonscan.com/tx/${hash}`,
     getAccountURL: (address: string) =>
       `https://mumbai.polygonscan.com/address/${address}`,
     getRedPacketFactoryAddress: (): Address =>
-      `0xD00b1AcF6FC6b375e984C6B71B740Bb8e9b0a4CF`,
+      `0x26A6E86BB72D57c9295D39c68DfA75D79f1632a4`,
+    // `0xD00b1AcF6FC6b375e984C6B71B740Bb8e9b0a4CF`,
   },
 } as const
 

@@ -10,7 +10,7 @@ import { getContract } from 'scripts/fns/getContract'
 import { getAddress } from 'viem'
 import { mnemonicToAccount } from 'viem/accounts'
 
-const network: NETWORK = 'baseSepolia'
+const network: NETWORK = 'mumbai'
 const file = 'RedPacketFactory.sol'
 const contractName = 'RedPacketFactory'
 
