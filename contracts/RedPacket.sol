@@ -94,6 +94,12 @@ contract RedPacket {
     return claimedAddresses;
   }
 
+  function getClaimedAmount() external view returns (uint256) {
+    require(claimedAmounts[msg.sender] != 0, 'No claim amount found.');
+
+    return claimedAmounts[msg.sender];
+  }
+
   function getClaimedCount() public view returns (uint256) {
     return claimedAddresses.length;
   }

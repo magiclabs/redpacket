@@ -47,9 +47,10 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
 
     const result = await magic.auth.loginWithEmailOTP({ email })
 
-    const isConnected = await magic.user.isLoggedIn()
+    // const isConnected = await magic.user.isLoggedIn()
 
-    await client.setQueryData(['is-logged-in'], isConnected)
+    client.setQueryData(['is-logged-in'], true)
+    client.setQueryData(['email'], email)
 
     await push(redirectUri)
   })

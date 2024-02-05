@@ -58,7 +58,7 @@ export default function RootLayout({ children }: Props) {
           <QueryProvider>{children}</QueryProvider>
         </Web3ModalProvider>
         <Toaster />
-        <Analytics />
+        <Analytics debug={false} />
       </body>
     </html>
   )
