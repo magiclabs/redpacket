@@ -6,6 +6,7 @@ import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
 import { Input } from 'components/ui/input'
 import { magic } from 'lib/magic'
+import { createMagicConector } from 'lib/wagmi/magicConnector'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { isProd } from 'utils/isProd'
@@ -29,6 +30,10 @@ type Props = {
 }
 
 export function EmailForm({ redirectUri = '/create' }: Props) {
+  const { connectors, connect } = useConnect()
+
+  // console.log({ connectors })
+
   const {
     register,
     formState: { isValid, isSubmitting },
@@ -45,14 +50,16 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
   const onSubmit = handleSubmit(async ({ email }) => {
     if (isSubmitting) return
 
-    const result = await magic.auth.loginWithEmailOTP({ email })
-
-    // const isConnected = await magic.user.isLoggedIn()
-
-    client.setQueryData(['is-logged-in'], true)
-    client.setQueryData(['email'], email)
-
-    await push(redirectUri)
+    connect(
+      { connector: createMagicConector({ magic }) },
+      {
+        onSuccess: () => {
+          client.setQueryData(['is-logged-in'], true)
+          client.setQueryData(['email'], email)
+          push(redirectUri)
+        },
+      },
+    )
   })
 
   return (

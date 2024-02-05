@@ -22,7 +22,7 @@ import { useAccount, useBalance, useBlockNumber, useDisconnect } from 'wagmi'
 
 export function WalletDropdown() {
   const client = useQueryClient()
-  const { address, isConnecting, isDisconnected } = useAccount()
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { data: blockNumber } = useBlockNumber({ watch: true })
 
@@ -39,6 +39,8 @@ export function WalletDropdown() {
   if (isDisconnected) {
     redirect('/')
   }
+
+  console.log({ isConnecting, balance, address, isConnected })
 
   if (isConnecting || !balance) {
     return <Loader className="absolute right-4 top-4 aspect-square h-6 w-6" />
@@ -84,9 +86,7 @@ export function WalletDropdown() {
         ) : null}
         <DropdownMenuItem
           className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
-          onClick={async () => {
-            await disconnect()
-          }}
+          onClick={() => disconnect()}
         >
           <LogoutIcon className="opacity-80 hover:opacity-100" />
           Log Out
