@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu'
 import { WALLET_TYPE } from 'hooks/useWalletType'
-import { redirect } from 'next/navigation'
+import { magic } from 'lib/magic'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { formatEther } from 'viem'
@@ -23,7 +23,7 @@ import { useAccount, useBalance, useBlockNumber, useDisconnect } from 'wagmi'
 
 export function WalletDropdown() {
   const client = useQueryClient()
-  const { address, isConnecting, isDisconnected, connector } = useAccount()
+  const { address, isConnecting, connector } = useAccount()
   const { disconnect } = useDisconnect()
   const { data: blockNumber } = useBlockNumber({ watch: true })
 
@@ -34,10 +34,6 @@ export function WalletDropdown() {
   }, [blockNumber])
 
   const [, copyToClipboard] = useCopyToClipboard()
-
-  if (isDisconnected) {
-    redirect('/')
-  }
 
   if (isConnecting || !balance) {
     return <Loader className="absolute right-4 top-4 aspect-square h-6 w-6" />
@@ -71,11 +67,21 @@ export function WalletDropdown() {
         </DropdownMenuItem>
         {connector?.type === WALLET_TYPE.MAGIC ? (
           <>
-            <DropdownMenuItem className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white">
+            <DropdownMenuItem
+              className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
+              onClick={async () => {
+                await magic.wallet.showAddress()
+              }}
+            >
               <QRCodeIcon className="opacity-80 hover:opacity-100" />
               QR Code
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white">
+            <DropdownMenuItem
+              className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
+              onClick={async () => {
+                await magic.wallet.showUI()
+              }}
+            >
               <WalletIcon className="opacity-80 hover:opacity-100" />
               Open Wallet
             </DropdownMenuItem>

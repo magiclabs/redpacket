@@ -2,7 +2,8 @@ import { ConnectWalletButton } from 'app/ConnectWalletButton'
 import { DemoByMagic } from 'app/DemoByMagic'
 import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
-import { GTSuper } from 'app/fonts'
+import { Container } from 'components/ui/container'
+import { MotionHeadline, TypographyBody } from 'components/ui/typography'
 import Image from 'next/image'
 
 export default function Home() {
@@ -34,36 +35,29 @@ export default function Home() {
 
       <RedPacket />
 
-      <div className="flex flex-col gap-5 px-2">
-        <h2
-          className={`${GTSuper.className} select-none self-center text-3xl sm:text-4xl md:text-[40px]`}
-          style={{
-            background: 'linear-gradient(180deg, #FFF 20.02%, #FFACAC 100%)',
-            backgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          Happy Lunar New Year
-        </h2>
-        <span className="max-w-[468px] text-balance text-center text-sm text-white opacity-80 sm:text-lg">
-          Celebrate the Year of the Dragon by creating digital red packets
-          (红包) filled with ETH
-        </span>
-      </div>
-
-      <div className="flex w-full max-w-[440px] flex-col justify-center gap-5 px-5">
-        <ConnectWalletButton />
-
-        <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-[#FFFFFF33]" />
-          <span className="text-sm font-medium text-white opacity-60">
-            Or, create a wallet
-          </span>
-          <div className="h-px flex-1 bg-[#FFFFFF33]" />
+      <Container>
+        <div className="flex flex-col gap-5">
+          <MotionHeadline>Happy Lunar New Year</MotionHeadline>
+          <TypographyBody>
+            Celebrate the Year of the Dragon by creating digital red packets
+            (红包) filled with ETH
+          </TypographyBody>
         </div>
 
-        <EmailForm />
-      </div>
+        <div className="mt-10 flex w-full flex-col gap-5">
+          <ConnectWalletButton />
+
+          <div className="flex items-center gap-4">
+            <div className="h-px flex-1 bg-[#FFFFFF33]" />
+            <span className="text-sm font-medium text-white opacity-60">
+              Or, create a wallet
+            </span>
+            <div className="h-px flex-1 bg-[#FFFFFF33]" />
+          </div>
+
+          <EmailForm />
+        </div>
+      </Container>
 
       <DemoByMagic />
     </main>

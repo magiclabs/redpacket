@@ -7,7 +7,7 @@ export function RedPacket({ className, ...rest }: MotionImageProps) {
       priority
       key="red-packet"
       className={cn(
-        'z-20 mt-4 aspect-square h-56 w-56 rotate-[30deg] select-none sm:mt-12 md:h-64 md:w-64',
+        'z-20 mt-4 aspect-square h-[224px] w-[224px] rotate-[30deg] select-none sm:mt-12 sm:h-[260px] sm:w-[260px]',
         className,
       )}
       src="/Red_Envelope_1.png"

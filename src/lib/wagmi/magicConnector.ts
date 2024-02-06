@@ -17,7 +17,7 @@ export function createMagicConector({ magic, login }: Params) {
     name: 'Magic',
     type: 'magic',
 
-    async connect({ chainId: input } = {}) {
+    async connect() {
       const didToken = login
         ? await login()
         : await magic.wallet.connectWithUI()

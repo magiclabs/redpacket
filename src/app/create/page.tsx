@@ -2,7 +2,7 @@ import { DemoByMagic } from 'app/DemoByMagic'
 import { RedPacket } from 'app/RedPacket'
 import { CreatePacketsForm } from 'app/create/CreatePacketsForm'
 import { WalletDropdown } from 'app/create/WalletDropdown'
-import { GTSuper } from 'app/fonts'
+import { Container } from 'components/ui/container'
 import Image from 'next/image'
 
 export default function Home() {
@@ -36,20 +36,9 @@ export default function Home() {
 
       <RedPacket />
 
-      <div className="flex flex-col gap-5 px-2">
-        <h2
-          className={`${GTSuper.className} select-none self-center text-3xl tracking-[-0.408px] sm:text-4xl md:text-[40px]`}
-          style={{
-            background: 'linear-gradient(180deg, #FFF 20.02%, #FFACAC 100%)',
-            backgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          Create your red packets
-        </h2>
-      </div>
-
-      <CreatePacketsForm />
+      <Container>
+        <CreatePacketsForm />
+      </Container>
 
       <DemoByMagic />
     </main>

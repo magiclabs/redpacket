@@ -1,3 +1,5 @@
+'use client'
+
 import { REDPACKET_ABI } from 'lib/constants'
 import ms from 'ms'
 import { formatEther, type Address } from 'viem'

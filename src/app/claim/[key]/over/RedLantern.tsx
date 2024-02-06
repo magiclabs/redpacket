@@ -5,7 +5,7 @@ export function RedLantern(props: Omit<ImageProps, 'src' | 'alt'>) {
     <Image
       priority
       key="red-packet"
-      className="aspect-square h-[334px] w-[334px] select-none md:h-64 md:w-64"
+      className="aspect-square h-[224px] w-[224px] select-none sm:h-[334px] sm:w-[334px]"
       src="/red-lantern.png"
       width="334"
       height="334"

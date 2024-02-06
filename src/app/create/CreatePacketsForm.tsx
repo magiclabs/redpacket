@@ -12,6 +12,7 @@ import { Button } from 'components/ui/button'
 import { Form } from 'components/ui/form'
 import { Input } from 'components/ui/input'
 import { Label } from 'components/ui/label'
+import { MotionHeadline } from 'components/ui/typography'
 import { cn } from 'lib/utils'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -145,11 +146,10 @@ export function CreatePacketsForm() {
 
   return (
     <Form {...form}>
-      <form
-        className="flex w-full max-w-[440px] flex-col px-5"
-        onSubmit={onSubmit}
-      >
-        <div className="grid w-full items-center gap-3 sm:grid-flow-col sm:justify-between">
+      <form className="flex w-full flex-col" onSubmit={onSubmit}>
+        <MotionHeadline>Create your red packets</MotionHeadline>
+
+        <div className="mt-8 grid w-full items-center gap-3 sm:grid-flow-col sm:justify-between">
           <Label htmlFor="packets" className="text-lg font-medium">
             Total Packets
           </Label>
@@ -200,7 +200,7 @@ export function CreatePacketsForm() {
           </div>
         </div>
 
-        <div className="mt-4 grid w-full items-center gap-3 sm:mt-5 sm:grid-flow-col sm:justify-between">
+        <div className="mt-8 grid w-full items-center gap-3 sm:mt-5 sm:grid-flow-col sm:justify-between">
           <div className="flex flex-col gap-0.5">
             <Label htmlFor="eth" className="text-lg font-medium">
               Total ETH
@@ -264,7 +264,7 @@ export function CreatePacketsForm() {
           <Button
             disabled={!isValid}
             type="submit"
-            className="mt-4 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
+            className="mt-8 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
           >
             Create Packets
           </Button>

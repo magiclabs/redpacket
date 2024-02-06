@@ -40,7 +40,7 @@ export function ClaimPacket() {
               }}
             >
               <RedPacket
-                className="h-full w-full rotate-0 md:h-[480px] md:w-[480px]"
+                className="h-full w-full rotate-0 sm:h-[480px] sm:w-[480px]"
                 initial={{ scale: 0.55, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.7 }}

@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         ? `https://redpacket-dev.magiclabs.vercel.app`
         : isProd()
           ? PROD_URL
-          : '',
+          : `https://${process.env.VERCEL_URL!}`,
   ),
   openGraph: {
     title,
