@@ -3,6 +3,7 @@
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCopyToClipboard } from '@uidotdev/usehooks'
+import { track } from '@vercel/analytics'
 import { Loader } from 'components/Loader'
 import { CopyIcon } from 'components/icons/CopyIcon'
 import { LogoutIcon } from 'components/icons/LogoutIcon'
@@ -82,7 +83,10 @@ export function WalletDropdown() {
         ) : null}
         <DropdownMenuItem
           className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
-          onClick={() => disconnect()}
+          onClick={() => {
+            track(`Log Out Clicked`)
+            disconnect()
+          }}
         >
           <LogoutIcon className="opacity-80 hover:opacity-100" />
           Log Out

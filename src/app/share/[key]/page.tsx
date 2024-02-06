@@ -1,6 +1,7 @@
 'use client'
 
 import { useCopyToClipboard } from '@uidotdev/usehooks'
+import { track } from '@vercel/analytics'
 import { DemoByMagic } from 'app/DemoByMagic'
 import { WalletDropdown } from 'app/create/WalletDropdown'
 import { GTSuper } from 'app/fonts'
@@ -146,8 +147,9 @@ export default function Home() {
         <div className="mt-5 flex gap-3">
           <Button
             className="h-10 flex-1 gap-2 bg-[#FFFFFF1F] hover:bg-[#FFFFFF33]"
-            onClick={() => {
-              push(`/create`)
+            onClick={async () => {
+              track(`Create More Clicked`)
+              await push(`/create`)
             }}
           >
             <BackIcon />
@@ -156,6 +158,9 @@ export default function Home() {
           <Button
             asChild
             className="h-10 flex-1 gap-2 bg-[#FFFFFF1F] hover:bg-[#FFFFFF33]"
+            onClick={() => {
+              track(`View Contract Clicked`)
+            }}
           >
             <a
               href={`${CHAINS[CURRENT_CHAIN_KEY].getAccountURL(contractAddress)}`}

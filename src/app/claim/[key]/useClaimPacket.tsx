@@ -3,7 +3,9 @@ import {
   type UserOperationCallData,
 } from '@alchemy/aa-core'
 import { useMutation } from '@tanstack/react-query'
+import { track } from '@vercel/analytics/react'
 import { useAlchemyClient } from 'app/claim/[key]/useAlchemyClient'
+import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { REDPACKET_ABI } from 'lib/constants'
 import { useParams, useRouter } from 'next/navigation'
 import { LightAccountABI } from 'src/abis/LightAccountABI'
@@ -14,6 +16,10 @@ export function useClaimPacket() {
   const { key } = useParams<{ key: string }>()
 
   const contractAddress: Address = `0x${key}`
+
+  const { totalBalance } = useRedPacket({
+    contractAddress,
+  })
 
   const { client, publicAddress } = useAlchemyClient()
 
@@ -37,8 +43,6 @@ export function useClaimPacket() {
       push(`/claim/${key}/result`)
 
       let balance = await client.getBalance({ address: client.getAddress() })
-
-      console.log({ balance })
 
       uo = [
         {
@@ -64,7 +68,11 @@ export function useClaimPacket() {
         hash: result.hash,
       })
 
-      console.log(`Finished`)
+      track(`Red Packet Claimed`, {
+        userAddress: publicAddress,
+        claimedAmount: Number(balance),
+        totalBalance: Number(totalBalance),
+      })
     },
   })
 

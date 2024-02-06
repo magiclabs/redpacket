@@ -71,7 +71,7 @@ export default function RootLayout({ children }: Props) {
           <QueryProvider>{children}</QueryProvider>
         </Web3ModalProvider>
         <Toaster />
-        <Analytics debug={false} />
+        {isProd() && <Analytics debug={false} />}
       </body>
     </html>
   )

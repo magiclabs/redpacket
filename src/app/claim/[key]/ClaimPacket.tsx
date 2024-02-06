@@ -1,5 +1,6 @@
 'use client'
 
+import { track } from '@vercel/analytics'
 import { RedPacket } from 'app/RedPacket'
 import { useClaimPacket } from 'app/claim/[key]/useClaimPacket'
 import { useRedPacket } from 'app/share/[key]/useRedPacket'
@@ -33,6 +34,7 @@ export function ClaimPacket() {
               role="button"
               className="relative z-50 aspect-square w-full cursor-pointer transition-all duration-300 ease-in-out hover:translate-y-[-8px] hover:transform"
               onClick={async () => {
+                track(`Red Packet Open Clicked`)
                 await claim()
                 await refetch()
               }}

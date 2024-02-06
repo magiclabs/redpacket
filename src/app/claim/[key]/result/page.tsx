@@ -1,6 +1,7 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
+import { track } from '@vercel/analytics/react'
 import { RedEthereum } from 'app/claim/[key]/result/RedEthereum'
 import { RedPacketFireworks } from 'app/claim/[key]/result/RedPacketFireworks'
 import { useClaimedAmount } from 'app/claim/[key]/result/useClaimedAmount'
@@ -139,7 +140,10 @@ export default function Lucky() {
             >
               <Button
                 className="h-14 flex-1 bg-[#FFFFFF1F] text-lg hover:bg-[#FFFFFF33]"
-                onClick={() => handleLogout()}
+                onClick={() => {
+                  track(`Log Out Clicked`)
+                  handleLogout()
+                }}
               >
                 {isLoggingOut ? (
                   <Spinner className="aspect-square h-7 w-7" />
@@ -149,7 +153,10 @@ export default function Lucky() {
               </Button>
               <Button
                 className="h-14 flex-1 text-lg"
-                onClick={() => handleOpenWallet()}
+                onClick={() => {
+                  track(`Open Wallet Clicked`)
+                  handleOpenWallet()
+                }}
               >
                 {isPending ? (
                   <Spinner className="aspect-square h-7 w-7" />
@@ -173,6 +180,9 @@ export default function Lucky() {
                 target="_blank"
                 rel="noopener"
                 className="font-semibold text-white hover:opacity-80"
+                onClick={() => {
+                  track(`wallet.magic.link Clicked`)
+                }}
               >
                 wallet.magic.link
               </a>

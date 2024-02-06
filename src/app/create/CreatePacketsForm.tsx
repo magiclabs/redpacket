@@ -1,6 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { track } from '@vercel/analytics'
 import { useCreateRedPacket } from 'app/create/useCreateRedPacket'
 import { useETHPrice } from 'app/create/useETHPrice'
 import { AlertIcon } from 'components/icons/AlertIcon'
@@ -37,6 +38,14 @@ const formSchema = z.object({
     }
 
     if (Number(v) > MAXIMUM_PACKETS) {
+      return false
+    }
+
+    if (isNaN(Number(v))) {
+      return false
+    }
+
+    if (Number(v) % 1 !== 0) {
       return false
     }
 
@@ -103,16 +112,32 @@ export function CreatePacketsForm() {
 
   const { push } = useRouter()
 
+  const { address: publicAddress } = useAccount()
+
   const onSubmit = handleSubmit(async () => {
     if (isLoading) return
 
     try {
       const address = await createRedPacket()
 
-      push(`/share/${address.slice(2)}`)
+      track(`Red Packet Created`, {
+        userAddress: publicAddress as string,
+        contractAddress: address,
+        packets,
+        eth,
+      })
+
+      await push(`/share/${address.slice(2)}`)
+      toast.success(`Red packets created successfully!`)
     } catch (e) {
       toast.error('Failed to create red packets, please try again.')
       console.error(e)
+
+      track(`Red Packet Creation Failed`, {
+        userAddress: publicAddress as string,
+        packets,
+        eth,
+      })
     }
   })
 
@@ -180,9 +205,7 @@ export function CreatePacketsForm() {
             <Label htmlFor="eth" className="text-lg font-medium">
               Total ETH
             </Label>
-            <span className="text-sm opacity-60">
-              Distributed between packets
-            </span>
+            <span className="text-sm opacity-60">Divided between packets</span>
           </div>
           <div className="relative flex h-14 items-center sm:max-w-[180px]">
             <Input
@@ -208,7 +231,7 @@ export function CreatePacketsForm() {
             <div className="my-0.5 h-4 w-10 animate-pulse rounded-full bg-gray-500" />
           ) : (
             <span className="text-right text-sm tabular-nums opacity-60">
-              ≈ ${(+ethPrice * +eth).toFixed(2)}
+              ≈ ${Number((+ethPrice * +eth).toFixed(2)).toLocaleString()}
             </span>
           )}
         </div>

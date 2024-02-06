@@ -1,5 +1,6 @@
 'use client'
 
+import { track } from '@vercel/analytics'
 import { useWeb3Modal, useWeb3ModalState } from '@web3modal/wagmi/react'
 import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
@@ -19,7 +20,11 @@ export function ConnectWalletButton() {
   return (
     <Button
       className="h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold"
-      onClick={() => modal.open()}
+      onClick={async () => {
+        track(`Connect Wallet Button Clicked`)
+
+        await modal.open()
+      }}
     >
       {open ? <Spinner /> : <>Connect Wallet</>}
     </Button>

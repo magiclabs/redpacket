@@ -1,3 +1,7 @@
+'use client'
+
+import { track } from '@vercel/analytics/react'
+
 export function DemoByMagic() {
   return (
     <div className="absolute bottom-0 mb-4 flex flex-col px-2 sm:mb-8">
@@ -8,6 +12,9 @@ export function DemoByMagic() {
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#FF191E] hover:underline"
+          onClick={() => {
+            track(`A demo by Magic Clicked`)
+          }}
         >
           <svg
             width="66"

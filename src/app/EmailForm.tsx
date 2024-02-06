@@ -49,22 +49,25 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
   const onSubmit = handleSubmit(async ({ email }) => {
     if (isSubmitting) return
 
-    connect(
-      {
-        connector: createMagicConector({
-          magic,
-          login: () => magic.auth.loginWithEmailOTP({ email }),
-        }),
-      },
-      {
-        onSuccess: () => {
-          client.setQueryData(['is-logged-in'], true)
-          client.setQueryData(['email'], email)
-
-          push(redirectUri)
+    await new Promise((resolve) => {
+      connect(
+        {
+          connector: createMagicConector({
+            magic,
+            login: () => magic.auth.loginWithEmailOTP({ email }),
+          }),
         },
-      },
-    )
+        {
+          onSuccess: async () => {
+            client.setQueryData(['is-logged-in'], true)
+            client.setQueryData(['email'], email)
+
+            await push(redirectUri)
+            resolve(true)
+          },
+        },
+      )
+    })
   })
 
   return (

@@ -47,7 +47,7 @@ export default function Home() {
         </h2>
         <span className="max-w-[468px] text-balance text-center text-sm text-white opacity-80 sm:text-lg">
           Celebrate the Year of the Dragon by creating digital red packets
-          (红包) filled with random amounts of ETH
+          (红包) filled with ETH
         </span>
       </div>
 
