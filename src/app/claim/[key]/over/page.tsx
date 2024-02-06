@@ -18,7 +18,13 @@ export default function Over() {
   const contractAddress: Address = `0x${key}`
 
   const { isConnected } = useAccount()
-  const { disconnect } = useDisconnect()
+  const { disconnect } = useDisconnect({
+    mutation: {
+      onSuccess: () => {
+        push('/claim/login?id=' + key)
+      },
+    },
+  })
 
   const { totalClaimCount } = useRedPacket({ contractAddress })
 
