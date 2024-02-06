@@ -19,7 +19,7 @@ export const ALCHEMY_RPC_URL = {
   mumbai: `https://polygon-mumbai.g.alchemy.com/v2/Sj_KlZV6R-XvaKewU9KTuSOvZXVNSL4j`,
 } as const
 
-export const CURRENT_CHAIN_KEY = isProd() ? 'mumbai' : 'mumbai'
+export const CURRENT_CHAIN_KEY = isProd() ? 'base' : 'mumbai'
 
 export const CURRENT_CHAIN = (
   {

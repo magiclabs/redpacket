@@ -19,7 +19,7 @@ import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { isProd } from 'utils/isProd'
+import { isLocal } from 'utils/isLocal'
 import { isServer } from 'utils/isServer'
 import { type Address } from 'viem'
 
@@ -109,7 +109,7 @@ export default function Home() {
                 '0px 4px 20px 0px rgba(0, 0, 0, 0.10), 0px 4px 36px -8px rgba(0, 0, 0, 0.25), 0px 3px 10px 2px rgba(255, 52, 52, 0.30)',
             }}
             onClick={async () => {
-              const text = `http${isProd() ? 's' : ''}://${link}`
+              const text = `http${isLocal() ? '' : 's'}://${link}`
               await copyToClipboard(text)
               setCopied(true)
               toast.success('Link copied to clipboard')

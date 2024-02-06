@@ -1,4 +1,3 @@
-import { clientEnv } from 'env/client'
 import { ALCHEMY_RPC_URL, CURRENT_CHAIN_KEY } from 'lib/constants'
 import {
   createPublicClient,
@@ -14,10 +13,6 @@ import {
   polygonMumbai as mumbai,
   polygon,
 } from 'viem/chains'
-
-export const magicApiKey = clientEnv.NEXT_PUBLIC_MAGIC_API_KEY!
-export const gasManagerPolicyId =
-  clientEnv.NEXT_PUBLIC_ALCHEMY_GAS_MANAGER_POLICY_ID_BASE!
 
 export const CHAINS = {
   base: {
