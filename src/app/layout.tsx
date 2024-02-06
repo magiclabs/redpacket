@@ -4,13 +4,16 @@ import { Analytics } from '@vercel/analytics/react'
 import { QueryProvider } from 'components/QueryProvider'
 import { Web3ModalProvider } from 'components/Web3Modal'
 import { Toaster } from 'components/ui/sonner'
-import { URL } from 'config/url'
+import { PROD_URL } from 'config/url'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import { wagmiConfig } from 'lib/web3modal/config'
 import { type Metadata } from 'next'
 import { headers } from 'next/headers'
 import { type PropsWithChildren } from 'react'
+import { isDev } from 'utils/isDev'
+import { isLocal } from 'utils/isLocal'
+import { isProd } from 'utils/isProd'
 import { cookieToInitialState } from 'wagmi'
 
 const title = `Magic Lunar New Year`
@@ -22,12 +25,21 @@ export const metadata: Metadata = {
   icons: {
     icon: '/Logo.png',
   },
+  metadataBase: new URL(
+    isLocal()
+      ? `http://localhost:3009`
+      : isDev()
+        ? `https://redpacket-dev.magiclabs.vercel.app`
+        : isProd()
+          ? PROD_URL
+          : '',
+  ),
   openGraph: {
     title,
     description,
     images: [
       {
-        url: `${URL}/og.png`,
+        url: `${PROD_URL}/og.png`,
         width: 1280,
         height: 720,
         alt: title,

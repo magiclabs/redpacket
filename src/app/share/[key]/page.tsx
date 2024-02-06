@@ -13,7 +13,7 @@ import { Button } from 'components/ui/button'
 import { Input } from 'components/ui/input'
 import { Progress } from 'components/ui/progress'
 import { CHAINS } from 'config/client'
-import { URL } from 'config/url'
+import { PROD_URL } from 'config/url'
 import { CURRENT_CHAIN_KEY } from 'lib/constants'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
@@ -31,7 +31,7 @@ export default function Home() {
   const [, copyToClipboard] = useCopyToClipboard()
 
   const link = isServer()
-    ? `${URL.replace(`https://`, '')}/claim/${key}`
+    ? `${PROD_URL.replace(`https://`, '')}/claim/${key}`
     : `${location.host.replace(`https://`, '')}/claim/${key}`
 
   const [copied, setCopied] = useState(false)

@@ -1,5 +1,5 @@
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import { URL } from 'config/url'
+import { PROD_URL } from 'config/url'
 import { ALCHEMY_RPC_URL } from 'lib/constants'
 import { isProd } from 'utils/isProd'
 import { cookieStorage, createStorage, http } from 'wagmi'
@@ -27,8 +27,8 @@ export const wagmiConfig = defaultWagmiConfig({
   metadata: {
     name: 'Red Packet',
     description: 'Red Packet',
-    url: URL,
-    icons: [`${URL}/apple-icon.png`],
+    url: PROD_URL,
+    icons: [`${PROD_URL}/apple-icon.png`],
   },
   ssr: true,
   storage: createStorage({

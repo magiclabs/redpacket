@@ -1,4 +1,3 @@
-import { clientEnv } from 'env/client'
 import { ALCHEMY_RPC_URL, CURRENT_CHAIN_KEY } from 'lib/constants'
 import { Magic } from 'magic-sdk'
 import { isServer } from 'utils/isServer'
@@ -6,7 +5,7 @@ import { base, baseSepolia, polygonMumbai } from 'viem/chains'
 
 export let magic: Magic
 
-export const MAGIC_API_KEY = clientEnv.NEXT_PUBLIC_MAGIC_API_KEY
+export const MAGIC_API_KEY = `pk_live_0DFB184A12DAD653`
 
 export const NETWORK = {
   base: {

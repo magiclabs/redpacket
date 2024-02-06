@@ -1,1 +1,1 @@
-export const URL = `https://redpacket.magic.link`
+export const PROD_URL = `https://redpacket.magic.link`
