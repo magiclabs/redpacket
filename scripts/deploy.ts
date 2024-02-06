@@ -11,7 +11,7 @@ import { getAddress } from 'viem'
 import { mnemonicToAccount } from 'viem/accounts'
 import { $ } from 'zx'
 
-const network: NETWORK = 'mumbai'
+const network: NETWORK = 'base'
 const file = 'RedPacketFactory.sol'
 const contractName = 'RedPacketFactory'
 

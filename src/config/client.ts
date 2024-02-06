@@ -23,7 +23,7 @@ export const CHAINS = {
     getAccountURL: (address: string) =>
       `https://basescan.org/address/${address}`,
     getRedPacketFactoryAddress: (): Address =>
-      `0xD00b1AcF6FC6b375e984C6B71B740Bb8e9b0a4CF`,
+      `0x2fabdF4f1F97C2C21Ba63c4dDd71c63968B2d22b`,
   },
   baseSepolia: {
     chain: baseSepolia,
@@ -32,8 +32,7 @@ export const CHAINS = {
     getTxURL: (hash: string) => `https://sepolia.basescan.org/tx/${hash}`,
     getAccountURL: (address: string) =>
       `https://sepolia.basescan.org/address/${address}`,
-    getRedPacketFactoryAddress: (): Address =>
-      `0x6eaeD20eb6566eA44Abbcd6642823A41A2dF119F`,
+    getRedPacketFactoryAddress: (): Address => `0x0`,
   },
   mumbai: {
     chain: mumbai,
@@ -43,7 +42,7 @@ export const CHAINS = {
     getAccountURL: (address: string) =>
       `https://mumbai.polygonscan.com/address/${address}`,
     getRedPacketFactoryAddress: (): Address =>
-      `0xb93E4C4EC184F8660cD65936B49C8B83eeFaF9E4`,
+      `0x4F0bc48d58aa0134CfFc37aa8f6A7B6aa7F7d4bc`,
   },
 } as const
 

@@ -19,7 +19,6 @@ contract RedPacket {
   mapping(address => uint256) public claimedAmounts;
   address public creator;
 
-  // Constructor
   constructor(uint256 _totalClaimCount, address _creator) payable {
     require(msg.value > 0, 'No funds sent with transaction.');
     require(_totalClaimCount > 0, 'Total claims should be greater than 0.');
@@ -32,7 +31,6 @@ contract RedPacket {
     emit PacketCreated(creator, getCurrentBalance(), totalClaimCount);
   }
 
-  // Claim a random amount from the Red Packet
   function claim() external returns (uint256) {
     uint256 claimedCount = getClaimedCount();
 
@@ -63,7 +61,6 @@ contract RedPacket {
     return claimAmount;
   }
 
-  // Expire the Red Packet
   function expire() external returns (uint256) {
     require(!expired, 'Packet has already expired.');
     require(creator == msg.sender, 'Only creator can expire a packet.');
