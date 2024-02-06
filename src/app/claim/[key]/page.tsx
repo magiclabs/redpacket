@@ -1,19 +1,19 @@
 'use client'
 
 import { ClaimPacket } from 'app/claim/[key]/ClaimPacket'
-import { useIsLoggedIn } from 'hooks/useIsLoggedIn'
 import { redirect, useParams } from 'next/navigation'
+import { useAccount } from 'wagmi'
 
 export default function Home() {
   const { key } = useParams<{ key: string }>()
 
-  const { isLoggedIn, isPending } = useIsLoggedIn()
+  const { isConnecting, isDisconnected } = useAccount()
 
-  if (isPending) {
+  if (isConnecting) {
     return <div></div>
   }
 
-  if (!isLoggedIn) {
+  if (isDisconnected) {
     redirect(`/claim/login?id=${key}`)
   }
 

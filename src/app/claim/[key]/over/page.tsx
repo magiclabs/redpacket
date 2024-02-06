@@ -6,11 +6,10 @@ import { Button } from 'components/ui/button'
 import { Container } from 'components/ui/container'
 import { MotionHeadline } from 'components/ui/typography'
 import { motion } from 'framer-motion'
-import { useIsLoggedIn } from 'hooks/useIsLoggedIn'
 import { ANIMATION_INTERVAL } from 'lib/constants'
-import { magic } from 'lib/magic'
 import { useParams, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
+import { useAccount, useDisconnect } from 'wagmi'
 
 export default function Over() {
   const { push } = useRouter()
@@ -18,14 +17,11 @@ export default function Over() {
 
   const contractAddress: Address = `0x${key}`
 
-  const { isLoggedIn } = useIsLoggedIn()
+  const { isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
 
   const { totalClaimCount } = useRedPacket({ contractAddress })
 
-  const handleLogout = async () => {
-    magic.user.logout()
-    await push(`/claim/login?id=${key}`)
-  }
   const handleCreatePackets = async () => {
     push('/')
   }
@@ -88,10 +84,10 @@ export default function Over() {
         animate={{ opacity: 1 }}
         transition={{ delay: ANIMATION_INTERVAL * 4 }}
       >
-        {isLoggedIn && (
+        {isConnected && (
           <Button
             className="h-12 flex-1 bg-[#FFFFFF1F] text-lg hover:bg-[#FFFFFF33]"
-            onClick={handleLogout}
+            onClick={() => disconnect()}
           >
             Log Out
           </Button>
