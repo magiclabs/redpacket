@@ -1,9 +1,32 @@
+'use client'
+
 import { BackLanturns } from 'app/claim/BackLanterns'
 import { RedFocus } from 'app/claim/RedFocus'
 import { WalletDropdown } from 'app/create/WalletDropdown'
-import { type PropsWithChildren } from 'react'
+import { redirect, useParams } from 'next/navigation'
+import { useEffect, type PropsWithChildren } from 'react'
+import { useAccount } from 'wagmi'
 
 export default function ClaimLayout({ children }: PropsWithChildren) {
+  const { key } = useParams<{ key: string }>()
+  const { isDisconnected, isConnecting } = useAccount()
+
+  console.log({ key, isDisconnected })
+
+  useEffect(() => {
+    if (isDisconnected) {
+      if (!key) {
+        redirect('/')
+      }
+
+      redirect('/claim/login?id=' + key)
+    }
+  }, [isDisconnected])
+
+  if (isConnecting || isDisconnected) {
+    return <></>
+  }
+
   return (
     <>
       <BackLanturns />
