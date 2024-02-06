@@ -2,7 +2,7 @@ import { DemoByMagic } from 'app/DemoByMagic'
 import { RedPacket } from 'app/RedPacket'
 import { CreatePacketsForm } from 'app/create/CreatePacketsForm'
 import { WalletDropdown } from 'app/create/WalletDropdown'
-import { MotionHeadline } from 'components/ui/typography'
+import { Container } from 'components/ui/container'
 import Image from 'next/image'
 
 export default function Home() {
@@ -36,9 +36,9 @@ export default function Home() {
 
       <RedPacket />
 
-      <MotionHeadline>Create your red packets</MotionHeadline>
-
-      <CreatePacketsForm />
+      <Container>
+        <CreatePacketsForm />
+      </Container>
 
       <DemoByMagic />
     </main>
