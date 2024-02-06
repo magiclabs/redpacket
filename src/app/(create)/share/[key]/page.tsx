@@ -45,18 +45,12 @@ export default function Home() {
     isSuccess,
   } = useRedPacket({ contractAddress, refetch: true })
 
-  // const { isConnected } = useAccount()
-
-  // if (!isConnected) {
-  //   redirect('/')
-  // }
-
   return (
-    <div className="flex h-lvh flex-col items-center gap-8">
+    <div className="flex h-lvh w-full flex-col items-center gap-8">
       <RedDragon />
 
-      <Container>
-        <div className="flex flex-col gap-5 px-2">
+      <Container className="gap-8">
+        <div className="flex flex-col gap-5">
           <h2
             className={`${GTSuper.className} md:text-[40px] select-none self-center text-3xl tracking-[-0.408px] sm:text-4xl`}
             style={{
@@ -69,7 +63,7 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="flex w-full max-w-[440px] flex-col px-5">
+        <div className="flex w-full flex-col">
           <span className="text-center text-xl font-medium">
             Share your claim link
           </span>
