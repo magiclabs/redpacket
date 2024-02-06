@@ -1,5 +1,6 @@
 'use client'
 
+import { track } from '@vercel/analytics/react'
 import { RedLantern } from 'app/claim/[key]/over/RedLantern'
 import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { Button } from 'components/ui/button'
@@ -28,13 +29,9 @@ export default function Over() {
 
   const { totalClaimCount } = useRedPacket({ contractAddress })
 
-  const handleCreatePackets = async () => {
-    push('/')
-  }
-
   return (
     <Container>
-      <div className="relative">
+      <div className="relative flex">
         <motion.div
           className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-[rgba(255,48,52,0.70)] blur-[58px]"
           initial={{ opacity: 0 }}
@@ -55,11 +52,11 @@ export default function Over() {
         animate={{ opacity: 1 }}
         transition={{ delay: ANIMATION_INTERVAL * 1 }}
       >
-        The festivities are over
+        All packets claimed
       </MotionHeadline>
 
       <motion.p
-        className="mt-5 text-center text-base font-normal leading-normal tracking-[-0.408px] text-[#ffffffcc] opacity-80 sm:text-lg"
+        className="mt-5 text-center text-lg font-normal leading-normal tracking-[-0.408px] text-[#ffffffcc] opacity-80 sm:text-lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.8 }}
         transition={{ delay: ANIMATION_INTERVAL * 2 }}
@@ -73,33 +70,36 @@ export default function Over() {
         animate={{ opacity: 1 }}
         transition={{ delay: ANIMATION_INTERVAL * 3 }}
       >
-        You can still watch a video demo of Magic’s Lunar New Year experience,
-        or <span className="font-semibold text-white">build your own.</span>
+        Use the link below to watch a video demo of the experience, or{' '}
+        <span className="font-semibold text-white">build your own.</span>
       </motion.div>
 
       <motion.div
-        className="mt-8 flex aspect-[400/225] w-full items-center justify-center rounded-3xl [background:rgba(255,255,255,0.12)]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: ANIMATION_INTERVAL * 3 }}
-      ></motion.div>
-
-      <motion.div
-        className="mt-6 flex w-full flex-col gap-3 sm:mt-10 sm:flex-row"
+        className="mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:flex-row"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: ANIMATION_INTERVAL * 4 }}
       >
         {isConnected && (
           <Button
-            className="h-12 flex-1 bg-[#FFFFFF1F] text-lg hover:bg-[#FFFFFF33]"
-            onClick={() => disconnect()}
+            className="order-2 min-h-14 flex-1 bg-[#FFFFFF1F] text-lg font-semibold hover:bg-[#FFFFFF33] sm:order-1"
+            onClick={() => {
+              track('Log Out Clicked')
+              disconnect()
+            }}
           >
             Log Out
           </Button>
         )}
-        <Button className="h-12 flex-1 text-lg" onClick={handleCreatePackets}>
-          Create Packets
+        <Button
+          className="order-1 min-h-14 flex-1 text-lg font-semibold sm:order-2"
+          onClick={() => {
+            track('Watch Demo Clicked')
+          }}
+        >
+          <a href="" target="_blank" rel="noopener noreferrer">
+            Watch demo
+          </a>
         </Button>
       </motion.div>
     </Container>
