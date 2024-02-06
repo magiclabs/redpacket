@@ -1,41 +1,60 @@
-import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+import { coinbaseWallet, injected, walletConnect } from '@wagmi/connectors'
+import { mumbai } from 'config/client'
 import { PROD_URL } from 'config/url'
 import { ALCHEMY_RPC_URL } from 'lib/constants'
+import { magic } from 'lib/magic'
+import { createMagicConector } from 'lib/wagmi/magicConnector'
 import { isProd } from 'utils/isProd'
-import { cookieStorage, createStorage, http } from 'wagmi'
-import { base, polygonMumbai } from 'wagmi/chains'
+import { createClient } from 'viem'
+import { cookieStorage, createConfig, createStorage, http } from 'wagmi'
+import { base } from 'wagmi/chains'
 
 export const projectId = `28adeacdce0cf960683ec30543294091`
 
 if (!projectId) throw new Error('Project ID is not defined')
 
-export const wagmiConfig = defaultWagmiConfig({
+const metadata = {
+  name: 'Red Packet',
+  description: 'Red Packet',
+  url: PROD_URL,
+  icons: [`${PROD_URL}/apple-icon.png`],
+}
+
+export const wagmiConfig = createConfig({
   ...(isProd()
     ? {
         chains: [base],
-        trabsoirts: {
-          [base.id]: http(ALCHEMY_RPC_URL['base']),
+        client({ chain }) {
+          return createClient({
+            chain,
+            transport: http(ALCHEMY_RPC_URL['base']),
+          })
         },
       }
     : {
-        chains: [polygonMumbai],
-        transports: {
-          [polygonMumbai.id]: http(ALCHEMY_RPC_URL['mumbai']),
+        chains: [mumbai],
+        client({ chain }) {
+          return createClient({
+            chain,
+            transport: http(ALCHEMY_RPC_URL['mumbai']),
+          })
         },
       }),
-  projectId,
-  metadata: {
-    name: 'Red Packet',
-    description: 'Red Packet',
-    url: PROD_URL,
-    icons: [`${PROD_URL}/apple-icon.png`],
-  },
+  connectors: [
+    walletConnect({
+      projectId,
+      metadata,
+      showQrModal: false,
+    }),
+    injected({ shimDisconnect: true }),
+    coinbaseWallet({
+      appName: 'Red Packet',
+      appLogoUrl: `${PROD_URL}/apple-icon.png`,
+    }),
+    createMagicConector({ magic }),
+  ],
   ssr: true,
   storage: createStorage({
     storage: cookieStorage,
   }),
-  enableWalletConnect: true,
-  enableInjected: true,
-  enableEIP6963: true,
-  enableCoinbase: true,
 })
