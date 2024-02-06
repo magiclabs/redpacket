@@ -38,19 +38,22 @@ export function useRedPacket({ contractAddress, refetch = false }: Params) {
 
   const totalClaimCount = isSuccess ? Number(data?.[0].result) : 0
 
-  const totalBalance = isSuccess
-    ? Number(formatEther(data?.[2].result as bigint))
-    : 0
+  const totalBalance =
+    isSuccess && data?.[2].result
+      ? Number(formatEther(data?.[2].result as bigint))
+      : 0
 
-  const remainingPackets = isSuccess
-    ? Number((data[0].result as bigint) - (data[1].result as bigint))
-    : 0
+  const remainingPackets =
+    isSuccess && data?.[0].result
+      ? Number((data?.[0].result as bigint) - (data[1].result as bigint))
+      : 0
 
-  const remainingBalance = isSuccess
-    ? Number(formatEther(BigInt(Number(data[3].result))))
-    : 0
+  const remainingBalance =
+    isSuccess && data?.[3].result
+      ? Number(formatEther(BigInt(Number(data?.[3].result))))
+      : 0
 
-  const isExpired = isSuccess ? data[5].result : false
+  const isExpired = isSuccess ? data?.[5].result : false
 
   return {
     totalClaimCount,

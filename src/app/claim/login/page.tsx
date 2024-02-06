@@ -7,16 +7,26 @@ import { RedFocus } from 'app/claim/RedFocus'
 import { Container } from 'components/ui/container'
 import { MotionHeadline } from 'components/ui/typography'
 import { motion } from 'framer-motion'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
+import { useAccount } from 'wagmi'
 
 export default function Claim() {
+  const { push } = useRouter()
   const search = useSearchParams()
+  const { isConnected } = useAccount()
 
   const key = search.get('id')
 
   if (typeof key !== 'string') {
     throw new Error('key is required')
   }
+
+  useEffect(() => {
+    if (isConnected) {
+      push(`/claim/${key}`)
+    }
+  }, [isConnected, key, push])
 
   return (
     <>
@@ -49,7 +59,7 @@ export default function Claim() {
             }}
           ></motion.div>
           <RedPacket
-            className="z-30 md:h-[260px] md:w-[260px]"
+            className="md:h-[260px] md:w-[260px] z-30"
             initial={{ opacity: 0, y: 200, rotate: 30 }}
             animate={{ opacity: 1, y: 0, rotate: 30 }}
             transition={{

@@ -1,9 +1,9 @@
 'use client'
 
 import { track } from '@vercel/analytics'
+import { useRedPacket } from 'app/(create)/share/[key]/useRedPacket'
 import { RedPacket } from 'app/RedPacket'
 import { useClaimPacket } from 'app/claim/[key]/useClaimPacket'
-import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
 import { Progress } from 'components/ui/progress'
 import { motion } from 'framer-motion'
