@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu'
-import { WALLET_TYPE, useWalletType } from 'hooks/useWalletType'
+import { WALLET_TYPE } from 'hooks/useWalletType'
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
@@ -22,11 +22,9 @@ import { useAccount, useBalance, useBlockNumber, useDisconnect } from 'wagmi'
 
 export function WalletDropdown() {
   const client = useQueryClient()
-  const { address, isConnecting, isDisconnected } = useAccount()
+  const { address, isConnecting, isDisconnected, connector } = useAccount()
   const { disconnect } = useDisconnect()
   const { data: blockNumber } = useBlockNumber({ watch: true })
-
-  const [walletType] = useWalletType()
 
   const { data: balance, queryKey } = useBalance({ address })
 
@@ -70,7 +68,7 @@ export function WalletDropdown() {
           <CopyIcon className="opacity-80 hover:opacity-100" />
           Copy Address
         </DropdownMenuItem>
-        {walletType === WALLET_TYPE.MAGIC ? (
+        {connector?.type === WALLET_TYPE.MAGIC ? (
           <>
             <DropdownMenuItem className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white">
               <QRCodeIcon className="opacity-80 hover:opacity-100" />
@@ -84,9 +82,7 @@ export function WalletDropdown() {
         ) : null}
         <DropdownMenuItem
           className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
-          onClick={async () => {
-            await disconnect()
-          }}
+          onClick={() => disconnect()}
         >
           <LogoutIcon className="opacity-80 hover:opacity-100" />
           Log Out

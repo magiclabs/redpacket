@@ -62,7 +62,7 @@ const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>
 
 export function CreatePacketsForm() {
-  const { address, connector } = useAccount()
+  const { address } = useAccount()
   const { data: balance } = useBalance({ address })
 
   const defaultValues = {

@@ -6,9 +6,11 @@ import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
 import { Input } from 'components/ui/input'
 import { magic } from 'lib/magic'
+import { createMagicConector } from 'lib/wagmi/magicConnector'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { isProd } from 'utils/isProd'
+import { useConnect } from 'wagmi'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -29,6 +31,8 @@ type Props = {
 }
 
 export function EmailForm({ redirectUri = '/create' }: Props) {
+  const { connect } = useConnect()
+
   const {
     register,
     formState: { isValid, isSubmitting },
@@ -45,14 +49,22 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
   const onSubmit = handleSubmit(async ({ email }) => {
     if (isSubmitting) return
 
-    const result = await magic.auth.loginWithEmailOTP({ email })
+    connect(
+      {
+        connector: createMagicConector({
+          magic,
+          login: () => magic.auth.loginWithEmailOTP({ email }),
+        }),
+      },
+      {
+        onSuccess: () => {
+          client.setQueryData(['is-logged-in'], true)
+          client.setQueryData(['email'], email)
 
-    // const isConnected = await magic.user.isLoggedIn()
-
-    client.setQueryData(['is-logged-in'], true)
-    client.setQueryData(['email'], email)
-
-    await push(redirectUri)
+          push(redirectUri)
+        },
+      },
+    )
   })
 
   return (

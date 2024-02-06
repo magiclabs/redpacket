@@ -19,11 +19,7 @@ type Props = PropsWithChildren<{
 
 export function Web3ModalProvider({ children, initialState }: Props) {
   return (
-    <WagmiProvider
-      config={wagmiConfig}
-      initialState={initialState}
-      // reconnectOnMount
-    >
+    <WagmiProvider config={wagmiConfig} initialState={initialState}>
       {children}
     </WagmiProvider>
   )
