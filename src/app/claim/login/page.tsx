@@ -4,7 +4,8 @@ import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
 import { BackLanturns } from 'app/claim/BackLanterns'
 import { RedFocus } from 'app/claim/RedFocus'
-import { GTSuper } from 'app/fonts'
+import { Container } from 'components/ui/container'
+import { MotionHeadline } from 'components/ui/typography'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 
@@ -34,7 +35,7 @@ export default function Claim() {
         }}
       />
 
-      <div className="relative z-30 flex flex-col items-center">
+      <Container>
         <div className="relative">
           <motion.div
             className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/4 transform rounded-full bg-[rgba(255,48,52,0.70)] blur-[58px]"
@@ -71,16 +72,7 @@ export default function Claim() {
             duration: 0.5,
           }}
         >
-          <h2
-            className={`${GTSuper.className} mt-5 select-none self-center text-3xl sm:text-4xl md:text-[40px]`}
-            style={{
-              background: 'linear-gradient(180deg, #FFF 20.02%, #FFACAC 100%)',
-              backgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            Open your red packet
-          </h2>
+          <MotionHeadline className="mt-5">Open your red packet</MotionHeadline>
           <span className="max-w-[468px] text-balance text-center text-sm text-white opacity-80 sm:text-lg">
             Happy Lunar New Year! You’ve received a special red packet. Log in
             to open it.
@@ -101,7 +93,7 @@ export default function Claim() {
         >
           <EmailForm redirectUri={`/claim/${key}`} />
         </motion.div>
-      </div>
+      </Container>
     </>
   )
 }
