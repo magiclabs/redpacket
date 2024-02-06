@@ -5,7 +5,7 @@ import { base, baseSepolia, polygonMumbai } from 'viem/chains'
 
 export let magic: Magic
 
-export const MAGIC_API_KEY = `pk_live_0DFB184A12DAD653`
+export const MAGIC_API_KEY = `pk_live_C8937F8712BF7A96`
 
 export const NETWORK = {
   base: {
