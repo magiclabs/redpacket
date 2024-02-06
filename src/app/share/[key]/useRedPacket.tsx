@@ -1,14 +1,14 @@
 import { REDPACKET_ABI } from 'lib/constants'
 import ms from 'ms'
 import { formatEther, type Address } from 'viem'
-import { useReadContract, useReadContracts } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 
 type Params = {
   contractAddress: Address
-  address?: Address
+  refetch?: boolean
 }
 
-export function useRedPacket({ contractAddress, address }: Params) {
+export function useRedPacket({ contractAddress, refetch = false }: Params) {
   const contract = {
     address: contractAddress,
     abi: REDPACKET_ABI,
@@ -24,21 +24,15 @@ export function useRedPacket({ contractAddress, address }: Params) {
       { ...contract, functionName: `expired` },
       { ...contract, functionName: `creator` },
     ],
-    query: {
-      refetchInterval: ms('5s'),
-      refetchIntervalInBackground: true,
-    },
+    ...(refetch
+      ? {
+          query: {
+            refetchInterval: ms('5s'),
+            refetchIntervalInBackground: true,
+          },
+        }
+      : {}),
   })
-
-  const { data: claimedAmounts, isSuccess: isClaimedAmountsSuccess } =
-    useReadContract({
-      ...contract,
-      functionName: `claimedAmounts`,
-      args: [address],
-      query: {
-        enabled: !!address,
-      },
-    })
 
   const totalClaimCount = isSuccess ? Number(data?.[0].result) : 0
 
@@ -55,8 +49,6 @@ export function useRedPacket({ contractAddress, address }: Params) {
     : 0
 
   const isExpired = isSuccess ? data[5].result : false
-
-  // const claimedAmounts = isSuccess ? data[6].result : 0
 
   return {
     totalClaimCount,

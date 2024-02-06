@@ -97,7 +97,8 @@ export default function Lucky() {
                 transition: { delay: ANIMATION_INTERVAL * 2 },
               }}
             >
-              Happy Net Year! <br />
+              Happy New Year!
+              <br />
               You won{' '}
               {parseFloat(Number(formatEther(claimedAmount)).toFixed(5))} ETH (
               {ethPrice &&

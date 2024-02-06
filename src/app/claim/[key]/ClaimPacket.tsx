@@ -13,7 +13,7 @@ export function ClaimPacket() {
 
   const contractAddress: Address = `0x${key}`
 
-  const { remainingBalance, totalBalance, isExpired } = useRedPacket({
+  const { remainingBalance, totalBalance, isExpired, refetch } = useRedPacket({
     contractAddress,
   })
 
@@ -31,6 +31,7 @@ export function ClaimPacket() {
           className="relative z-50 aspect-square w-full cursor-pointer transition-all duration-300 ease-in-out hover:translate-y-[-8px] hover:transform"
           onClick={async () => {
             await claim()
+            await refetch()
           }}
         >
           <RedPacket

@@ -44,7 +44,7 @@ export default function Home() {
     remainingBalance,
     remainingPackets,
     isSuccess,
-  } = useRedPacket({ contractAddress })
+  } = useRedPacket({ contractAddress, refetch: true })
 
   return (
     <main
