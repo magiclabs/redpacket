@@ -10,6 +10,7 @@ import { createMagicConector } from 'lib/wagmi/magicConnector'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { isProd } from 'utils/isProd'
+import { useConnect } from 'wagmi'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -30,9 +31,7 @@ type Props = {
 }
 
 export function EmailForm({ redirectUri = '/create' }: Props) {
-  const { connectors, connect } = useConnect()
-
-  // console.log({ connectors })
+  const { connect } = useConnect()
 
   const {
     register,
@@ -51,11 +50,17 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
     if (isSubmitting) return
 
     connect(
-      { connector: createMagicConector({ magic }) },
+      {
+        connector: createMagicConector({
+          magic,
+          login: () => magic.auth.loginWithEmailOTP({ email }),
+        }),
+      },
       {
         onSuccess: () => {
           client.setQueryData(['is-logged-in'], true)
           client.setQueryData(['email'], email)
+
           push(redirectUri)
         },
       },

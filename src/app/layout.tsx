@@ -1,3 +1,4 @@
+import { ChainSwitcher } from 'app/ChainSwitcher'
 import './globals.css'
 
 import { Analytics } from '@vercel/analytics/react'
@@ -56,7 +57,9 @@ export default function RootLayout({ children }: Props) {
       </head>
       <body className="h-lvh max-w-full overflow-hidden font-sans">
         <Web3ModalProvider initialState={initialState}>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <ChainSwitcher>{children}</ChainSwitcher>
+          </QueryProvider>
         </Web3ModalProvider>
         <Toaster />
         <Analytics debug={false} />

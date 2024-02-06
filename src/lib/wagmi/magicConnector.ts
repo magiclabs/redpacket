@@ -1,13 +1,14 @@
 import { map, pipe, toArray } from '@fxts/core'
 import { createConnector } from '@wagmi/core'
 import { type Magic } from 'magic-sdk'
-import { getAddress } from 'viem'
+import { getAddress, type Address } from 'viem'
 
 type Params = {
   magic: Magic
+  login?: () => Promise<string | null>
 }
 
-export function createMagicConector({ magic }: Params) {
+export function createMagicConector({ magic, login }: Params) {
   type Provider = typeof magic.rpcProvider
 
   return createConnector<Provider>(() => ({
@@ -15,27 +16,38 @@ export function createMagicConector({ magic }: Params) {
     id: 'magicConnector',
     name: 'Magic',
     type: 'magic',
-    async connect(parameters) {
-      const addresses = await magic.wallet.connectWithUI()
+
+    async connect({ chainId: input } = {}) {
+      const didToken = login
+        ? await login()
+        : await magic.wallet.connectWithUI()
+      if (!didToken) {
+        throw new Error('Failed to login with Magic.')
+      }
+
+      const accounts = await this.getAccounts()
+      const chainId = await this.getChainId()
+
       return {
-        chainId: parameters?.chainId || 0,
-        accounts: pipe(
-          addresses,
-          map((address) => getAddress(address)),
-          toArray,
-        ),
+        chainId,
+        accounts,
       }
     },
     async disconnect() {
-      const res = await magic.wallet.disconnect()
-      console.log({ res })
+      await magic.wallet.disconnect()
     },
     async getProvider() {
-      return magic.rpcProvider
+      return magic?.rpcProvider
     },
     async getAccounts() {
       const provider = await this.getProvider()
-      return provider.send('eth_accounts')
+      const accounts = await provider.send<Address[]>('eth_accounts')
+
+      return pipe(
+        accounts,
+        map((address) => getAddress(address)),
+        toArray,
+      )
     },
     async getChainId() {
       const provider = await this.getProvider()
