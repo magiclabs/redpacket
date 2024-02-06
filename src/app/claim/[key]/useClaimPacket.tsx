@@ -4,8 +4,7 @@ import {
 } from '@alchemy/aa-core'
 import { useMutation } from '@tanstack/react-query'
 import { useAlchemyClient } from 'app/claim/[key]/useAlchemyClient'
-import { CHAINS } from 'config/client'
-import { CURRENT_CHAIN_KEY, REDPACKET_ABI } from 'lib/constants'
+import { REDPACKET_ABI } from 'lib/constants'
 import { useParams, useRouter } from 'next/navigation'
 import { LightAccountABI } from 'src/abis/LightAccountABI'
 import { encodeFunctionData, type Address } from 'viem'
@@ -34,8 +33,6 @@ export function useClaimPacket() {
 
       const { hash } = await client.sendUserOperation({ uo })
       const tx = await client.waitForUserOperationTransaction({ hash })
-
-      console.log(CHAINS[CURRENT_CHAIN_KEY].getTxURL(tx))
 
       push(`/claim/${key}/result`)
 

@@ -22,7 +22,8 @@ export const CHAINS = {
     getTxURL: (hash: string) => `https://basescan.org/tx/${hash}`,
     getAccountURL: (address: string) =>
       `https://basescan.org/address/${address}`,
-    getRedPacketFactoryAddress: (): Address => `0x1`,
+    getRedPacketFactoryAddress: (): Address =>
+      `0xD00b1AcF6FC6b375e984C6B71B740Bb8e9b0a4CF`,
   },
   baseSepolia: {
     chain: baseSepolia,

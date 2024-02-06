@@ -62,7 +62,7 @@ export function WalletDropdown() {
           className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
           onClick={async () => {
             await copyToClipboard(address)
-            toast('Address copied to clipboard')
+            toast.success('Address copied to clipboard')
           }}
         >
           <CopyIcon className="opacity-80 hover:opacity-100" />
