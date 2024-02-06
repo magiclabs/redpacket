@@ -12,9 +12,10 @@ import { Button } from 'components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ANIMATION_INTERVAL } from 'lib/constants'
 import { magic } from 'lib/magic'
-import { useParams, useRouter } from 'next/navigation'
+import { redirect, useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { formatEther, type Address } from 'viem'
+import { useAccount } from 'wagmi'
 
 export default function Lucky() {
   const { push } = useRouter()
@@ -22,6 +23,7 @@ export default function Lucky() {
 
   const contractAddress: Address = `0x${key}`
 
+  const { isDisconnected } = useAccount()
   const { ethPrice } = useETHPrice()
   const { totalBalance } = useRedPacket({ contractAddress })
 
@@ -48,6 +50,16 @@ export default function Lucky() {
       setIsVisible(false)
     }, 3000)
   }, [])
+
+  useEffect(() => {
+    if (isDisconnected) {
+      if (!key) {
+        redirect('/')
+      }
+
+      redirect('/claim/login?id=' + key)
+    }
+  }, [isDisconnected, key])
 
   return (
     <>

@@ -16,18 +16,33 @@ import {
 } from 'components/ui/dropdown-menu'
 import { WALLET_TYPE } from 'hooks/useWalletType'
 import { magic } from 'lib/magic'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { formatEther } from 'viem'
 import { useAccount, useBalance, useBlockNumber, useDisconnect } from 'wagmi'
 
 export function WalletDropdown() {
+  const { push } = useRouter()
+  const pathname = usePathname()
+  const { key } = useParams<{ key: string }>()
+
   const client = useQueryClient()
-  const { address, isConnecting, connector } = useAccount()
-  const { disconnect } = useDisconnect()
+  const { address, isConnecting, connector, isDisconnected } = useAccount()
+  const { disconnect } = useDisconnect({
+    mutation: {
+      onSuccess: () => {
+        if (pathname.includes('claim') && key) {
+          push('/claim/login?id=' + key)
+        } else {
+          push('/')
+        }
+      },
+    },
+  })
   const { data: blockNumber } = useBlockNumber({ watch: true })
 
-  const { data: balance, queryKey } = useBalance({ address })
+  const { data: balance, queryKey, isLoading } = useBalance({ address })
 
   useEffect(() => {
     client.invalidateQueries({ queryKey })
@@ -35,8 +50,12 @@ export function WalletDropdown() {
 
   const [, copyToClipboard] = useCopyToClipboard()
 
-  if (isConnecting || !balance) {
+  if (isConnecting || isLoading) {
     return <Loader className="absolute right-4 top-4 aspect-square h-6 w-6" />
+  }
+
+  if (isDisconnected) {
+    return <></>
   }
 
   return address && balance ? (
