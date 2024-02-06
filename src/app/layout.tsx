@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { QueryProvider } from 'components/QueryProvider'
 import { Web3ModalProvider } from 'components/Web3Modal'
 import { Toaster } from 'components/ui/sonner'
+import { URL } from 'config/url'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import { wagmiConfig } from 'lib/web3modal/config'
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     description,
     images: [
       {
-        url: '/og.png',
+        url: `${URL}/og.png`,
         width: 1280,
         height: 720,
         alt: title,

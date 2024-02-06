@@ -32,3 +32,5 @@ nr vc env pull
 ```bash
 nr dev
 ```
+
+- Open http://localhost:3009
