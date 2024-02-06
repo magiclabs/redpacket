@@ -11,8 +11,6 @@ export default function ClaimLayout({ children }: PropsWithChildren) {
   const { key } = useParams<{ key: string }>()
   const { isDisconnected, isConnecting } = useAccount()
 
-  console.log({ key, isDisconnected })
-
   useEffect(() => {
     if (isDisconnected) {
       if (!key) {

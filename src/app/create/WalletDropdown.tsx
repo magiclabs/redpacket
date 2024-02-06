@@ -79,7 +79,6 @@ export function WalletDropdown() {
             <DropdownMenuItem
               className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
               onClick={async () => {
-                console.log('HEY')
                 await magic.wallet.showUI()
               }}
             >
