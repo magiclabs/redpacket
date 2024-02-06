@@ -8,6 +8,7 @@ import { useAlchemyClient } from 'app/claim/[key]/useAlchemyClient'
 import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { REDPACKET_ABI } from 'lib/constants'
 import { useParams, useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { LightAccountABI } from 'src/abis/LightAccountABI'
 import { encodeFunctionData, type Address } from 'viem'
 
@@ -37,8 +38,14 @@ export function useClaimPacket() {
         }),
       }
 
-      const { hash } = await client.sendUserOperation({ uo })
-      const tx = await client.waitForUserOperationTransaction({ hash })
+      try {
+        const { hash } = await client.sendUserOperation({ uo })
+        const tx = await client.waitForUserOperationTransaction({ hash })
+      } catch (e: any) {
+        const details = JSON.parse(e.details)
+        toast.error(details.message)
+        return
+      }
 
       push(`/claim/${key}/result`)
 
