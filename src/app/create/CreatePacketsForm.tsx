@@ -200,7 +200,7 @@ export function CreatePacketsForm() {
           </div>
         </div>
 
-        <div className="mt-4 grid w-full items-center gap-3 sm:mt-5 sm:grid-flow-col sm:justify-between">
+        <div className="mt-8 grid w-full items-center gap-3 sm:mt-5 sm:grid-flow-col sm:justify-between">
           <div className="flex flex-col gap-0.5">
             <Label htmlFor="eth" className="text-lg font-medium">
               Total ETH
@@ -264,7 +264,7 @@ export function CreatePacketsForm() {
           <Button
             disabled={!isValid}
             type="submit"
-            className="mt-4 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
+            className="mt-8 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
           >
             Create Packets
           </Button>
