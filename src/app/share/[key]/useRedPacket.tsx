@@ -1,6 +1,8 @@
+'use client'
+
 import { REDPACKET_ABI } from 'lib/constants'
 import ms from 'ms'
-import { formatEther, type Address } from 'viem'
+import { type Address } from 'viem'
 import { useReadContracts } from 'wagmi'
 
 type Params = {
@@ -34,18 +36,21 @@ export function useRedPacket({ contractAddress, refetch = false }: Params) {
       : {}),
   })
 
+  console.log({ data })
+
   const totalClaimCount = isSuccess ? Number(data?.[0].result) : 0
 
   const totalBalance = isSuccess
-    ? Number(formatEther(data?.[2].result as bigint))
-    : 0
+    ? 0
+    : // ? Number(formatEther(data?.[2].result as bigint))
+      0
 
   const remainingPackets = isSuccess
-    ? Number((data[0].result as bigint) - (data[1].result as bigint))
+    ? 0 // Number((data[0].result as bigint) - (data[1].result as bigint))
     : 0
 
   const remainingBalance = isSuccess
-    ? Number(formatEther(BigInt(Number(data[3].result))))
+    ? 0 //Number(formatEther(BigInt(Number(data[3].result))))
     : 0
 
   const isExpired = isSuccess ? data[5].result : false
