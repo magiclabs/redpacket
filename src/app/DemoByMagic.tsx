@@ -4,7 +4,7 @@ import { track } from '@vercel/analytics/react'
 
 export function DemoByMagic() {
   return (
-    <div className="absolute bottom-0 mb-4 flex flex-col px-2 sm:mb-8">
+    <div className="bottom-0 z-10 mb-4 mt-auto flex flex-col px-2 sm:mb-8">
       <span className="flex max-w-[468px] items-center gap-2 text-xs text-white">
         <span className="select-none opacity-50">A demo by</span>
         <a

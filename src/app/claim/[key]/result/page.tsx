@@ -8,7 +8,6 @@ import { useClaimedAmount } from 'app/claim/[key]/result/useClaimedAmount'
 import { useETHPrice } from 'app/create/useETHPrice'
 import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { Spinner } from 'components/Spinner'
-import { SpakleIcon } from 'components/icons/SpakleIcon'
 import { Button } from 'components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ANIMATION_INTERVAL } from 'lib/constants'
@@ -115,19 +114,6 @@ export default function Lucky() {
                   `($${parseFloat((totalBalance * +ethPrice).toFixed(2)).toLocaleString()})`}
               </span>
             </motion.p>
-
-            <motion.div
-              className="mt-8 inline-flex items-center gap-3 rounded-[58px] border border-solid border-[#FD3E42] px-6 py-3 shadow-[0px_3px_10px_2px_rgba(255,52,52,0.30)] [background:rgba(245,170,52,0.13)]"
-              initial={{ y: 10, opacity: 0 }}
-              animate={{
-                y: 0,
-                opacity: 1,
-                transition: { delay: ANIMATION_INTERVAL * 3 },
-              }}
-            >
-              <SpakleIcon />
-              <span>Your luck is in the top 10%</span>
-            </motion.div>
 
             <motion.div
               className="mt-10 flex w-full gap-3 px-5"

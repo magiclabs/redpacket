@@ -17,12 +17,13 @@ import { CHAINS } from 'config/client'
 import { PROD_URL } from 'config/url'
 import { CURRENT_CHAIN_KEY } from 'lib/constants'
 import Image from 'next/image'
-import { useParams, useRouter } from 'next/navigation'
+import { redirect, useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { isLocal } from 'utils/isLocal'
 import { isServer } from 'utils/isServer'
 import { type Address } from 'viem'
+import { useAccount } from 'wagmi'
 
 export default function Home() {
   const { key } = useParams<{ key: string }>()
@@ -47,6 +48,12 @@ export default function Home() {
     isSuccess,
   } = useRedPacket({ contractAddress, refetch: true })
 
+  const { isConnected } = useAccount()
+
+  if (!isConnected) {
+    redirect('/')
+  }
+
   return (
     <main
       className="flex h-lvh flex-col items-center gap-8"
@@ -61,7 +68,7 @@ export default function Home() {
         <div className="relative flex justify-center">
           <Image
             priority
-            className="absolute aspect-[1280/412] min-w-[1280px] md:w-full"
+            className="md:w-full absolute aspect-[1280/412] min-w-[1280px]"
             src="/Lanterns.png"
             width="1280"
             height="412"
@@ -79,7 +86,7 @@ export default function Home() {
 
       <div className="flex flex-col gap-5 px-2">
         <h2
-          className={`${GTSuper.className} select-none self-center text-3xl tracking-[-0.408px] sm:text-4xl md:text-[40px]`}
+          className={`${GTSuper.className} md:text-[40px] select-none self-center text-3xl tracking-[-0.408px] sm:text-4xl`}
           style={{
             background: 'linear-gradient(180deg, #FFF 20.02%, #FFACAC 100%)',
             backgroundClip: 'text',
