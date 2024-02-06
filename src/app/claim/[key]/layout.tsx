@@ -1,6 +1,5 @@
 'use client'
 
-import { WalletDropdown } from 'app/(create)/create/WalletDropdown'
 import { BackLanturns } from 'app/claim/BackLanterns'
 import { RedFocus } from 'app/claim/RedFocus'
 import { useParams, useRouter } from 'next/navigation'
@@ -26,7 +25,6 @@ export default function ClaimLayout({ children }: PropsWithChildren) {
     <>
       <BackLanturns />
       <RedFocus />
-      <WalletDropdown />
 
       {children}
     </>
