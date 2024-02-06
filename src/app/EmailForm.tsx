@@ -59,10 +59,10 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
         },
         {
           onSuccess: async () => {
+            console.log('SUCCESS!')
             client.setQueryData(['is-logged-in'], true)
             client.setQueryData(['email'], email)
 
-            await push(redirectUri)
             resolve(true)
           },
         },

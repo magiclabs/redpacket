@@ -5,7 +5,11 @@ import { type PropsWithChildren } from 'react'
 import { useAccount } from 'wagmi'
 
 export default function CreateLayout({ children }: PropsWithChildren) {
-  const { isDisconnected } = useAccount()
+  const { isConnecting, isDisconnected, isReconnecting } = useAccount()
+
+  if (isConnecting || isReconnecting) {
+    return <></>
+  }
 
   if (isDisconnected) {
     redirect('/')
