@@ -59,14 +59,14 @@ export default function RootLayout({ children }: Props) {
   return (
     <html
       lang="en"
-      className={`dark ${GeistSans.variable} ${GeistMono.variable} scrollbar-hide h-lvh overflow-x-hidden antialiased`}
+      className={`dark ${GeistSans.variable} ${GeistMono.variable} h-lvh overflow-x-hidden antialiased scrollbar-hide`}
     >
       <head>
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="msapplication-TileImage" content="/Logo.png" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className="h-lvh max-w-full font-sans">
+      <body className="h-lvh max-w-full bg-[#03010B] font-sans">
         <Web3ModalProvider initialState={initialState}>
           <QueryProvider>{children}</QueryProvider>
         </Web3ModalProvider>

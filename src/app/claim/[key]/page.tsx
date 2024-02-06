@@ -1,5 +1,6 @@
 'use client'
 
+import { WalletDropdown } from 'app/(create)/create/WalletDropdown'
 import { ClaimPacket } from 'app/claim/[key]/ClaimPacket'
 import { redirect, useParams } from 'next/navigation'
 import { useEffect } from 'react'
@@ -23,5 +24,10 @@ export default function Home() {
     return <div></div>
   }
 
-  return <ClaimPacket />
+  return (
+    <>
+      <WalletDropdown />
+      <ClaimPacket />
+    </>
+  )
 }

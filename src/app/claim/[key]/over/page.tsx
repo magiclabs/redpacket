@@ -1,8 +1,8 @@
 'use client'
 
 import { track } from '@vercel/analytics/react'
+import { useRedPacket } from 'app/(create)/share/[key]/useRedPacket'
 import { RedLantern } from 'app/claim/[key]/over/RedLantern'
-import { useRedPacket } from 'app/share/[key]/useRedPacket'
 import { Button } from 'components/ui/button'
 import { Container } from 'components/ui/container'
 import { MotionHeadline } from 'components/ui/typography'
