@@ -1,10 +1,20 @@
+'use client'
+
 import { ConnectWalletButton } from 'app/ConnectWalletButton'
 import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
 import { Container } from 'components/ui/container'
 import { MotionHeadline, TypographyBody } from 'components/ui/typography'
+import { redirect } from 'next/navigation'
+import { useAccount } from 'wagmi'
 
 export default function Home() {
+  const { isConnected } = useAccount()
+
+  if (isConnected) {
+    redirect('/create')
+  }
+
   return (
     <div className="flex flex-col items-center gap-8">
       <RedPacket />
