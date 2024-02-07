@@ -4,25 +4,40 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
 import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from 'components/ui/form'
 import { Input } from 'components/ui/input'
 import { magic } from 'lib/magic'
 import { createMagicConector } from 'lib/wagmi/magicConnector'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { isProd } from 'utils/isProd'
 import { useConnect } from 'wagmi'
 import { z } from 'zod'
 
 const formSchema = z.object({
-  email: z.custom<string>((v) => {
-    return (
-      typeof v === 'string' &&
-      z.string().email().safeParse(v).success &&
-      // Prevent user from entering a "+" in their email (aliasing)
-      (!isProd() ? true : !v.includes('+'))
-    )
-  }),
+  email: z
+    .string()
+    .email()
+    .regex(/^[^+]*$/, {
+      message: 'Email aliases containing “+” are not allowed',
+    }),
 })
+
+// const formSchema = z.object({
+//   email: z.custom<string>((v) => {
+//     return (
+//       typeof v === 'string' &&
+//       z.string().email().safeParse(v).success &&
+//       // Prevent user from entering a "+" in their email (aliasing)
+//       (!isProd() ? true : !v.includes('+'))
+//     )
+//   }, ''),
+// })
 
 type FormData = z.infer<typeof formSchema>
 
@@ -33,14 +48,15 @@ type Props = {
 export function EmailForm({ redirectUri = '/create' }: Props) {
   const { connect } = useConnect()
 
-  const {
-    register,
-    formState: { isValid, isSubmitting },
-    handleSubmit,
-  } = useForm<FormData>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
   })
+  const {
+    register,
+    formState: { isValid, isSubmitting, errors },
+    handleSubmit,
+  } = form
 
   const { push } = useRouter()
 
@@ -71,26 +87,37 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
   })
 
   return (
-    <form className="relative flex" onSubmit={onSubmit}>
-      <Input
-        className="h-14 rounded-xl border-[#ffffff33] bg-[#ffffff14] pr-24 text-lg text-white"
-        placeholder="Your email"
-        type="email"
-        {...register('email', {
-          required: true,
-        })}
-      />
-
-      <Button
-        disabled={!isValid || isSubmitting}
-        className="absolute right-[6px] h-10 w-20 self-center text-base font-semibold"
-      >
-        {isSubmitting ? (
-          <Spinner className="aspect-square h-5 w-5" />
-        ) : (
-          <>Log in</>
-        )}
-      </Button>
-    </form>
+    <Form {...form}>
+      <form onSubmit={onSubmit} className="relative flex">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormControl>
+                <Input
+                  className="h-14 rounded-xl border-[#ffffff33] bg-[#ffffff14] pr-24 text-lg text-white"
+                  placeholder="Your email"
+                  type="email"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          type="submit"
+          disabled={!isValid || isSubmitting}
+          className="absolute right-[6px] top-2 h-10 w-20 self-center text-base font-semibold"
+        >
+          {isSubmitting ? (
+            <Spinner className="aspect-square h-5 w-5" />
+          ) : (
+            <>Log in</>
+          )}
+        </Button>
+      </form>
+    </Form>
   )
 }
