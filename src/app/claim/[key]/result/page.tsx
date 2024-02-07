@@ -13,28 +13,22 @@ import { Button } from 'components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ANIMATION_INTERVAL } from 'lib/constants'
 import { magic } from 'lib/magic'
-import { redirect, useParams, useRouter } from 'next/navigation'
+import { redirect, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { formatEther, type Address } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
 
 export default function Lucky() {
-  const { push } = useRouter()
   const { key } = useParams<{ key: string }>()
+
+  const { isDisconnected } = useAccount()
 
   const contractAddress: Address = `0x${key}`
 
-  const { isDisconnected } = useAccount()
   const { ethPrice } = useETHPrice()
   const { totalBalance } = useRedPacket({ contractAddress })
 
-  const { mutateAsync: handleLogout, isPending: isLoggingOut } = useMutation({
-    mutationFn: async () => {
-      await magic.user.logout()
-
-      await push(`/claim/login?id=${key}`)
-    },
-  })
+  const { disconnect } = useDisconnect()
 
   const { mutateAsync: handleOpenWallet, isPending } = useMutation({
     mutationFn: async () => {
@@ -52,15 +46,9 @@ export default function Lucky() {
     }, 3000)
   }, [])
 
-  useEffect(() => {
-    if (isDisconnected) {
-      if (!key) {
-        redirect('/')
-      }
-
-      redirect('/claim/login?id=' + key)
-    }
-  }, [isDisconnected, key])
+  if (isDisconnected) {
+    redirect('/claim/login?id=' + key)
+  }
 
   return (
     <>
@@ -142,14 +130,10 @@ export default function Lucky() {
                 className="h-14 flex-1 bg-[#FFFFFF1F] text-lg hover:bg-[#FFFFFF33]"
                 onClick={() => {
                   track(`Log Out Clicked`)
-                  handleLogout()
+                  disconnect()
                 }}
               >
-                {isLoggingOut ? (
-                  <Spinner className="aspect-square h-7 w-7" />
-                ) : (
-                  'Log Out'
-                )}
+                Log Out
               </Button>
               <Button
                 className="h-14 flex-1 text-lg"

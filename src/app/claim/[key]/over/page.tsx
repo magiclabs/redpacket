@@ -21,8 +21,9 @@ export default function Over() {
   const { isConnected } = useAccount()
   const { disconnect } = useDisconnect({
     mutation: {
-      onSuccess: () => {
-        push('/claim/login?id=' + key)
+      onSettled: () => {
+        track('Logged Out')
+        push('/')
       },
     },
   })
