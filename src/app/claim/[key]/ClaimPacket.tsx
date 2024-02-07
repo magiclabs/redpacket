@@ -3,11 +3,13 @@
 import { track } from '@vercel/analytics'
 import { useRedPacket } from 'app/(create)/share/[key]/useRedPacket'
 import { RedPacket } from 'app/RedPacket'
+import { useAlchemyClient } from 'app/claim/[key]/useAlchemyClient'
 import { useClaimPacket } from 'app/claim/[key]/useClaimPacket'
 import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
 import { Progress } from 'components/ui/progress'
 import { motion } from 'framer-motion'
 import { redirect, useParams } from 'next/navigation'
+import { toast } from 'sonner'
 import { type Address } from 'viem'
 
 export function ClaimPacket() {
@@ -15,9 +17,27 @@ export function ClaimPacket() {
 
   const contractAddress: Address = `0x${key}`
 
-  const { remainingBalance, totalBalance, isExpired, refetch } = useRedPacket({
+  const {
+    remainingBalance,
+    totalBalance,
+    isExpired,
+    refetch,
+    claimedAddresses,
+  } = useRedPacket({
     contractAddress,
   })
+
+  const { client } = useAlchemyClient()
+
+  console.log({ claimedAddresses, address: client?.account.address })
+
+  if (
+    client?.account.address &&
+    claimedAddresses.includes(client.account.address)
+  ) {
+    toast('You have already claimed this packet', { id: 'claimed' })
+    redirect(`/claim/${key}/result`)
+  }
 
   if (isExpired) {
     redirect(`/claim/${key}/over`)

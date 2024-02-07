@@ -53,6 +53,8 @@ export function useRedPacket({ contractAddress, refetch = false }: Params) {
       ? Number(formatEther(BigInt(Number(data?.[3].result))))
       : 0
 
+  const claimedAddresses = (isSuccess ? data?.[4].result : []) as Address[]
+
   const isExpired = isSuccess ? data?.[5].result : false
 
   return {
@@ -62,6 +64,7 @@ export function useRedPacket({ contractAddress, refetch = false }: Params) {
     remainingBalance,
     isExpired,
     isSuccess,
+    claimedAddresses,
     ...rest,
   }
 }
