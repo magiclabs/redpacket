@@ -102,7 +102,7 @@ export default function Claim() {
             duration: 0.5,
           }}
         >
-          <EmailForm redirectUri={`/claim/${key}`} />
+          <EmailForm />
         </motion.div>
 
         <motion.div
