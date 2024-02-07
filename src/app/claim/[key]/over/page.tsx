@@ -40,7 +40,7 @@ export default function Over() {
         animate={{ opacity: 1 }}
         transition={{ delay: ANIMATION_INTERVAL * 1 }}
       >
-        The festivities are &nbsp;over
+        The festivities <span className="inline-block">are over</span>
       </MotionHeadline>
 
       <motion.p
