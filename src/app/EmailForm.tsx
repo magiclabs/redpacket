@@ -14,7 +14,6 @@ import {
 import { Input } from 'components/ui/input'
 import { magic } from 'lib/magic'
 import { createMagicConector } from 'lib/wagmi/magicConnector'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useConnect } from 'wagmi'
 import { z } from 'zod'
@@ -28,37 +27,19 @@ const formSchema = z.object({
     }),
 })
 
-// const formSchema = z.object({
-//   email: z.custom<string>((v) => {
-//     return (
-//       typeof v === 'string' &&
-//       z.string().email().safeParse(v).success &&
-//       // Prevent user from entering a "+" in their email (aliasing)
-//       (!isProd() ? true : !v.includes('+'))
-//     )
-//   }, ''),
-// })
-
 type FormData = z.infer<typeof formSchema>
 
-type Props = {
-  redirectUri?: string
-}
-
-export function EmailForm({ redirectUri = '/create' }: Props) {
+export function EmailForm() {
   const { connect } = useConnect()
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    mode: 'onChange',
+    mode: 'onSubmit',
   })
   const {
-    register,
-    formState: { isValid, isSubmitting, errors },
+    formState: { isSubmitting },
     handleSubmit,
   } = form
-
-  const { push } = useRouter()
 
   const client = useQueryClient()
 
@@ -108,7 +89,7 @@ export function EmailForm({ redirectUri = '/create' }: Props) {
         />
         <Button
           type="submit"
-          disabled={!isValid || isSubmitting}
+          disabled={isSubmitting}
           className="absolute right-[6px] top-2 h-10 w-20 self-center text-base font-semibold"
         >
           {isSubmitting ? (
