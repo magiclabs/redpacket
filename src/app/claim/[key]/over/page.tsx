@@ -32,20 +32,7 @@ export default function Over() {
 
   return (
     <Container>
-      <div className="relative flex">
-        <motion.div
-          className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-[rgba(255,48,52,0.70)] blur-[58px]"
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: 1,
-          }}
-          transition={{
-            delay: 0.5,
-            duration: 0.5,
-          }}
-        ></motion.div>
-        <RedLantern />
-      </div>
+      <RedLantern />
 
       <MotionHeadline
         className="mt-2.5 sm:-mt-[14px]"

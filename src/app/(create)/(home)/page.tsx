@@ -17,7 +17,16 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center gap-8">
-      <RedPacket />
+      <div className="relative">
+        <RedPacket />
+        <div
+          className="absolute inset-0 z-50 m-auto aspect-square h-[80px] w-[80px] rounded-full bg-blue-200 blur-[40px] sm:h-[100px] sm:w-[100px] sm:blur-[50px]"
+          style={{
+            background:
+              'radial-gradient(50% 50% at 50% 50%, rgba(255, 48, 52, 0.7) 0%, rgba(255, 48, 52, 0.7) 100%)',
+          }}
+        />
+      </div>
 
       <Container>
         <div className="flex flex-col gap-5">
