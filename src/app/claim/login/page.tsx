@@ -33,7 +33,7 @@ export default function Claim() {
       <BackLanturns
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.2 }}
+        transition={{ delay: 1.8 }}
       />
 
       <RedFocus
@@ -41,7 +41,7 @@ export default function Claim() {
         animate={{ opacity: 1 }}
         transition={{
           duration: 0.5,
-          delay: 2.5,
+          delay: 2.3,
         }}
       />
 
@@ -59,7 +59,7 @@ export default function Claim() {
               opacity: 1,
             }}
             transition={{
-              delay: 3,
+              delay: 2.3,
               duration: 0.5,
             }}
           ></motion.div>
@@ -69,8 +69,7 @@ export default function Claim() {
             animate={{ opacity: 1, y: 0, rotate: 30 }}
             transition={{
               type: 'spring',
-              duration: 2,
-              stiffness: 60,
+              duration: 1.8,
             }}
           />
         </div>
@@ -83,7 +82,7 @@ export default function Claim() {
             y: 0,
           }}
           transition={{
-            delay: 3,
+            delay: 2.8,
             duration: 0.5,
           }}
         >
@@ -102,7 +101,7 @@ export default function Claim() {
             y: 0,
           }}
           transition={{
-            delay: 3.6,
+            delay: 3.3,
             duration: 0.5,
           }}
         >
@@ -113,7 +112,7 @@ export default function Claim() {
           className="mt-10 flex w-full flex-col justify-center gap-5 text-pretty sm:px-0"
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 4, duration: 0.5 }}
+          transition={{ delay: 3.8, duration: 0.5 }}
         >
           <span className="max-w-[354px] self-center text-center text-xs text-[#FFFFFF80] sm:text-sm">
             {`By proceeding, you consent to Magic's `}
