@@ -6,7 +6,7 @@ export function RedDragon() {
       priority
       key="red-dragon"
       className="md:h-64 md:w-64 z-10 mt-4 aspect-square h-64 w-64 select-none sm:mt-12"
-      src="/Red_Dragon.png"
+      src="/red-dragon.png"
       width="260"
       height="260"
       quality={80}
