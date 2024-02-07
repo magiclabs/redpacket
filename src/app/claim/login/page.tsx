@@ -48,7 +48,12 @@ export default function Claim() {
       <Container>
         <div className="relative">
           <motion.div
-            className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/4 transform rounded-full bg-[rgba(255,48,52,0.70)] blur-[58px]"
+            className="z-3 absolute inset-0 m-auto aspect-square h-[80px] w-[80px] rounded-full blur-[40px] sm:h-[100px] sm:w-[100px] sm:blur-[50px]"
+            style={{
+              background:
+                'radial-gradient(50% 50% at 50% 50%, rgba(255, 48, 52, 0.7) 0%, rgba(255, 48, 52, 0.7) 100%)',
+              mixBlendMode: 'overlay',
+            }}
             initial={{ opacity: 0 }}
             animate={{
               opacity: 1,
