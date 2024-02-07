@@ -14,7 +14,7 @@ import {
   parseEther,
   type SimulateContractReturnType,
 } from 'viem'
-import { useAccount, useSimulateContract, useWriteContract } from 'wagmi'
+import { useAccount, useEstimateFeesPerGas, useSimulateContract, useWriteContract } from 'wagmi'
 
 type Params = {
   isValid: boolean
@@ -27,6 +27,8 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
 
   const { address } = useAccount()
 
+  const fees = useEstimateFeesPerGas({ chainId: CHAINS[CURRENT_CHAIN_KEY].chain.id})
+
   const { data, queryKey } = useSimulateContract({
     address: CHAINS[CURRENT_CHAIN_KEY].getRedPacketFactoryAddress(),
     abi: REDPACKET_FACTORY_ABI,
@@ -36,6 +38,8 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
     query: {
       enabled: isValid,
     },
+    maxFeePerGas: fees.data?.maxFeePerGas,
+    maxPriorityFeePerGas: fees.data?.maxPriorityFeePerGas,
   })
 
   const client = useQueryClient()
