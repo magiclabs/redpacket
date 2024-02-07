@@ -29,11 +29,9 @@ export function ClaimPacket() {
 
   const { client } = useAlchemyClient()
 
-  console.log({ claimedAddresses, address: client?.account.address })
-
   if (
     client?.account.address &&
-    claimedAddresses.includes(client.account.address)
+    claimedAddresses?.includes(client.account.address)
   ) {
     toast('You have already claimed this packet', { id: 'claimed' })
     redirect(`/claim/${key}/result`)

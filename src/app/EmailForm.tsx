@@ -57,7 +57,6 @@ export function EmailForm() {
         },
         {
           onSuccess: async () => {
-            console.log('SUCCESS!')
             client.setQueryData(['is-logged-in'], true)
             client.setQueryData(['email'], email)
 

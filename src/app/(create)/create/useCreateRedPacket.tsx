@@ -82,7 +82,6 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
               reject(error)
             },
           })
-          console.log({ address })
         }),
     })
 

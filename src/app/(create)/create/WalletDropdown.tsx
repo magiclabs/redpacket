@@ -63,14 +63,14 @@ export function WalletDropdown() {
   return address && balance ? (
     <div className="absolute right-4 top-4 z-50 flex flex-col gap-2">
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex h-10 justify-center gap-2 rounded-3xl border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF14] p-2 pr-4 font-mono text-base font-light text-white shadow-[0px_4px_28px_8px_rgba(0,0,0,0.25)] backdrop-blur-[18px] focus-visible:outline-none">
+        <DropdownMenuTrigger className="flex h-10 w-fit justify-center gap-2 self-end rounded-3xl border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF14] p-2 pr-4 font-mono text-base font-light text-white shadow-[0px_4px_28px_8px_rgba(0,0,0,0.25)] backdrop-blur-[18px] focus-visible:outline-none">
           <div
             className="aspect-square h-6 w-6 rounded-full"
             style={{
               background:
                 'radial-gradient(66.02% 77.37% at 31.25% 32.81%, #FF2227 0%, #A30128 100%)',
             }}
-          />
+          ></div>
           {parseFloat(Number(formatEther(balance?.value)).toFixed(5))} ETH
         </DropdownMenuTrigger>
         <DropdownMenuContent

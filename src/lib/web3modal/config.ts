@@ -1,13 +1,14 @@
 import { coinbaseWallet, injected, walletConnect } from '@wagmi/connectors'
-import { mumbai } from 'config/client'
 import { PROD_URL } from 'config/url'
-import { ALCHEMY_RPC_URL } from 'lib/constants'
+import {
+  ALCHEMY_RPC_URL,
+  CURRENT_CHAIN,
+  CURRENT_CHAIN_KEY,
+} from 'lib/constants'
 import { magic } from 'lib/magic'
 import { createMagicConector } from 'lib/wagmi/magicConnector'
-import { isProd } from 'utils/isProd'
 import { createClient } from 'viem'
 import { cookieStorage, createConfig, createStorage, http } from 'wagmi'
-import { base } from 'wagmi/chains'
 
 export const projectId = `28adeacdce0cf960683ec30543294091`
 
@@ -21,25 +22,13 @@ const metadata = {
 }
 
 export const wagmiConfig = createConfig({
-  ...(isProd()
-    ? {
-        chains: [base],
-        client({ chain }) {
-          return createClient({
-            chain,
-            transport: http(ALCHEMY_RPC_URL['base']),
-          })
-        },
-      }
-    : {
-        chains: [mumbai],
-        client({ chain }) {
-          return createClient({
-            chain,
-            transport: http(ALCHEMY_RPC_URL['mumbai']),
-          })
-        },
-      }),
+  chains: [CURRENT_CHAIN],
+  client({ chain }) {
+    return createClient({
+      chain,
+      transport: http(ALCHEMY_RPC_URL[CURRENT_CHAIN_KEY]),
+    })
+  },
   connectors: [
     walletConnect({
       projectId,
