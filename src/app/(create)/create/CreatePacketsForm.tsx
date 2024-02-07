@@ -175,6 +175,10 @@ export function CreatePacketsForm() {
               disabled={isLoading}
               {...register('packets', {
                 required: true,
+                onChange: (e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, '')
+                  setValue('packets', value)
+                },
               })}
               maxLength={4}
               id="packets"
@@ -215,6 +219,16 @@ export function CreatePacketsForm() {
               {...register('eth', {
                 required: true,
                 maxLength: 9,
+                onChange: (e) => {
+                  const value = e.target.value.replace(/[^0-9.]/g, '')
+                  const dotCount = value.split('.').length - 1
+
+                  if (dotCount > 1) {
+                    return
+                  }
+
+                  setValue('eth', value)
+                },
               })}
               maxLength={9}
               inputMode="numeric"
