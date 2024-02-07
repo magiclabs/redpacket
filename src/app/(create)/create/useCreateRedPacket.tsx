@@ -14,7 +14,12 @@ import {
   parseEther,
   type SimulateContractReturnType,
 } from 'viem'
-import { useAccount, useEstimateFeesPerGas, useSimulateContract, useWriteContract } from 'wagmi'
+import {
+  useAccount,
+  useEstimateFeesPerGas,
+  useSimulateContract,
+  useWriteContract,
+} from 'wagmi'
 
 type Params = {
   isValid: boolean
@@ -27,7 +32,9 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
 
   const { address } = useAccount()
 
-  const fees = useEstimateFeesPerGas({ chainId: CHAINS[CURRENT_CHAIN_KEY].chain.id})
+  const { data: fees, isSuccess } = useEstimateFeesPerGas({
+    chainId: CHAINS[CURRENT_CHAIN_KEY].chain.id,
+  })
 
   const { data, queryKey } = useSimulateContract({
     address: CHAINS[CURRENT_CHAIN_KEY].getRedPacketFactoryAddress(),
@@ -38,8 +45,12 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
     query: {
       enabled: isValid,
     },
-    maxFeePerGas: fees.data?.maxFeePerGas,
-    maxPriorityFeePerGas: fees.data?.maxPriorityFeePerGas,
+    ...(isSuccess
+      ? {
+          maxFeePerGas: fees.maxFeePerGas,
+          maxPriorityFeePerGas: fees.maxPriorityFeePerGas,
+        }
+      : {}),
   })
 
   const client = useQueryClient()
@@ -90,7 +101,11 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
           const unsubscribe = new QueryObserver<SimulateContractReturnType>(
             client,
             { queryKey },
-          ).subscribe(async ({ isSuccess, data }) => {
+          ).subscribe(async ({ isSuccess, data, isError, error }) => {
+            if (isError) {
+              reject(error)
+            }
+
             if (isSuccess) {
               const hash = await writeContractAsync(data.request)
               const address = await getRedPacketAddress()
