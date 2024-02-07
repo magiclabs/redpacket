@@ -9,7 +9,6 @@ import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
 import { Progress } from 'components/ui/progress'
 import { motion } from 'framer-motion'
 import { redirect, useParams } from 'next/navigation'
-import { toast } from 'sonner'
 import { type Address } from 'viem'
 
 export function ClaimPacket() {
@@ -33,7 +32,6 @@ export function ClaimPacket() {
     client?.account.address &&
     claimedAddresses?.includes(client.account.address)
   ) {
-    toast('You have already claimed this packet', { id: 'claimed' })
     redirect(`/claim/${key}/result`)
   }
 
