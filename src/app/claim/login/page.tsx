@@ -33,7 +33,7 @@ export default function Claim() {
       <BackLanturns
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 2.2 }}
       />
 
       <RedFocus
@@ -41,7 +41,7 @@ export default function Claim() {
         animate={{ opacity: 1 }}
         transition={{
           duration: 0.5,
-          delay: 2,
+          delay: 2.5,
         }}
       />
 
@@ -54,7 +54,7 @@ export default function Claim() {
               opacity: 1,
             }}
             transition={{
-              delay: 2,
+              delay: 3,
               duration: 0.5,
             }}
           ></motion.div>
@@ -63,10 +63,9 @@ export default function Claim() {
             initial={{ opacity: 0, y: 200, rotate: 30 }}
             animate={{ opacity: 1, y: 0, rotate: 30 }}
             transition={{
-              ease: 'easeInOut',
               type: 'spring',
-              duration: 1.2,
-              stiffness: 50,
+              duration: 2,
+              stiffness: 60,
             }}
           />
         </div>
@@ -79,7 +78,7 @@ export default function Claim() {
             y: 0,
           }}
           transition={{
-            delay: 2.4,
+            delay: 3,
             duration: 0.5,
           }}
         >
@@ -98,7 +97,7 @@ export default function Claim() {
             y: 0,
           }}
           transition={{
-            delay: 2.8,
+            delay: 3.6,
             duration: 0.5,
           }}
         >
