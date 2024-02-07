@@ -52,7 +52,7 @@ export default function Over() {
         animate={{ opacity: 1 }}
         transition={{ delay: ANIMATION_INTERVAL * 1 }}
       >
-        All packets claimed
+        The festivities are over
       </MotionHeadline>
 
       <motion.p
