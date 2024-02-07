@@ -11,7 +11,7 @@ import { useClaimedAmount } from 'app/claim/[key]/result/useClaimedAmount'
 import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ANIMATION_INTERVAL } from 'lib/constants'
+import { ANIMATION_INTERVAL, CURRENT_CHAIN_KEY } from 'lib/constants'
 import { magic } from 'lib/magic'
 import { redirect, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -160,7 +160,7 @@ export default function Lucky() {
             >
               Funds can be transferred out or accessed at any time via{' '}
               <a
-                href="https://wallet.magic.link"
+                href={`https://wallet.magic.link/?network=${CURRENT_CHAIN_KEY}`}
                 target="_blank"
                 rel="noopener"
                 className="font-semibold text-white hover:opacity-80"
