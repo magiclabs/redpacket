@@ -53,7 +53,7 @@ export default function Over() {
         animate={{ opacity: 1 }}
         transition={{ delay: ANIMATION_INTERVAL * 1 }}
       >
-        The festivities are over
+        The festivities are &nbsp;over
       </MotionHeadline>
 
       <motion.p
