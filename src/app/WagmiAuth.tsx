@@ -2,6 +2,7 @@
 
 import { Loading } from 'components/Loading'
 import { useEffect, useState, type PropsWithChildren } from 'react'
+import { isServer } from 'utils/isServer'
 import { useAccount } from 'wagmi'
 
 export const WagmiAuth = ({ children }: PropsWithChildren) => {
@@ -12,7 +13,7 @@ export const WagmiAuth = ({ children }: PropsWithChildren) => {
     setIsMounted(true)
   }, [])
 
-  if (isReconnecting || !isMounted) {
+  if (isServer() || isReconnecting || !isMounted) {
     return <Loading />
   }
 
