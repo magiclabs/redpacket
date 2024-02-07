@@ -15,6 +15,7 @@ import { Input } from 'components/ui/input'
 import { magic } from 'lib/magic'
 import { createMagicConector } from 'lib/wagmi/magicConnector'
 import { useForm } from 'react-hook-form'
+import { isProd } from 'utils/isProd'
 import { useConnect } from 'wagmi'
 import { z } from 'zod'
 
@@ -22,7 +23,7 @@ const formSchema = z.object({
   email: z
     .string()
     .email()
-    .regex(/^[^+]*$/, {
+    .regex(isProd() ? /^[^+]*$/ : /^[*]*/, {
       message: 'Email aliases containing “+” are not allowed',
     }),
 })
