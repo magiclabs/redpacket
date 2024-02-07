@@ -2,7 +2,6 @@
 
 import { useMutation } from '@tanstack/react-query'
 import { track } from '@vercel/analytics/react'
-import { WalletDropdown } from 'app/(create)/create/WalletDropdown'
 import { useETHPrice } from 'app/(create)/create/useETHPrice'
 import { useRedPacket } from 'app/(create)/share/[key]/useRedPacket'
 import { RedEthereum } from 'app/claim/[key]/result/RedEthereum'
@@ -52,7 +51,6 @@ export default function Lucky() {
 
   return (
     <>
-      <WalletDropdown />
       <AnimatePresence>
         {isVisible && (
           <motion.div

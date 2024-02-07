@@ -9,6 +9,7 @@ import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
 import { Progress } from 'components/ui/progress'
 import { motion } from 'framer-motion'
 import { redirect, useParams } from 'next/navigation'
+import { useEffect } from 'react'
 import { type Address } from 'viem'
 
 export function ClaimPacket() {
@@ -22,24 +23,57 @@ export function ClaimPacket() {
     isExpired,
     refetch,
     claimedAddresses,
+    isLoading,
   } = useRedPacket({
     contractAddress,
   })
 
   const { client } = useAlchemyClient()
 
-  if (
-    client?.account.address &&
-    claimedAddresses?.includes(client.account.address)
-  ) {
-    redirect(`/claim/${key}/result`)
-  }
+  useEffect(() => {
+    if (isLoading) {
+      return
+    }
 
-  if (isExpired) {
-    redirect(`/claim/${key}/over`)
-  }
+    if (
+      client?.account.address &&
+      claimedAddresses?.includes(client.account.address)
+    ) {
+      redirect(`/claim/${key}/result`)
+    }
+
+    if (isExpired) {
+      redirect(`/claim/${key}/over`)
+    }
+  }, [claimedAddresses, client, isExpired, isLoading, key])
 
   const { claim, isPending } = useClaimPacket()
+
+  if (isLoading) {
+    return (
+      <motion.main
+        key="loading"
+        className="flex h-dvh w-full flex-col items-center justify-center overflow-x-hidden"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="flex flex-col items-center">
+          <InfiniteLoadingSpinner className="aspect-square h-16 w-16" />
+          <span className="text-sm font-semibold">Loading Red Packets...</span>
+          <motion.span
+            className="mt-1 text-center text-sm text-[#ffffffcc]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2, duration: 0.5 }}
+          >
+            This takes a few seconds
+          </motion.span>
+        </div>
+      </motion.main>
+    )
+  }
 
   return (
     <>

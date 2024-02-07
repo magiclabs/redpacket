@@ -3,7 +3,6 @@
 import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState, type PropsWithChildren } from 'react'
-import { isServer } from 'utils/isServer'
 import { useAccount } from 'wagmi'
 
 export const WagmiAuth = ({ children }: PropsWithChildren) => {
@@ -16,7 +15,7 @@ export const WagmiAuth = ({ children }: PropsWithChildren) => {
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      {isServer() || isReconnecting || !isMounted ? (
+      {isReconnecting || !isMounted ? (
         <motion.main
           key="loading"
           className="flex h-dvh w-full flex-col items-center justify-center overflow-x-hidden"

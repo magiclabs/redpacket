@@ -34,7 +34,9 @@ export function WalletDropdown() {
   const { disconnect } = useDisconnect({
     mutation: {
       onSettled: () => {
-        if (pathname.includes('claim') && key) {
+        if (pathname.includes('over')) {
+          push('/')
+        } else if (pathname.includes('claim') && key) {
           push('/claim/login?id=' + key)
         } else {
           push('/')
