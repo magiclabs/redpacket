@@ -40,6 +40,7 @@ export function EmailForm() {
   const {
     formState: { isSubmitting },
     handleSubmit,
+    reset,
   } = form
 
   const client = useQueryClient()
@@ -47,24 +48,29 @@ export function EmailForm() {
   const onSubmit = handleSubmit(async ({ email }) => {
     if (isSubmitting) return
 
-    await new Promise((resolve) => {
-      connect(
-        {
-          connector: createMagicConector({
-            magic,
-            login: () => magic.auth.loginWithEmailOTP({ email }),
-          }),
-        },
-        {
-          onSuccess: async () => {
-            client.setQueryData(['is-logged-in'], true)
-            client.setQueryData(['email'], email)
-
-            resolve(true)
+    try {
+      await new Promise((resolve, reject) => {
+        connect(
+          {
+            connector: createMagicConector({
+              magic,
+              login: () => magic.auth.loginWithEmailOTP({ email }),
+            }),
           },
-        },
-      )
-    })
+          {
+            onSuccess: async () => {
+              client.setQueryData(['is-logged-in'], true)
+              client.setQueryData(['email'], email)
+
+              resolve(true)
+            },
+            onError: reject,
+          },
+        )
+      })
+    } catch (e) {
+      reset()
+    }
   })
 
   return (

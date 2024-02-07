@@ -46,7 +46,6 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
     query: {
       enabled: isValid,
     },
-
     ...(isSuccess && isProd()
       ? {
           maxFeePerGas: fees.maxFeePerGas,
