@@ -90,7 +90,7 @@ export default function Claim() {
         </motion.div>
 
         <motion.div
-          className="mt-10 flex w-full flex-col justify-center gap-5 px-5 sm:px-0"
+          className="mt-10 flex w-full flex-col justify-center gap-5 sm:px-0"
           initial={{ opacity: 0, y: 60 }}
           animate={{
             opacity: 1,
@@ -102,6 +102,44 @@ export default function Claim() {
           }}
         >
           <EmailForm redirectUri={`/claim/${key}`} />
+        </motion.div>
+
+        <motion.div
+          className="mt-10 flex w-full flex-col justify-center gap-5 text-pretty sm:px-0"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 4, duration: 0.5 }}
+        >
+          <span className="max-w-[354px] self-center text-center text-xs text-[#FFFFFF80] sm:text-sm">
+            {`By proceeding, you consent to Magic's `}
+            <a
+              href="https://magic.link/legal/privacy-policy"
+              target="_blank"
+              rel="noopener"
+              className="font-semibold text-[#FFFFFFBF] hover:text-white"
+            >
+              Privacy Policy
+            </a>
+            {` and `}
+            <a
+              href="https://magic.link/legal/terms-of-service"
+              target="_blank"
+              rel="noopener"
+              className="font-semibold text-[#FFFFFFBF] hover:text-white"
+            >
+              Terms of Service
+            </a>
+            {` Limited Time offer. One (1) entry per person. Must be 18 years or older to participate. Void where prohibited. See complete `}
+            <a
+              href="https://magic.link/legal/red-packet-terms-conditions"
+              target="_blank"
+              rel="noopener"
+              className="font-semibold text-[#FFFFFFBF] hover:text-white"
+            >
+              Giveaway Terms and Conditions
+            </a>
+            {` for details.`}
+          </span>
         </motion.div>
       </Container>
     </>
