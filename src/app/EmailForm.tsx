@@ -83,7 +83,7 @@ export function EmailForm() {
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-[#FF4548]" />
             </FormItem>
           )}
         />
