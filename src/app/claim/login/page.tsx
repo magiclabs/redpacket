@@ -14,7 +14,7 @@ import { useAccount } from 'wagmi'
 export default function Claim() {
   const { push } = useRouter()
   const search = useSearchParams()
-  const { isConnected } = useAccount()
+  const { isConnected, connector } = useAccount()
 
   const key = search.get('id')
 
@@ -23,10 +23,10 @@ export default function Claim() {
   }
 
   useEffect(() => {
-    if (isConnected) {
+    if (isConnected && connector?.type === 'magic') {
       push(`/claim/${key}`)
     }
-  }, [isConnected, key, push])
+  }, [connector?.type, isConnected, key, push])
 
   return (
     <>
