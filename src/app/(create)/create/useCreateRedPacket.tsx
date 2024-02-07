@@ -9,6 +9,7 @@ import { CHAINS } from 'config/client'
 import { CURRENT_CHAIN_KEY, REDPACKET_FACTORY_ABI } from 'lib/constants'
 import { publicClient } from 'lib/viem/publicClient'
 import ms from 'ms'
+import { isProd } from 'utils/isProd'
 import {
   decodeEventLog,
   parseEther,
@@ -45,7 +46,8 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
     query: {
       enabled: isValid,
     },
-    ...(isSuccess
+
+    ...(isSuccess && isProd()
       ? {
           maxFeePerGas: fees.maxFeePerGas,
           maxPriorityFeePerGas: fees.maxPriorityFeePerGas,

@@ -15,18 +15,20 @@ import { Progress } from 'components/ui/progress'
 import { CHAINS } from 'config/client'
 import { PROD_URL } from 'config/url'
 import { CURRENT_CHAIN_KEY } from 'lib/constants'
-import { useParams, useRouter } from 'next/navigation'
+import { redirect, useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { isLocal } from 'utils/isLocal'
 import { isServer } from 'utils/isServer'
 import { type Address } from 'viem'
+import { useAccount } from 'wagmi'
 
 export default function Share() {
   const { key } = useParams<{ key: string }>()
 
   const contractAddress: Address = `0x${key}`
 
+  const { isDisconnected } = useAccount()
   const [, copyToClipboard] = useCopyToClipboard()
 
   const link = isServer()
@@ -44,6 +46,10 @@ export default function Share() {
     remainingPackets,
     isSuccess,
   } = useRedPacket({ contractAddress, refetch: true })
+
+  if (isDisconnected) {
+    redirect('/')
+  }
 
   return (
     <div className="flex h-lvh w-full flex-col items-center gap-8">
