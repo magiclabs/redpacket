@@ -32,7 +32,7 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
 
   const { address } = useAccount()
 
-  const { data: fees, isLoading } = useEstimateFeesPerGas({
+  const { data: fees, isSuccess } = useEstimateFeesPerGas({
     chainId: CHAINS[CURRENT_CHAIN_KEY].chain.id,
   })
 
@@ -45,12 +45,12 @@ export function useCreateRedPacket({ eth, packets, isValid }: Params) {
     query: {
       enabled: isValid,
     },
-    ...(isLoading
-      ? {}
-      : {
-          maxFeePerGas: fees?.maxFeePerGas,
-          maxPriorityFeePerGas: fees?.maxPriorityFeePerGas,
-        }),
+    ...(isSuccess
+      ? {
+          maxFeePerGas: fees.maxFeePerGas,
+          maxPriorityFeePerGas: fees.maxPriorityFeePerGas,
+        }
+      : {}),
   })
 
   const client = useQueryClient()
