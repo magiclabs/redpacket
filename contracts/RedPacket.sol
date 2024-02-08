@@ -40,7 +40,6 @@ contract RedPacket {
       claimedAmounts[msg.sender] == 0,
       'You have already claimed a packet.'
     );
-    require(creator != msg.sender, 'Creator cannot claim a packet.');
 
     uint256 balance = getCurrentBalance();
     uint256 claimAmount = totalBalance / totalClaimCount;
