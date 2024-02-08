@@ -24,6 +24,7 @@ import { z } from 'zod'
 export const MAXIMUM_PACKETS = 9999
 export const MINIMUM_PACKETS = 1
 export const MINIMUM_ETH = 0.001
+export const MAXIMUM_ETH = 10
 
 export const DEFAULT_PACKETS = 10
 export const DEFAULT_ETH = 0.02
@@ -52,21 +53,17 @@ const formSchema = z.object({
 
     return true
   }),
-  eth: z.custom<string>((v) => {
-    if (typeof v !== 'string') {
-      return false
-    }
-
-    if (Number(v) < MINIMUM_ETH) {
-      return false
-    }
-
-    if (!parseEther(v)) {
-      return false
-    }
-
-    return true
-  }),
+  eth: z
+    .string()
+    .refine((v) => {
+      return Number(v) >= MINIMUM_ETH
+    }, 'ETH amount is too low')
+    .refine((v) => {
+      return Number(v) <= MAXIMUM_ETH
+    }, 'ETH amount is too high')
+    .refine((v) => {
+      return parseEther(v)
+    }, 'Invalid ETH amount'),
 })
 
 export type FormValues = z.infer<typeof formSchema>
