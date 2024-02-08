@@ -59,7 +59,7 @@ export default function Home() {
         <TypographyLink href="" target="_blank" rel="noopener noreferrer">
           Privacy Policy
         </TypographyLink>{' '}
-        and
+        and{' '}
         <TypographyLink href="" target="_blank" rel="noopener noreferrer">
           Terms of Service.
         </TypographyLink>{' '}
