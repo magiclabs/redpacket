@@ -35,11 +35,11 @@ export function WalletDropdown() {
     mutation: {
       onSettled: () => {
         if (pathname.includes('over')) {
-          push('/')
+          push('/login')
         } else if (pathname.includes('claim') && key) {
           push('/claim/login?id=' + key)
         } else {
-          push('/')
+          push('/login')
         }
       },
     },

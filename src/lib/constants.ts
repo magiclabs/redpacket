@@ -28,3 +28,7 @@ export const CURRENT_CHAIN = (
     mumbai: polygonMumbai,
   } as const
 )[CURRENT_CHAIN_KEY]
+
+export const MAGIC_1ETH_CONTRACT_ADDRESS = isProd()
+  ? ''
+  : 'aEeeda52783563d07754FEfE716C3E42d379C093'

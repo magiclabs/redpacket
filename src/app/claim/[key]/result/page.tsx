@@ -50,11 +50,9 @@ export default function Lucky() {
     }, 3000)
   }, [])
 
-  useEffect(() => {
-    if (isDisconnected) {
-      redirect('/claim/login?id=' + key)
-    }
-  }, [isDisconnected, key])
+  if (isDisconnected) {
+    redirect('/claim/login?id=' + key)
+  }
 
   const isLoading = useMemo(() => {
     return claimedAmount === 0n || isVisible
@@ -109,7 +107,7 @@ export default function Lucky() {
               animate={{
                 y: 0,
                 opacity: 1,
-                transition: { delay: ANIMATION_INTERVAL * 2 },
+                transition: { delay: ANIMATION_INTERVAL * 1 },
               }}
             >
               Happy New Year!
@@ -131,7 +129,7 @@ export default function Lucky() {
               animate={{
                 y: 0,
                 opacity: 1,
-                transition: { delay: ANIMATION_INTERVAL * 4 },
+                transition: { delay: ANIMATION_INTERVAL * 3 },
               }}
             >
               <Button
@@ -163,7 +161,7 @@ export default function Lucky() {
               initial={{ opacity: 0 }}
               animate={{
                 opacity: 1,
-                transition: { delay: ANIMATION_INTERVAL * 5 },
+                transition: { delay: ANIMATION_INTERVAL * 4 },
               }}
             >
               Funds can be transferred out or accessed at any time via{' '}

@@ -20,7 +20,7 @@ export default function Over() {
     mutation: {
       onSettled: () => {
         track('Logged Out')
-        push('/')
+        push('/login')
       },
     },
   })
@@ -73,7 +73,7 @@ export default function Over() {
             className="order-1 min-h-14 flex-1 text-lg font-semibold sm:order-2"
             onClick={() => {
               track('Create Clicked')
-              push('/')
+              push('/login')
             }}
           >
             Create

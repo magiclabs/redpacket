@@ -10,13 +10,13 @@ import { type PropsWithChildren } from 'react'
 export default function CreateLayout({ children }: PropsWithChildren) {
   const pathname = usePathname()
 
-  const isHome = pathname === '/'
+  const isLogin = pathname === '/login'
 
   return (
     <>
       <BackLanturns />
       <RedFocus />
-      {!isHome && <WalletDropdown />}
+      {!isLogin && <WalletDropdown />}
 
       <Container>{children}</Container>
     </>
