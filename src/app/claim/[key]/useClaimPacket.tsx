@@ -1,5 +1,6 @@
 import {
   type BatchUserOperationCallData,
+  type Percentage,
   type UserOperationCallData,
 } from '@alchemy/aa-core'
 import { useMutation } from '@tanstack/react-query'
@@ -70,7 +71,10 @@ export function useClaimPacket() {
         },
       ]
 
-      const result = await client.sendUserOperation({ uo })
+      const result = await client.sendUserOperation({ 
+        uo, 
+        overrides: {callGasLimit: { percentage: 50 } as Percentage} 
+      })
       const tx2 = await client.waitForUserOperationTransaction({
         hash: result.hash,
       })
