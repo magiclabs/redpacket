@@ -2,8 +2,11 @@
 
 import { useMutation } from '@tanstack/react-query'
 import { track } from '@vercel/analytics/react'
+import { WalletDropdown } from 'app/(create)/create/WalletDropdown'
 import { useETHPrice } from 'app/(create)/create/useETHPrice'
 import { useRedPacket } from 'app/(create)/share/[key]/useRedPacket'
+import { BackLanturns } from 'app/claim/BackLanterns'
+import { RedFocus } from 'app/claim/RedFocus'
 import { RedEthereum } from 'app/claim/[key]/result/RedEthereum'
 import { RedPacketFireworks } from 'app/claim/[key]/result/RedPacketFireworks'
 import { useClaimedAmount } from 'app/claim/[key]/result/useClaimedAmount'
@@ -59,6 +62,10 @@ export default function Lucky() {
 
   return (
     <>
+      <BackLanturns />
+      <RedFocus />
+      <WalletDropdown />
+
       <AnimatePresence>
         {isLoading && (
           <motion.div
