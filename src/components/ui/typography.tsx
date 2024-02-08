@@ -52,3 +52,39 @@ export const TypographyBody = ({
     </p>
   )
 }
+
+export const TypographySmall = ({
+  children,
+  className,
+  ...rest
+}: ComponentProps<'p'>) => {
+  return (
+    <small
+      className={cn(
+        `text-center text-[11px] font-normal leading-normal tracking-[-0.408px] text-white/50`,
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </small>
+  )
+}
+
+export const TypographyLink = ({
+  children,
+  className,
+  ...rest
+}: ComponentProps<'a'>) => {
+  return (
+    <a
+      className={cn(
+        `font-semibold text-white/75 hover:text-white/100`,
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </a>
+  )
+}

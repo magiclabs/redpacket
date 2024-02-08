@@ -4,7 +4,12 @@ import { ConnectWalletButton } from 'app/ConnectWalletButton'
 import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
 import { Container } from 'components/ui/container'
-import { MotionHeadline, TypographyBody } from 'components/ui/typography'
+import {
+  MotionHeadline,
+  TypographyBody,
+  TypographyLink,
+  TypographySmall,
+} from 'components/ui/typography'
 import { redirect } from 'next/navigation'
 import { useAccount } from 'wagmi'
 
@@ -50,6 +55,22 @@ export default function Home() {
 
           <EmailForm />
         </div>
+
+        <TypographySmall className="mt-8 w-full max-w-[354px]">
+          By proceeding, you consent to Magic’s{' '}
+          <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </TypographyLink>{' '}
+          and
+          <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+            Terms of Service.
+          </TypographyLink>{' '}
+          See complete{' '}
+          <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+            Terms and Conditions
+          </TypographyLink>{' '}
+          for details.
+        </TypographySmall>
       </Container>
     </div>
   )
