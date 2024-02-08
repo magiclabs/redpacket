@@ -56,15 +56,27 @@ export default function Home() {
 
       <TypographySmall className="mt-8 w-full max-w-[354px]">
         By proceeding, you consent to Magic’s{' '}
-        <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+        <TypographyLink
+          href="https://magic.link/legal/privacy-policy"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Privacy Policy
         </TypographyLink>{' '}
         and{' '}
-        <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+        <TypographyLink
+          href="https://magic.link/legal/terms-of-service"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Terms of Service.
         </TypographyLink>{' '}
         See complete{' '}
-        <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+        <TypographyLink
+          href="https://magic.link/legal/red-packet-terms-conditions"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Terms and Conditions
         </TypographyLink>{' '}
         for details.
