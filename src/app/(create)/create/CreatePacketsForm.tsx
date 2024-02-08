@@ -21,7 +21,7 @@ import { formatEther, parseEther } from 'viem'
 import { useAccount, useBalance } from 'wagmi'
 import { z } from 'zod'
 
-export const MAXIMUM_PACKETS = 9999
+export const MAXIMUM_PACKETS = 999
 export const MINIMUM_PACKETS = 1
 export const MINIMUM_ETH = 0.001
 export const MAXIMUM_ETH = 10
@@ -179,7 +179,7 @@ export function CreatePacketsForm() {
                   setValue('packets', value)
                 },
               })}
-              maxLength={4}
+              maxLength={3}
               id="packets"
               inputMode="numeric"
               defaultValue={DEFAULT_PACKETS}
