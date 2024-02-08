@@ -29,7 +29,8 @@ export const WagmiAuth = ({ children }: PropsWithChildren) => {
             <span className="text-sm font-semibold">
               Loading Red Packets...
             </span>
-            {isMounted && (
+
+            {isMounted ? (
               <motion.span
                 className="mt-1 text-center text-sm text-[#ffffffcc]"
                 initial={{ opacity: 0, y: 20 }}
@@ -38,6 +39,10 @@ export const WagmiAuth = ({ children }: PropsWithChildren) => {
               >
                 This takes a few seconds
               </motion.span>
+            ) : (
+              <span className="mt-1 text-center text-sm text-[#ffffffcc]">
+                &nbsp;
+              </span>
             )}
           </div>
         </motion.main>

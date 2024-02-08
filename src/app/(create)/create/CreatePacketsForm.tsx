@@ -147,7 +147,9 @@ export function CreatePacketsForm() {
   return (
     <Form {...form}>
       <form className="flex w-full flex-col" onSubmit={onSubmit}>
-        <MotionHeadline>Create your red packets</MotionHeadline>
+        <MotionHeadline>
+          Create your <span className="inline-block">red packets</span>
+        </MotionHeadline>
 
         <div className="mt-8 grid w-full items-center gap-3 sm:grid-flow-col sm:justify-between">
           <Label htmlFor="packets" className="text-lg font-medium">

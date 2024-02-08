@@ -3,7 +3,6 @@
 import { ConnectWalletButton } from 'app/ConnectWalletButton'
 import { EmailForm } from 'app/EmailForm'
 import { RedPacket } from 'app/RedPacket'
-import { Container } from 'components/ui/container'
 import {
   MotionHeadline,
   TypographyBody,
@@ -21,7 +20,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-8">
+    <>
       <div className="relative">
         <RedPacket />
         <div
@@ -33,45 +32,43 @@ export default function Home() {
         />
       </div>
 
-      <Container>
-        <div className="flex flex-col gap-5">
-          <MotionHeadline>Happy Lunar New Year</MotionHeadline>
-          <TypographyBody>
-            Celebrate the Year of the Dragon by creating digital red packets
-            (红包) filled with ETH
-          </TypographyBody>
+      <div className="mt-8 flex flex-col gap-5">
+        <MotionHeadline>Happy Lunar New Year</MotionHeadline>
+        <TypographyBody>
+          Celebrate the Year of the Dragon by creating digital red packets
+          (红包) filled with ETH
+        </TypographyBody>
+      </div>
+
+      <div className="mt-10 flex w-full flex-col gap-5">
+        <ConnectWalletButton />
+
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-[#FFFFFF33]" />
+          <span className="text-sm font-medium text-white opacity-60">
+            Or, create a wallet
+          </span>
+          <div className="h-px flex-1 bg-[#FFFFFF33]" />
         </div>
 
-        <div className="mt-10 flex w-full flex-col gap-5">
-          <ConnectWalletButton />
+        <EmailForm />
+      </div>
 
-          <div className="flex items-center gap-4">
-            <div className="h-px flex-1 bg-[#FFFFFF33]" />
-            <span className="text-sm font-medium text-white opacity-60">
-              Or, create a wallet
-            </span>
-            <div className="h-px flex-1 bg-[#FFFFFF33]" />
-          </div>
-
-          <EmailForm />
-        </div>
-
-        <TypographySmall className="mt-8 w-full max-w-[354px]">
-          By proceeding, you consent to Magic’s{' '}
-          <TypographyLink href="" target="_blank" rel="noopener noreferrer">
-            Privacy Policy
-          </TypographyLink>{' '}
-          and
-          <TypographyLink href="" target="_blank" rel="noopener noreferrer">
-            Terms of Service.
-          </TypographyLink>{' '}
-          See complete{' '}
-          <TypographyLink href="" target="_blank" rel="noopener noreferrer">
-            Terms and Conditions
-          </TypographyLink>{' '}
-          for details.
-        </TypographySmall>
-      </Container>
-    </div>
+      <TypographySmall className="mt-8 w-full max-w-[354px]">
+        By proceeding, you consent to Magic’s{' '}
+        <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+          Privacy Policy
+        </TypographyLink>{' '}
+        and
+        <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+          Terms of Service.
+        </TypographyLink>{' '}
+        See complete{' '}
+        <TypographyLink href="" target="_blank" rel="noopener noreferrer">
+          Terms and Conditions
+        </TypographyLink>{' '}
+        for details.
+      </TypographySmall>
+    </>
   )
 }

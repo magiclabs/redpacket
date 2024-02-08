@@ -1,6 +1,7 @@
 import './globals.css'
 
 import { Analytics } from '@vercel/analytics/react'
+import { DemoByMagic } from 'app/DemoByMagic'
 import { WagmiAuth } from 'app/WagmiAuth'
 import { QueryProvider } from 'components/QueryProvider'
 import { Web3ModalProvider } from 'components/Web3Modal'
@@ -60,17 +61,22 @@ export default function RootLayout({ children }: Props) {
   return (
     <html
       lang="en"
-      className={`dark ${GeistSans.variable} ${GeistMono.variable} h-lvh overflow-x-hidden antialiased scrollbar-hide`}
+      className={`dark ${GeistSans.variable} ${GeistMono.variable} antialiased`}
     >
       <head>
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="msapplication-TileImage" content="/favicon.png" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className="h-lvh max-w-full bg-[#03010B] font-sans">
+      <body className="bg-[#03010B] font-sans ">
         <Web3ModalProvider initialState={initialState}>
           <QueryProvider>
-            <WagmiAuth>{children}</WagmiAuth>
+            <WagmiAuth>
+              <main className="relative flex min-h-dvh w-dvw flex-col items-center overflow-x-hidden scrollbar-hide">
+                {children}
+                <DemoByMagic />
+              </main>
+            </WagmiAuth>
           </QueryProvider>
         </Web3ModalProvider>
         <Toaster />

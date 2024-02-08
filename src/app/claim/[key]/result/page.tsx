@@ -9,6 +9,7 @@ import { RedPacketFireworks } from 'app/claim/[key]/result/RedPacketFireworks'
 import { useClaimedAmount } from 'app/claim/[key]/result/useClaimedAmount'
 import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
+import { Container } from 'components/ui/container'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ANIMATION_INTERVAL, CURRENT_CHAIN_KEY } from 'lib/constants'
 import { magic } from 'lib/magic'
@@ -45,16 +46,18 @@ export default function Lucky() {
     }, 3000)
   }, [])
 
-  if (isDisconnected) {
-    redirect('/claim/login?id=' + key)
-  }
+  useEffect(() => {
+    if (isDisconnected) {
+      redirect('/claim/login?id=' + key)
+    }
+  }, [isDisconnected, key])
 
   return (
     <>
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            className="absolute h-dvh w-screen"
+            className="absolute h-full w-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 1 } }}
@@ -66,7 +69,7 @@ export default function Lucky() {
       </AnimatePresence>
       <AnimatePresence>
         {!isVisible && (
-          <motion.div
+          <Container
             className="z-10 flex w-full max-w-[400px] flex-col items-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -169,7 +172,7 @@ export default function Lucky() {
                 wallet.magic.link
               </a>
             </motion.span>
-          </motion.div>
+          </Container>
         )}
       </AnimatePresence>
     </>
