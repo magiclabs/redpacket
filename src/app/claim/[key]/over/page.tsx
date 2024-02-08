@@ -82,12 +82,11 @@ export default function Over() {
         <Button
           className="order-1 min-h-14 flex-1 text-lg font-semibold sm:order-2"
           onClick={() => {
-            track('Watch Demo Clicked')
+            track('Create Clicked')
+            push('/')
           }}
         >
-          <a href="" target="_blank" rel="noopener noreferrer">
-            Watch demo
-          </a>
+          Create
         </Button>
       </motion.div>
     </Container>
