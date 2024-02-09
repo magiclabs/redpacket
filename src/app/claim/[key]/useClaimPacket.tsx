@@ -1,7 +1,6 @@
 import {
   type BatchUserOperationCallData,
-  type Percentage,
-  type UserOperationCallData,
+  type UserOperationCallData
 } from '@alchemy/aa-core'
 import { useMutation } from '@tanstack/react-query'
 import { track } from '@vercel/analytics/react'
@@ -40,7 +39,15 @@ export function useClaimPacket() {
       }
 
       try {
-        const { hash } = await client.sendUserOperation({ uo })
+        const { hash } = await client.sendUserOperation(
+          { uo, 
+            overrides: {
+              callGasLimit: { percentage: 50 },
+              maxFeePerGas: { percentage: 150 }, 
+              maxPriorityFeePerGas: { percentage: 150 }
+            } 
+          }
+        )
         const tx = await client.waitForUserOperationTransaction({ hash })
       } catch (e: any) {
         const details = JSON.parse(e.details)
@@ -73,7 +80,11 @@ export function useClaimPacket() {
 
       const result = await client.sendUserOperation({ 
         uo, 
-        overrides: {callGasLimit: { percentage: 50 } as Percentage} 
+        overrides: {
+          callGasLimit: { percentage: 50 },
+          maxFeePerGas: { percentage: 150 }, 
+          maxPriorityFeePerGas: { percentage: 150 }
+        } 
       })
       const tx2 = await client.waitForUserOperationTransaction({
         hash: result.hash,
