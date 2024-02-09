@@ -15,7 +15,7 @@ const network: NETWORK = 'base'
 const file = 'RedPacketFactory.sol'
 const contractName = 'RedPacketFactory'
 
-const seedPhrase = process.env.TEST_SEED
+const seedPhrase = process.env.SEED_PHRASE
 
 async function main() {
   // Cleanup

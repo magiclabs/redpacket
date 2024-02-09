@@ -14,19 +14,6 @@ npm i -g @antfu/ni bun
 ni
 ```
 
-- Link the project to Vercel
-
-```bash
-nr vc link
-# And follow the instructions
-```
-
-- Pull environment variables
-
-```bash
-nr vc env pull
-```
-
 - Run the project
 
 ```bash
