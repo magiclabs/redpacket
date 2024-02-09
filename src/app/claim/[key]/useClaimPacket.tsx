@@ -43,8 +43,8 @@ export function useClaimPacket() {
           { uo, 
             overrides: {
               callGasLimit: { percentage: 5 },
-              maxFeePerGas: { percentage: 100 }, 
-              maxPriorityFeePerGas: { percentage: 5 }
+              // maxFeePerGas: { percentage: 100 }, 
+              maxPriorityFeePerGas: { percentage: 1 }
             } 
           }
         )
@@ -82,8 +82,8 @@ export function useClaimPacket() {
         uo, 
         overrides: {
           callGasLimit: { percentage: 5 },
-          maxFeePerGas: { percentage: 100 }, 
-          maxPriorityFeePerGas: { percentage: 5 }
+          // maxFeePerGas: { percentage: 100 }, 
+          maxPriorityFeePerGas: { percentage: 1 }
         } 
       })
       const tx2 = await client.waitForUserOperationTransaction({
