@@ -42,7 +42,7 @@ export function useClaimPacket() {
         const { hash } = await client.sendUserOperation(
           { uo, 
             overrides: {
-              callGasLimit: { percentage: 50 },
+              callGasLimit: { percentage: 5 },
               maxFeePerGas: { percentage: 150 }, 
               maxPriorityFeePerGas: { percentage: 150 }
             } 
@@ -81,7 +81,7 @@ export function useClaimPacket() {
       const result = await client.sendUserOperation({ 
         uo, 
         overrides: {
-          callGasLimit: { percentage: 50 },
+          callGasLimit: { percentage: 5 },
           maxFeePerGas: { percentage: 150 }, 
           maxPriorityFeePerGas: { percentage: 150 }
         } 
