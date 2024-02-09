@@ -47,7 +47,7 @@ export default function Share() {
   } = useRedPacket({ contractAddress, refetch: true })
 
   if (isDisconnected) {
-    redirect('/')
+    redirect('/login')
   }
 
   return (

@@ -12,7 +12,7 @@ import {
 import { redirect } from 'next/navigation'
 import { useAccount } from 'wagmi'
 
-export default function Home() {
+export default function CreateLogin() {
   const { isConnected } = useAccount()
 
   if (isConnected) {

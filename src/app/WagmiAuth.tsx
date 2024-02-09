@@ -1,21 +1,34 @@
 'use client'
 
+import { watchAccount } from '@wagmi/core'
 import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
 import { AnimatePresence, motion } from 'framer-motion'
+import { wagmiConfig } from 'lib/web3modal/config'
 import { useEffect, useState, type PropsWithChildren } from 'react'
-import { useAccount } from 'wagmi'
 
 export const WagmiAuth = ({ children }: PropsWithChildren) => {
-  const { isReconnecting } = useAccount()
+  const [isLoading, setIsLoading] = useState(true)
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    const unwatch = watchAccount(wagmiConfig, {
+      onChange: ({ status }) => {
+        console.log({ status })
+        if (status === 'connecting' || status === 'reconnecting') {
+          return
+        }
+
+        setIsLoading(false)
+      },
+    })
+
     setIsMounted(true)
+    return () => unwatch()
   }, [])
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      {isReconnecting || !isMounted ? (
+      {isLoading ? (
         <motion.main
           key="loading"
           className="flex h-dvh w-full flex-col items-center justify-center overflow-x-hidden"
@@ -40,9 +53,7 @@ export const WagmiAuth = ({ children }: PropsWithChildren) => {
                 This takes a few seconds
               </motion.span>
             ) : (
-              <span className="mt-1 text-center text-sm text-[#ffffffcc]">
-                &nbsp;
-              </span>
+              <span className="mt-1 text-center text-sm">&nbsp;</span>
             )}
           </div>
         </motion.main>

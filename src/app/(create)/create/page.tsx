@@ -9,7 +9,7 @@ export default function Home() {
   const { isDisconnected } = useAccount()
 
   if (isDisconnected) {
-    redirect('/')
+    redirect('/login')
   }
 
   return (
