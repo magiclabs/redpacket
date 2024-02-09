@@ -24,6 +24,9 @@ const config: NextConfig = {
     config.externals.push('pino-pretty', 'lokijs', 'encoding')
     return config
   },
+  compiler: {
+    removeConsole: true,
+  },
 }
 
 export default config
