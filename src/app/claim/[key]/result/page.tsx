@@ -14,7 +14,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ANIMATION_INTERVAL, CURRENT_CHAIN_KEY } from 'lib/constants'
 import { magic } from 'lib/magic'
 import { redirect, useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { toUSD } from 'utils/toUSD'
 import { formatEther, type Address } from 'viem'
 import { useAccount, useDisconnect } from 'wagmi'
 
@@ -52,10 +53,14 @@ export default function Lucky() {
     }
   }, [isDisconnected, key])
 
+  const isLoading = useMemo(() => {
+    return claimedAmount === 0n || isVisible
+  }, [claimedAmount, isVisible])
+
   return (
     <>
       <AnimatePresence>
-        {isVisible && (
+        {isLoading && (
           <motion.div
             className="absolute h-full w-full"
             initial={{ opacity: 0 }}
@@ -68,7 +73,7 @@ export default function Lucky() {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {!isVisible && (
+        {!isLoading && (
           <Container
             className="z-10 flex w-full max-w-[400px] flex-col items-center"
             initial={{ opacity: 0 }}
@@ -88,7 +93,7 @@ export default function Lucky() {
                 transition: { delay: ANIMATION_INTERVAL },
               }}
             >
-              {parseFloat(Number(formatEther(claimedAmount)).toFixed(5))} ETH
+              {parseFloat(Number(formatEther(claimedAmount)).toFixed(6))} ETH
             </motion.span>
 
             <motion.p
@@ -103,18 +108,13 @@ export default function Lucky() {
               Happy New Year!
               <br />
               You won{' '}
-              {parseFloat(Number(formatEther(claimedAmount)).toFixed(5))} ETH (
-              {ethPrice &&
-                `$${parseFloat(
-                  (Number(formatEther(claimedAmount)) * +ethPrice).toFixed(2),
-                ).toLocaleString()}`}
+              {parseFloat(Number(formatEther(claimedAmount)).toFixed(6))} ETH (
+              {ethPrice && toUSD(Number(formatEther(claimedAmount)), ethPrice)}
               ) <br />
               <span className="font-normal opacity-70">
                 Total prize pool:{' '}
-                {totalBalance ? parseFloat(totalBalance.toFixed(5)) : 0} ETH
-                {` `}
-                {ethPrice &&
-                  `($${parseFloat((totalBalance * +ethPrice).toFixed(2)).toLocaleString()})`}
+                {totalBalance ? parseFloat(totalBalance.toFixed(6)) : 0} ETH
+                {` `}({ethPrice && toUSD(totalBalance, ethPrice)})
               </span>
             </motion.p>
 
