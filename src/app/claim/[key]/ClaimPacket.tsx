@@ -24,7 +24,6 @@ export function ClaimPacket() {
     refetch,
     claimedAddresses,
     isLoading,
-    isError,
   } = useRedPacket({
     contractAddress,
   })
@@ -36,8 +35,6 @@ export function ClaimPacket() {
       return
     }
 
-    console.log({ isExpired, isError })
-
     if (
       client?.account.address &&
       claimedAddresses?.includes(client.account.address)
@@ -48,7 +45,7 @@ export function ClaimPacket() {
     if (isExpired) {
       redirect(`/claim/${key}/over`)
     }
-  }, [claimedAddresses, client, isError, isExpired, isLoading, key])
+  }, [claimedAddresses, client, isExpired, isLoading, key])
 
   const { claim, isPending } = useClaimPacket()
 
