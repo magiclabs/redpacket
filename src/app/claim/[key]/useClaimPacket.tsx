@@ -28,6 +28,8 @@ export function useClaimPacket() {
     mutationFn: async () => {
       if (!client || !publicAddress) return
 
+      const fee = await client.estimateMaxPriorityFeePerGas()
+
       let uo: UserOperationCallData | BatchUserOperationCallData
 
       uo = {
@@ -44,7 +46,7 @@ export function useClaimPacket() {
             overrides: {
               callGasLimit: { percentage: 5 },
               // maxFeePerGas: { percentage: 100 }, 
-              maxPriorityFeePerGas: 50,
+              maxPriorityFeePerGas: fee + 1000000n,
             } 
           }
         )
@@ -83,7 +85,7 @@ export function useClaimPacket() {
         overrides: {
           callGasLimit: { percentage: 5 },
           // maxFeePerGas: { percentage: 100 }, 
-          maxPriorityFeePerGas: 50,
+          maxPriorityFeePerGas: fee + 1000000n,
         } 
       })
       const tx2 = await client.waitForUserOperationTransaction({
