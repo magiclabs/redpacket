@@ -11,6 +11,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { LightAccountABI } from 'src/abis/LightAccountABI'
 import { encodeFunctionData, type Address } from 'viem'
+import { useEstimateFeesPerGas } from 'wagmi'
 
 export function useClaimPacket() {
   const { push } = useRouter()
@@ -24,11 +25,11 @@ export function useClaimPacket() {
 
   const { client, publicAddress } = useAlchemyClient()
 
+  const { data: fees, isSuccess } = useEstimateFeesPerGas()
+
   const { mutateAsync: claim, ...rest } = useMutation({
     mutationFn: async () => {
       if (!client || !publicAddress) return
-
-      const fee = await client.estimateMaxPriorityFeePerGas()
 
       let uo: UserOperationCallData | BatchUserOperationCallData
 
@@ -44,9 +45,9 @@ export function useClaimPacket() {
         const { hash } = await client.sendUserOperation(
           { uo, 
             overrides: {
-              callGasLimit: { percentage: 5 },
-              // maxFeePerGas: { percentage: 100 }, 
-              maxPriorityFeePerGas: fee + 1000000n,
+              callGasLimit: { percentage: 10 },
+              maxFeePerGas: fees?.maxFeePerGas, 
+              // maxPriorityFeePerGas: fees.maxPriorityFeePerGas
             } 
           }
         )
@@ -83,9 +84,9 @@ export function useClaimPacket() {
       const result = await client.sendUserOperation({ 
         uo, 
         overrides: {
-          callGasLimit: { percentage: 5 },
-          // maxFeePerGas: { percentage: 100 }, 
-          maxPriorityFeePerGas: fee + 1000000n,
+          callGasLimit: { percentage: 10 },
+          maxFeePerGas: fees?.maxFeePerGas, 
+          // maxPriorityFeePerGas: fees.maxPriorityFeePerGas
         } 
       })
       const tx2 = await client.waitForUserOperationTransaction({
