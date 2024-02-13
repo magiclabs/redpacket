@@ -1,7 +1,7 @@
 import RedPacket from 'contracts/RedPacket.sol/RedPacket.json'
 import RedPacketFactory from 'contracts/RedPacketFactory.sol/RedPacketFactory.json'
 import { isProd } from 'utils/isProd'
-import { base, baseSepolia, polygonMumbai } from 'viem/chains'
+import { base, polygonMumbai } from 'viem/chains'
 
 export const REDPACKET_FACTORY_ABI = RedPacketFactory.abi
 export const REDPACKET_ABI = RedPacket.abi
@@ -9,14 +9,13 @@ export const REDPACKET_ABI = RedPacket.abi
 export const ANIMATION_INTERVAL = 0.5
 
 export const ALCHEMY_GASMANAGER_POLICY_ID = {
-  base: `ab7e61d7-e32d-4678-bf92-0cf6b2e1b5aa`,
-  mumbai: `652ddbb1-2159-4926-8ea4-1effaa2b7658`,
+  base: `bb92abfa-d4cc-485b-904c-c7ae44305718`,
+  mumbai: `30454200-84a8-4a1c-a162-397fc7e28c49`,
 } as const
 
 export const ALCHEMY_RPC_URL = {
-  base: `https://base-mainnet.g.alchemy.com/v2/mgAiAkPBUrNakqSTikVs4IYvve4AVh07`,
-  baseSepolia: `https://base-sepolia.g.alchemy.com/v2/8i288JRIGXoG0UUJWfFwrucu0BRHbb1-`,
-  mumbai: `https://polygon-mumbai.g.alchemy.com/v2/Sj_KlZV6R-XvaKewU9KTuSOvZXVNSL4j`,
+  base: `/rpc/base`,
+  mumbai: `/rpc/mumbai`,
 } as const
 
 export const CURRENT_CHAIN_KEY = isProd() ? 'base' : 'mumbai'
@@ -24,7 +23,6 @@ export const CURRENT_CHAIN_KEY = isProd() ? 'base' : 'mumbai'
 export const CURRENT_CHAIN = (
   {
     base: base,
-    baseSepolia: baseSepolia,
     mumbai: polygonMumbai,
   } as const
 )[CURRENT_CHAIN_KEY]

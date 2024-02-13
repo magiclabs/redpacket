@@ -16,14 +16,6 @@ import '@nomicfoundation/hardhat-verify'
 
 const config: HardhatUserConfig = {
   solidity: '0.8.20',
-  networks: {
-    base: {
-      url: `https://base-mainnet.g.alchemy.com/v2/EzC7OYuylt0HecPRiyZX-HMNaYJiHy9j`,
-    },
-    baseSepolia: {
-      url: `https://base-sepolia.g.alchemy.com/v2/xtBmbqs4Xe17IVlF65vU6BmTEKLBybir`,
-    },
-  },
 }
 
 export default config
