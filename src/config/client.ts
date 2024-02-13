@@ -7,7 +7,6 @@ import {
 } from 'viem'
 import {
   base,
-  baseSepolia,
   mainnet as ethereum,
   goerli,
   polygonMumbai as mumbai,
@@ -24,15 +23,6 @@ export const CHAINS = {
       `https://basescan.org/address/${address}`,
     getRedPacketFactoryAddress: (): Address =>
       `0x2fabdF4f1F97C2C21Ba63c4dDd71c63968B2d22b`,
-  },
-  baseSepolia: {
-    chain: baseSepolia,
-    transport: http(ALCHEMY_RPC_URL['baseSepolia']),
-    scanURL: `https://sepolia.basescan.org`,
-    getTxURL: (hash: string) => `https://sepolia.basescan.org/tx/${hash}`,
-    getAccountURL: (address: string) =>
-      `https://sepolia.basescan.org/address/${address}`,
-    getRedPacketFactoryAddress: (): Address => `0x0`,
   },
   mumbai: {
     chain: mumbai,
