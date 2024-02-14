@@ -2,8 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { track } from '@vercel/analytics'
-import { useCreateRedPacket } from 'app/(create)/create/useCreateRedPacket'
-import { useETHPrice } from 'app/(create)/create/useETHPrice'
 import { AlertIcon } from 'components/icons/AlertIcon'
 import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
 import { MinusIcon } from 'components/icons/MinusIcon'
@@ -13,8 +11,11 @@ import { Form } from 'components/ui/form'
 import { Input } from 'components/ui/input'
 import { Label } from 'components/ui/label'
 import { MotionHeadline } from 'components/ui/typography'
+import { useCreateRedPacket } from 'hooks/useCreateRedPacket'
+import { useETHPrice } from 'hooks/useETHPrice'
 import { cn } from 'lib/utils'
 import { useRouter } from 'next/navigation'
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { formatEther, parseEther } from 'viem'
@@ -69,21 +70,18 @@ const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>
 
 export function CreatePacketsForm() {
-  const { address } = useAccount()
-  const { data: balance } = useBalance({ address })
-
-  const defaultValues = {
-    packets: `${DEFAULT_PACKETS}`,
-    eth: `${Math.min(
-      MINIMUM_ETH,
-      balance?.value ? Number(formatEther(balance.value)) : DEFAULT_ETH,
-    )}`,
-  }
+  const { push } = useRouter()
+  const { address: publicAddress } = useAccount()
+  const { data: balance } = useBalance({ address: publicAddress })
+  const { ethPrice } = useETHPrice()
 
   const form = useForm<FormValues>({
     mode: 'onChange',
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: {
+      packets: DEFAULT_PACKETS.toString(),
+      eth: MINIMUM_ETH.toString(),
+    },
   })
 
   const {
@@ -97,26 +95,22 @@ export function CreatePacketsForm() {
   const eth = +watch('eth')
   const packets = +watch('packets')
 
-  const isInsufficientFunds = balance?.value
-    ? Number(formatEther(balance.value)) < +eth
-    : false
+  const isInsufficientFunds = useMemo(() => {
+    return balance ? +formatEther(balance.value) < +eth : false
+  }, [balance, eth])
+
+  const { createRedPacket, isWaitingApproval, isGenerating } =
+    useCreateRedPacket()
 
   const isValid = isFormValid && !isInsufficientFunds
 
-  const { createRedPacket, isWaitingApproval, isGenerating } =
-    useCreateRedPacket({ eth, packets, isValid })
-
   const isLoading = isWaitingApproval || isGenerating
 
-  const { push } = useRouter()
-
-  const { address: publicAddress } = useAccount()
-
-  const onSubmit = handleSubmit(async () => {
+  const onSubmit = handleSubmit(async ({ eth, packets }) => {
     if (isLoading) return
 
     try {
-      const address = await createRedPacket()
+      const address = await createRedPacket({ eth: +eth, packets: +packets })
 
       track(`Red Packet Created`, {
         userAddress: publicAddress as string,
@@ -138,8 +132,6 @@ export function CreatePacketsForm() {
       })
     }
   })
-
-  const { ethPrice } = useETHPrice()
 
   return (
     <Form {...form}>
@@ -182,7 +174,6 @@ export function CreatePacketsForm() {
               maxLength={3}
               id="packets"
               inputMode="numeric"
-              defaultValue={DEFAULT_PACKETS}
             />
             <Button
               type="button"
@@ -231,7 +222,6 @@ export function CreatePacketsForm() {
               })}
               maxLength={9}
               inputMode="numeric"
-              defaultValue={defaultValues.eth}
             />
             <span className="absolute right-4 text-sm font-medium opacity-50">
               ETH

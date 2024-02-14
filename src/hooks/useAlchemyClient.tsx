@@ -2,7 +2,7 @@ import { createLightAccountAlchemyClient } from '@alchemy/aa-alchemy'
 // @ts-ignore
 import { MagicSigner } from '@alchemy/aa-signers/magic'
 import { useQuery } from '@tanstack/react-query'
-import { useMagicInfo } from 'app/claim/[key]/useMagicInfo'
+import { useMagicInfo } from 'hooks/useMagicInfo'
 import {
   ALCHEMY_GASMANAGER_POLICY_ID,
   ALCHEMY_RPC_URL,
