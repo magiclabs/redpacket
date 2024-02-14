@@ -87,10 +87,13 @@ export function CreatePacketsForm() {
   const {
     handleSubmit,
     register,
-    formState: { isValid: isFormValid },
+    formState: { isValid: isFormValid, isSubmitting },
     setValue,
     watch,
+    setError,
   } = form
+
+  console.log({ isSubmitting, isFormValid })
 
   const eth = +watch('eth')
   const packets = +watch('packets')
@@ -99,18 +102,24 @@ export function CreatePacketsForm() {
     return balance ? +formatEther(balance.value) < +eth : false
   }, [balance, eth])
 
-  const { createRedPacket, isWaitingApproval, isGenerating } =
-    useCreateRedPacket()
-
   const isValid = isFormValid && !isInsufficientFunds
 
-  const isLoading = isWaitingApproval || isGenerating
+  const {
+    createRedPacket,
+    isWaitingApproval,
+    isGenerating,
+    isIdle,
+    isSuccess,
+  } = useCreateRedPacket()
 
   const onSubmit = handleSubmit(async ({ eth, packets }) => {
-    if (isLoading) return
-
     try {
-      const address = await createRedPacket({ eth: +eth, packets: +packets })
+      const address = await createRedPacket({
+        totalClaimCount: +packets,
+        principal: +eth,
+      })
+
+      console.log({ address })
 
       track(`Red Packet Created`, {
         userAddress: publicAddress as string,
@@ -119,7 +128,7 @@ export function CreatePacketsForm() {
         eth,
       })
 
-      await push(`/share/${address.slice(2)}`)
+      push(`/share/${address.slice(2)}`)
       toast.success(`Red packets created successfully!`)
     } catch (e) {
       toast.error('Failed to create red packets, please try again.')
@@ -163,7 +172,7 @@ export function CreatePacketsForm() {
             </Button>
             <Input
               className="h-14 w-full rounded-lg border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF1F] text-center font-mono text-2xl font-light"
-              disabled={isLoading}
+              disabled={isSubmitting}
               {...register('packets', {
                 required: true,
                 onChange: (e) => {
@@ -204,7 +213,7 @@ export function CreatePacketsForm() {
           <div className="relative flex h-14 items-center sm:max-w-[180px]">
             <Input
               className="h-14 rounded-lg border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF1F] pr-14 text-right font-mono text-2xl font-light"
-              disabled={isLoading}
+              disabled={isSubmitting}
               id="eth"
               {...register('eth', {
                 required: true,
@@ -252,25 +261,30 @@ export function CreatePacketsForm() {
           </div>
         ) : null}
 
-        {isWaitingApproval || isGenerating ? (
-          <div className="mt-3 flex flex-col">
-            <InfiniteLoadingSpinner className="aspect-square h-12 w-12" />
-            <span className="-mt-1 text-center text-sm opacity-60">
-              {isWaitingApproval
-                ? 'Waiting for approval...'
-                : isGenerating
-                  ? 'Generating red packets....'
-                  : ''}
-            </span>
-          </div>
-        ) : (
+        {isIdle && (
           <Button
-            disabled={!isValid}
+            disabled={isSubmitting || !isValid}
             type="submit"
             className="mt-8 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
           >
             Create Packets
           </Button>
+        )}
+        {isGenerating && (
+          <div className="mt-3 flex flex-col">
+            <InfiniteLoadingSpinner className="aspect-square h-12 w-12" />
+            <span className="-mt-1 text-center text-sm opacity-60">
+              Generating red packets....
+            </span>
+          </div>
+        )}
+        {(isWaitingApproval || isSuccess) && (
+          <div className="mt-3 flex flex-col">
+            <InfiniteLoadingSpinner className="aspect-square h-12 w-12" />
+            <span className="-mt-1 text-center text-sm opacity-60">
+              Waiting for approval...
+            </span>
+          </div>
         )}
       </form>
     </Form>

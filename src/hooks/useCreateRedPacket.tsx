@@ -1,127 +1,116 @@
 'use client'
 
-import {
-  QueryObserver,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { find, map, pipe } from '@fxts/core'
+import { useMutation } from '@tanstack/react-query'
 import { CHAINS } from 'config/client'
 import { CURRENT_CHAIN_KEY, REDPACKET_FACTORY_ABI } from 'lib/constants'
 import { publicClient } from 'lib/viem/publicClient'
 import ms from 'ms'
-import { isProd } from 'utils/isProd'
-import {
-  decodeEventLog,
-  parseEther,
-  type SimulateContractReturnType,
-} from 'viem'
-import {
-  useAccount,
-  useEstimateFeesPerGas,
-  useSimulateContract,
-  useWriteContract,
-} from 'wagmi'
+import { useState } from 'react'
+import { decodeEventLog, parseEther, type Address } from 'viem'
+import { useAccount, useWriteContract } from 'wagmi'
 
 type Params = {
-  isValid: boolean
-  eth: number
-  packets: number
+  totalClaimCount: number
+  principal: number
 }
 
-export function useCreateRedPacket({ eth, packets, isValid }: Params) {
-  const { writeContractAsync, isPending } = useWriteContract()
+type RedPacketCreatedEventArgs = {
+  creator: Address
+  redPacketAddress: Address
+  totalBalance: bigint
+  totalClaimCount: number
+}
+
+const CREATE_RED_PACKET_STATUS = {
+  NONE: 'NONE',
+  GENERATING: 'GENERATING',
+  WAITING_APPROVAL: 'WAITING_APPROVAL',
+  DONE: 'DONE',
+} as const
+
+export function useCreateRedPacket() {
+  const [status, setStatus] = useState<keyof typeof CREATE_RED_PACKET_STATUS>(
+    CREATE_RED_PACKET_STATUS.NONE,
+  )
 
   const { address } = useAccount()
+  const { writeContractAsync } = useWriteContract()
 
-  const { data: fees, isSuccess } = useEstimateFeesPerGas({
-    chainId: CHAINS[CURRENT_CHAIN_KEY].chain.id,
-  })
+  const { mutateAsync: createRedPacket, isSuccess } = useMutation({
+    mutationFn: ({ totalClaimCount, principal }: Params) => {
+      setStatus(CREATE_RED_PACKET_STATUS.GENERATING)
 
-  const { data, queryKey } = useSimulateContract({
-    address: CHAINS[CURRENT_CHAIN_KEY].getRedPacketFactoryAddress(),
-    abi: REDPACKET_FACTORY_ABI,
-    functionName: 'createRedPacket',
-    args: [packets],
-    value: isValid ? parseEther(`${eth}`) : undefined,
-    query: {
-      enabled: isValid,
-    },
-    ...(isSuccess && isProd()
-      ? {
-          maxFeePerGas: fees.maxFeePerGas,
-          maxPriorityFeePerGas: fees.maxPriorityFeePerGas,
-        }
-      : {}),
-  })
+      return new Promise<Address>(async (resolve, reject) => {
+        const unwatch = publicClient.watchContractEvent({
+          pollingInterval: ms('1s'),
+          address: CHAINS[CURRENT_CHAIN_KEY].getRedPacketFactoryAddress(),
+          abi: REDPACKET_FACTORY_ABI,
+          eventName: 'RedPacketCreated',
+          args: { creator: address },
+          batch: false,
+          onLogs: (logs) => {
+            const targetLog = pipe(
+              logs,
+              map((log) =>
+                decodeEventLog({
+                  abi: REDPACKET_FACTORY_ABI,
+                  data: log.data,
+                  topics: log.topics,
+                }),
+              ),
+              find((v) => v.eventName === 'RedPacketCreated'),
+            )
 
-  const client = useQueryClient()
+            if (!targetLog) {
+              return
+            }
 
-  const { mutateAsync: getRedPacketAddress, isPending: isGenerating } =
-    useMutation({
-      mutationFn: () =>
-        new Promise<string>(async (resolve, reject) => {
-          const unwatch = publicClient.watchContractEvent({
-            pollingInterval: ms('1s'),
+            const redPacketAddress = (
+              targetLog.args as unknown as RedPacketCreatedEventArgs
+            ).redPacketAddress
+
+            console.log({ redPacketAddress })
+            resolve(redPacketAddress)
+            unwatch()
+          },
+
+          onError: (error) => {
+            reject(error)
+            unwatch()
+          },
+        })
+
+        try {
+          const hash = await writeContractAsync({
             address: CHAINS[CURRENT_CHAIN_KEY].getRedPacketFactoryAddress(),
             abi: REDPACKET_FACTORY_ABI,
-            eventName: 'RedPacketCreated',
-            args: { creator: address },
-            batch: false,
-            onLogs: (logs) => {
-              const topics = decodeEventLog({
-                abi: REDPACKET_FACTORY_ABI,
-                data: logs[0].data,
-                topics: logs[0].topics,
-              })
-
-              resolve((topics.args as any).redPacketAddress as string)
-              unwatch()
-            },
-            onError: (error) => {
-              console.error(error)
-              unwatch()
-              reject(error)
-            },
+            functionName: 'createRedPacket',
+            args: [totalClaimCount],
+            value: parseEther(principal.toString()),
           })
-        }),
-    })
 
-  const { mutateAsync: createRedPacket } = useMutation({
-    mutationFn: () =>
-      new Promise<string>(async (resolve, reject) => {
-        const result = client.getQueryData<SimulateContractReturnType>(queryKey)
-        try {
-          if (result) {
-            const hash = await writeContractAsync(result.request)
-            const address = await getRedPacketAddress()
-            resolve(address)
-            return
-          }
-
-          const unsubscribe = new QueryObserver<SimulateContractReturnType>(
-            client,
-            { queryKey },
-          ).subscribe(async ({ isSuccess, data, isError, error }) => {
-            if (isError) {
-              reject(error)
-            }
-
-            if (isSuccess) {
-              const hash = await writeContractAsync(data.request)
-              const address = await getRedPacketAddress()
-              resolve(address)
-              unsubscribe()
-            }
-          })
-        } catch (error) {
-          reject(error)
+          setStatus(CREATE_RED_PACKET_STATUS.WAITING_APPROVAL)
+          await publicClient.waitForTransactionReceipt({ hash })
+        } catch (e) {
+          unwatch()
+          reject(e)
         }
-      }),
+      })
+    },
+    onSuccess: () => {
+      setStatus(CREATE_RED_PACKET_STATUS.DONE)
+    },
+    onError: () => {
+      setStatus(CREATE_RED_PACKET_STATUS.NONE)
+    },
   })
 
   return {
-    isWaitingApproval: isPending,
-    isGenerating,
     createRedPacket,
+    isIdle: status === CREATE_RED_PACKET_STATUS.NONE,
+    isWaitingApproval: status === CREATE_RED_PACKET_STATUS.WAITING_APPROVAL,
+    isGenerating: status === CREATE_RED_PACKET_STATUS.GENERATING,
+    isSuccess,
   }
 }

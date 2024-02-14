@@ -17,40 +17,27 @@ import {
 } from 'components/ui/dropdown-menu'
 import { WALLET_TYPE } from 'hooks/useWalletType'
 import { magic } from 'lib/magic'
-import { useParams, usePathname, useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { isProd } from 'utils/isProd'
 import { formatEther } from 'viem'
-import { useAccount, useBalance, useBlockNumber, useDisconnect } from 'wagmi'
+import {
+  useAccount,
+  useBalance,
+  useDisconnect,
+  useWatchBlockNumber,
+} from 'wagmi'
 
 export function WalletDropdown() {
-  const { push } = useRouter()
-  const pathname = usePathname()
-  const { key } = useParams<{ key: string }>()
-
   const client = useQueryClient()
+
   const { address, isConnecting, connector, isDisconnected } = useAccount()
-  const { disconnect } = useDisconnect({
-    mutation: {
-      onSettled: () => {
-        if (pathname.includes('over')) {
-          push('/login')
-        } else if (pathname.includes('claim') && key) {
-          push('/claim/login?id=' + key)
-        } else {
-          push('/login')
-        }
-      },
+  const { disconnect } = useDisconnect({})
+  const { data: balance, queryKey, isLoading } = useBalance({ address })
+  useWatchBlockNumber({
+    onBlockNumber: () => {
+      client.invalidateQueries({ queryKey })
     },
   })
-  const { data: blockNumber } = useBlockNumber({ watch: true })
-
-  const { data: balance, queryKey, isLoading } = useBalance({ address })
-
-  useEffect(() => {
-    client.invalidateQueries({ queryKey })
-  }, [blockNumber])
 
   const [, copyToClipboard] = useCopyToClipboard()
 
