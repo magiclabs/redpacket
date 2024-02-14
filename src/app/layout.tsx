@@ -13,8 +13,7 @@ import { wagmiConfig } from 'lib/web3modal/config'
 import { type Metadata } from 'next'
 import { headers } from 'next/headers'
 import { type PropsWithChildren } from 'react'
-import { isDev } from 'utils/isDev'
-import { isLocal } from 'utils/isLocal'
+import { getBaseURL } from 'utils/getBaseURL'
 import { isProd } from 'utils/isProd'
 import { cookieToInitialState } from 'wagmi'
 
@@ -27,15 +26,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.png',
   },
-  metadataBase: new URL(
-    isLocal()
-      ? `http://localhost:3009`
-      : isDev()
-        ? `https://redpacket-dev.magiclabs.vercel.app`
-        : isProd()
-          ? PROD_URL
-          : `https://${process.env.VERCEL_URL!}`,
-  ),
+  metadataBase: new URL(getBaseURL()),
   openGraph: {
     title,
     description,
