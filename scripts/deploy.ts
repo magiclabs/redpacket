@@ -1,23 +1,31 @@
+import { includes, keys } from '@fxts/core'
 import assert from 'assert'
-import {
-  CHAINS,
-  getPublicClient,
-  getWalletClient,
-  type NETWORK,
-} from 'config/client'
+import { CHAINS, getPublicClient, getWalletClient } from 'config/client'
 import { run } from 'hardhat'
 import { getContract } from 'scripts/fns/getContract'
 import { getAddress } from 'viem'
 import { mnemonicToAccount } from 'viem/accounts'
 import { $ } from 'zx'
 
-const network: NETWORK = 'base'
 const file = 'RedPacketFactory.sol'
 const contractName = 'RedPacketFactory'
 
 const seedPhrase = process.env.SEED_PHRASE
 
 async function main() {
+  if (process.argv.length !== 3) {
+    console.warn(
+      'Please provide a network as an argument.\nExample: nlx tsx scripts/deploy.ts mumbai',
+    )
+    return
+  }
+
+  const network = process.argv[2]
+  if (!includes(network, keys(CHAINS))) {
+    console.warn('You can only deploy to mumbai or base.')
+    return
+  }
+
   // Cleanup
   await $`rm -rf ./artifacts`
   await $`rm -rf ./cache`
