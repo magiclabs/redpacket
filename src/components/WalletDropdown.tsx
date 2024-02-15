@@ -19,6 +19,7 @@ import { WALLET_TYPE } from 'hooks/useWalletType'
 import { magic } from 'lib/magic'
 import { toast } from 'sonner'
 import { isProd } from 'utils/isProd'
+import { toShortAddress } from 'utils/toShortAddress'
 import { formatEther } from 'viem'
 import {
   useAccount,
@@ -30,7 +31,7 @@ import {
 export function WalletDropdown() {
   const client = useQueryClient()
 
-  const { address, isConnecting, connector, isDisconnected } = useAccount()
+  const { address, connector, isDisconnected } = useAccount()
   const { disconnect } = useDisconnect({})
   const { data: balance, queryKey, isLoading } = useBalance({ address })
   useWatchBlockNumber({
@@ -41,15 +42,15 @@ export function WalletDropdown() {
 
   const [, copyToClipboard] = useCopyToClipboard()
 
-  if (isConnecting || isLoading) {
-    return <Loader className="absolute right-4 top-4 aspect-square h-6 w-6" />
-  }
-
   if (isDisconnected) {
     return <></>
   }
 
-  return address && balance ? (
+  if (isLoading) {
+    return <Loader className="absolute right-4 top-4 aspect-square h-6 w-6" />
+  }
+
+  return (
     <div className="absolute right-4 top-4 z-50 flex flex-col gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger className="flex h-10 w-fit justify-center gap-2 self-end rounded-3xl border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF14] p-2 pr-4 font-mono text-base font-light text-white shadow-[0px_4px_28px_8px_rgba(0,0,0,0.25)] backdrop-blur-[18px] focus-visible:outline-none">
@@ -60,7 +61,9 @@ export function WalletDropdown() {
                 'radial-gradient(66.02% 77.37% at 31.25% 32.81%, #FF2227 0%, #A30128 100%)',
             }}
           ></div>
-          {parseFloat(Number(formatEther(balance?.value)).toFixed(5))} ETH
+          {balance
+            ? `${parseFloat(Number(formatEther(balance?.value)).toFixed(5))} ETH`
+            : toShortAddress(address ?? '0x')}
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
@@ -69,7 +72,7 @@ export function WalletDropdown() {
           <DropdownMenuItem
             className="flex cursor-pointer gap-2 rounded-xl bg-transparent opacity-80 hover:opacity-100 data-[highlighted]:bg-transparent data-[highlighted]:text-white"
             onClick={async () => {
-              await copyToClipboard(address)
+              address && (await copyToClipboard(address))
               toast.success('Address copied to clipboard')
             }}
           >
@@ -126,7 +129,5 @@ export function WalletDropdown() {
         </div>
       )}
     </div>
-  ) : (
-    <></>
   )
 }

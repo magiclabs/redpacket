@@ -90,10 +90,7 @@ export function CreatePacketsForm() {
     formState: { isValid: isFormValid, isSubmitting },
     setValue,
     watch,
-    setError,
   } = form
-
-  console.log({ isSubmitting, isFormValid })
 
   const eth = +watch('eth')
   const packets = +watch('packets')

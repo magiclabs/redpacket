@@ -7,7 +7,7 @@ import { RedPacketFireworks } from 'app/claim/[key]/result/RedPacketFireworks'
 import { Spinner } from 'components/Spinner'
 import { Button } from 'components/ui/button'
 import { Container } from 'components/ui/container'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useETHPrice } from 'hooks/useETHPrice'
 import { useRedPacket } from 'hooks/useRedPacket'
 import { ANIMATION_INTERVAL, CURRENT_CHAIN_KEY } from 'lib/constants'
@@ -60,7 +60,7 @@ export default function Lucky() {
   }
 
   return (
-    <>
+    <AnimatePresence mode="wait">
       {isLoading && (
         <motion.div
           className="absolute h-full w-full"
@@ -79,7 +79,7 @@ export default function Lucky() {
         </Container>
       )}
 
-      {isSuccess && (
+      {!isLoading && isSuccess && (
         <Container
           className="z-10 flex w-full max-w-[400px] flex-col items-center"
           initial={{ opacity: 0 }}
@@ -140,7 +140,7 @@ export default function Lucky() {
             animate={{
               y: 0,
               opacity: 1,
-              transition: { delay: ANIMATION_INTERVAL * 3 },
+              transition: { delay: ANIMATION_INTERVAL * 2 },
             }}
           >
             <Button
@@ -172,7 +172,7 @@ export default function Lucky() {
             initial={{ opacity: 0 }}
             animate={{
               opacity: 1,
-              transition: { delay: ANIMATION_INTERVAL * 4 },
+              transition: { delay: ANIMATION_INTERVAL * 3 },
             }}
           >
             Funds can be transferred out or accessed at any time via{' '}
@@ -190,6 +190,6 @@ export default function Lucky() {
           </motion.span>
         </Container>
       )}
-    </>
+    </AnimatePresence>
   )
 }
