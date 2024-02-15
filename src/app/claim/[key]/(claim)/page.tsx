@@ -1,9 +1,6 @@
 'use client'
 
-import { WalletDropdown } from 'app/(create)/create/WalletDropdown'
-import { BackLanturns } from 'app/claim/BackLanterns'
-import { RedFocus } from 'app/claim/RedFocus'
-import { ClaimPacket } from 'app/claim/[key]/ClaimPacket'
+import { ClaimPacket } from 'app/claim/[key]/(claim)/ClaimPacket'
 import { Container } from 'components/ui/container'
 import { redirect, useParams } from 'next/navigation'
 import { useAccount } from 'wagmi'
@@ -18,10 +15,6 @@ export default function Home() {
 
   return (
     <>
-      <BackLanturns />
-      <RedFocus />
-      <WalletDropdown />
-
       <Container className="max-w-[520px] justify-center">
         <ClaimPacket />
       </Container>

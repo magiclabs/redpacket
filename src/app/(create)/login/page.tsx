@@ -1,8 +1,9 @@
 'use client'
 
-import { ConnectWalletButton } from 'app/ConnectWalletButton'
-import { EmailForm } from 'app/EmailForm'
-import { RedPacket } from 'app/RedPacket'
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { EmailForm } from 'components/EmailForm'
+import { RedPacket } from 'components/RedPacket'
+import { Container } from 'components/ui/container'
 import {
   MotionHeadline,
   TypographyBody,
@@ -20,17 +21,8 @@ export default function CreateLogin() {
   }
 
   return (
-    <>
-      <div className="relative">
-        <RedPacket />
-        <div
-          className="absolute inset-0 z-50 m-auto aspect-square h-[80px] w-[80px] rounded-full bg-blue-200 blur-[40px] sm:h-[100px] sm:w-[100px] sm:blur-[50px]"
-          style={{
-            background:
-              'radial-gradient(50% 50% at 50% 50%, rgba(255, 48, 52, 0.7) 0%, rgba(255, 48, 52, 0.7) 100%)',
-          }}
-        />
-      </div>
+    <Container>
+      <RedPacket />
 
       <div className="mt-8 flex flex-col gap-5">
         <MotionHeadline>Happy Lunar New Year</MotionHeadline>
@@ -81,6 +73,6 @@ export default function CreateLogin() {
         </TypographyLink>{' '}
         for details.
       </TypographySmall>
-    </>
+    </Container>
   )
 }

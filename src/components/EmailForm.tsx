@@ -38,7 +38,7 @@ export function EmailForm() {
     mode: 'onSubmit',
   })
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, isSubmitSuccessful },
     handleSubmit,
     reset,
   } = form
@@ -46,8 +46,6 @@ export function EmailForm() {
   const client = useQueryClient()
 
   const onSubmit = handleSubmit(async ({ email }) => {
-    if (isSubmitting) return
-
     try {
       await new Promise((resolve, reject) => {
         connect(
@@ -76,6 +74,7 @@ export function EmailForm() {
     <Form {...form}>
       <form onSubmit={onSubmit} className="relative flex">
         <FormField
+          disabled={isSubmitting || isSubmitSuccessful}
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -94,7 +93,7 @@ export function EmailForm() {
         />
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isSubmitSuccessful}
           className="absolute right-[6px] top-2 h-10 w-20 self-center text-base font-semibold"
         >
           {isSubmitting ? (
