@@ -2,8 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { track } from '@vercel/analytics'
-import { useCreateRedPacket } from 'app/(create)/create/useCreateRedPacket'
-import { useETHPrice } from 'app/(create)/create/useETHPrice'
 import { AlertIcon } from 'components/icons/AlertIcon'
 import { InfiniteLoadingSpinner } from 'components/icons/InfiniteLoadingSpinner'
 import { MinusIcon } from 'components/icons/MinusIcon'
@@ -13,8 +11,11 @@ import { Form } from 'components/ui/form'
 import { Input } from 'components/ui/input'
 import { Label } from 'components/ui/label'
 import { MotionHeadline } from 'components/ui/typography'
+import { useCreateRedPacket } from 'hooks/useCreateRedPacket'
+import { useETHPrice } from 'hooks/useETHPrice'
 import { cn } from 'lib/utils'
 import { useRouter } from 'next/navigation'
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { formatEther, parseEther } from 'viem'
@@ -69,27 +70,24 @@ const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>
 
 export function CreatePacketsForm() {
-  const { address } = useAccount()
-  const { data: balance } = useBalance({ address })
-
-  const defaultValues = {
-    packets: `${DEFAULT_PACKETS}`,
-    eth: `${Math.min(
-      MINIMUM_ETH,
-      balance?.value ? Number(formatEther(balance.value)) : DEFAULT_ETH,
-    )}`,
-  }
+  const { push } = useRouter()
+  const { address: publicAddress } = useAccount()
+  const { data: balance } = useBalance({ address: publicAddress })
+  const { ethPrice } = useETHPrice()
 
   const form = useForm<FormValues>({
     mode: 'onChange',
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: {
+      packets: DEFAULT_PACKETS.toString(),
+      eth: MINIMUM_ETH.toString(),
+    },
   })
 
   const {
     handleSubmit,
     register,
-    formState: { isValid: isFormValid },
+    formState: { isValid: isFormValid, isSubmitting },
     setValue,
     watch,
   } = form
@@ -97,26 +95,28 @@ export function CreatePacketsForm() {
   const eth = +watch('eth')
   const packets = +watch('packets')
 
-  const isInsufficientFunds = balance?.value
-    ? Number(formatEther(balance.value)) < +eth
-    : false
+  const isInsufficientFunds = useMemo(() => {
+    return balance ? +formatEther(balance.value) < +eth : false
+  }, [balance, eth])
 
   const isValid = isFormValid && !isInsufficientFunds
 
-  const { createRedPacket, isWaitingApproval, isGenerating } =
-    useCreateRedPacket({ eth, packets, isValid })
+  const {
+    createRedPacket,
+    isWaitingApproval,
+    isGenerating,
+    isIdle,
+    isSuccess,
+  } = useCreateRedPacket()
 
-  const isLoading = isWaitingApproval || isGenerating
-
-  const { push } = useRouter()
-
-  const { address: publicAddress } = useAccount()
-
-  const onSubmit = handleSubmit(async () => {
-    if (isLoading) return
-
+  const onSubmit = handleSubmit(async ({ eth, packets }) => {
     try {
-      const address = await createRedPacket()
+      const address = await createRedPacket({
+        totalClaimCount: +packets,
+        principal: +eth,
+      })
+
+      console.log({ address })
 
       track(`Red Packet Created`, {
         userAddress: publicAddress as string,
@@ -125,7 +125,7 @@ export function CreatePacketsForm() {
         eth,
       })
 
-      await push(`/share/${address.slice(2)}`)
+      push(`/share/${address.slice(2)}`)
       toast.success(`Red packets created successfully!`)
     } catch (e) {
       toast.error('Failed to create red packets, please try again.')
@@ -138,8 +138,6 @@ export function CreatePacketsForm() {
       })
     }
   })
-
-  const { ethPrice } = useETHPrice()
 
   return (
     <Form {...form}>
@@ -171,7 +169,7 @@ export function CreatePacketsForm() {
             </Button>
             <Input
               className="h-14 w-full rounded-lg border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF1F] text-center font-mono text-2xl font-light"
-              disabled={isLoading}
+              disabled={isSubmitting}
               {...register('packets', {
                 required: true,
                 onChange: (e) => {
@@ -182,7 +180,6 @@ export function CreatePacketsForm() {
               maxLength={3}
               id="packets"
               inputMode="numeric"
-              defaultValue={DEFAULT_PACKETS}
             />
             <Button
               type="button"
@@ -213,7 +210,7 @@ export function CreatePacketsForm() {
           <div className="relative flex h-14 items-center sm:max-w-[180px]">
             <Input
               className="h-14 rounded-lg border border-solid border-[rgba(255,255,255,0.20)] bg-[#FFFFFF1F] pr-14 text-right font-mono text-2xl font-light"
-              disabled={isLoading}
+              disabled={isSubmitting}
               id="eth"
               {...register('eth', {
                 required: true,
@@ -231,7 +228,6 @@ export function CreatePacketsForm() {
               })}
               maxLength={9}
               inputMode="numeric"
-              defaultValue={defaultValues.eth}
             />
             <span className="absolute right-4 text-sm font-medium opacity-50">
               ETH
@@ -262,25 +258,30 @@ export function CreatePacketsForm() {
           </div>
         ) : null}
 
-        {isWaitingApproval || isGenerating ? (
-          <div className="mt-3 flex flex-col">
-            <InfiniteLoadingSpinner className="aspect-square h-12 w-12" />
-            <span className="-mt-1 text-center text-sm opacity-60">
-              {isWaitingApproval
-                ? 'Waiting for approval...'
-                : isGenerating
-                  ? 'Generating red packets....'
-                  : ''}
-            </span>
-          </div>
-        ) : (
+        {isIdle && (
           <Button
-            disabled={!isValid}
+            disabled={isSubmitting || !isValid}
             type="submit"
             className="mt-8 h-14 w-full max-w-[400px] rounded-2xl bg-[#FF191E] text-lg font-semibold sm:mt-10"
           >
             Create Packets
           </Button>
+        )}
+        {isGenerating && (
+          <div className="mt-3 flex flex-col">
+            <InfiniteLoadingSpinner className="aspect-square h-12 w-12" />
+            <span className="-mt-1 text-center text-sm opacity-60">
+              Generating red packets....
+            </span>
+          </div>
+        )}
+        {(isWaitingApproval || isSuccess) && (
+          <div className="mt-3 flex flex-col">
+            <InfiniteLoadingSpinner className="aspect-square h-12 w-12" />
+            <span className="-mt-1 text-center text-sm opacity-60">
+              Waiting for approval...
+            </span>
+          </div>
         )}
       </form>
     </Form>

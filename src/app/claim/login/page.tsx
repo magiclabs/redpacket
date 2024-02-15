@@ -1,9 +1,9 @@
 'use client'
 
-import { EmailForm } from 'app/EmailForm'
-import { RedPacket } from 'app/RedPacket'
-import { BackLanturns } from 'app/claim/BackLanterns'
-import { RedFocus } from 'app/claim/RedFocus'
+import { BackLanturns } from 'components/BackLanterns'
+import { EmailForm } from 'components/EmailForm'
+import { RedFocus } from 'components/RedFocus'
+import { RedPacket } from 'components/RedPacket'
 import { Container } from 'components/ui/container'
 import { MotionHeadline } from 'components/ui/typography'
 import { motion } from 'framer-motion'

@@ -1,9 +1,9 @@
 import './globals.css'
 
 import { Analytics } from '@vercel/analytics/react'
-import { DemoByMagic } from 'app/DemoByMagic'
-import { WagmiAuth } from 'app/WagmiAuth'
+import { DemoByMagic } from 'components/DemoByMagic'
 import { QueryProvider } from 'components/QueryProvider'
+import { WagmiAuth } from 'components/WagmiAuth'
 import { Web3ModalProvider } from 'components/Web3Modal'
 import { Toaster } from 'components/ui/sonner'
 import { PROD_URL } from 'config/url'

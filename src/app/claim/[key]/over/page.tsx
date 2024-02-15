@@ -1,8 +1,6 @@
 'use client'
 
 import { track } from '@vercel/analytics/react'
-import { BackLanturns } from 'app/claim/BackLanterns'
-import { RedFocus } from 'app/claim/RedFocus'
 import { RedLantern } from 'app/claim/[key]/over/RedLantern'
 import { Button } from 'components/ui/button'
 import { Container } from 'components/ui/container'
@@ -27,9 +25,6 @@ export default function Over() {
 
   return (
     <>
-      <BackLanturns />
-      <RedFocus />
-
       <Container>
         <RedLantern />
 

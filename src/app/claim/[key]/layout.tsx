@@ -7,12 +7,12 @@ import { WalletDropdown } from 'components/WalletDropdown'
 import { usePathname } from 'next/navigation'
 import { useMemo, type PropsWithChildren } from 'react'
 
-export default function CreateLayout({ children }: PropsWithChildren) {
+export default function ClaimLayout({ children }: PropsWithChildren) {
   const pathname = usePathname()
 
   const showDropdown = useMemo(() => {
     const subpath = pipe(pathname, split('/'), last)
-    return subpath !== 'login'
+    return subpath !== 'over'
   }, [pathname])
 
   return (
