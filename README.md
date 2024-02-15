@@ -39,7 +39,7 @@ ni
 
 cp .env.example .env.local
 Fill out .env.local with your own values
-You could use 0xb33bf957413a127e19e655f158f4c8d1d9db4aa5 as the red packet factory smart contract, or you could deploy your own (the instructions at the end of this file)
+You could use `0xd92830984DfE878CB43E12D5B9Fe9c71Cb40C62b` as the red packet factory smart contract, or you could deploy your own (the instructions at the end of this file)
 
 - Run the project
 

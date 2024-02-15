@@ -22,7 +22,7 @@ export const CHAINS = {
     getAccountURL: (address: string) =>
       `https://basescan.org/address/${address}`,
     getRedPacketFactoryAddress: (): Address =>
-      `0x7617E332A532E21753243cbF963cb2dfeC7AD54f`,
+      `0xd92830984DfE878CB43E12D5B9Fe9c71Cb40C62b`,
   },
   mumbai: {
     chain: mumbai,
