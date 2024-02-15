@@ -3,7 +3,7 @@
 import { REDPACKET_ABI } from 'lib/constants'
 import ms from 'ms'
 import { type Address } from 'viem'
-import { useReadContract } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 
 type Params = {
   contractAddress: Address
@@ -21,7 +21,10 @@ type GetMetadataResponse = {
 }
 
 export function useRedPacket({ contractAddress }: Params) {
+  const { address } = useAccount()
+
   const { data, ...rest } = useReadContract({
+    account: address,
     address: contractAddress,
     abi: REDPACKET_ABI,
     functionName: 'getMetadata',

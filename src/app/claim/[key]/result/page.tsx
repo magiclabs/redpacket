@@ -117,11 +117,7 @@ export default function Lucky() {
               toUSD(Number(formatEther(metadata.claimedAmount)), ethPrice)}
             ) <br />
             <span className="font-normal opacity-70">
-              Total prize pool:{' '}
-              {metadata.principal
-                ? parseFloat(Number(formatEther(metadata.principal)).toFixed(6))
-                : 0}{' '}
-              ETH
+              Total prize pool: {formatEther(metadata.principal)} ETH
               {` `}(
               {ethPrice &&
                 toUSD(Number(formatEther(metadata.principal)), ethPrice)}

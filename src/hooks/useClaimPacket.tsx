@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { track } from '@vercel/analytics/react'
 import { useAlchemyClient } from 'hooks/useAlchemyClient'
-import { useRedPacket } from 'hooks/useRedPacket'
 import { REDPACKET_ABI } from 'lib/constants'
 import { useParams, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -14,17 +13,14 @@ export function useClaimPacket() {
 
   const contractAddress: Address = `0x${key}`
 
-  const { metadata } = useRedPacket({
-    contractAddress,
-  })
-
   const { address } = useAccount()
   const { client } = useAlchemyClient()
   const { data: fees } = useEstimateFeesPerGas()
 
   const { mutateAsync: claim, ...rest } = useMutation({
+    mutationKey: ['claim', address],
     mutationFn: async () => {
-      if (!client || !address || !metadata) return
+      if (!client || !address) return
 
       console.log({ address })
 
@@ -50,11 +46,11 @@ export function useClaimPacket() {
 
         track(`Red Packet Claimed`, {
           userAddress: address,
-          principalAmount: Number(metadata.principal),
         })
 
         push(`/claim/${key}/result`)
       } catch (e: any) {
+        console.error(e)
         const details = JSON.parse(e.details)
         toast.error(details.message)
         return

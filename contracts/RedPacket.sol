@@ -29,6 +29,7 @@ contract RedPacket {
   // Storage
   address internal creator;
   mapping(address => uint256) internal claimedAmounts;
+  mapping(address => bool) internal claimers;
   uint256 internal totalClaimCount;
   uint256 internal principal;
   uint256 internal claimedCount;
@@ -58,10 +59,7 @@ contract RedPacket {
   function claim(address receiver) external returns (uint256) {
     require(!expired, 'Packet has expired.');
     require(claimedCount < totalClaimCount, 'All packets have been claimed.');
-    require(
-      claimedAmounts[msg.sender] == 0,
-      'You have already claimed a packet.'
-    );
+    require(claimers[msg.sender] != true, 'You have already claimed a packet.');
 
     uint256 balance = getBalance();
     uint256 claimAmount = principal / totalClaimCount;
@@ -82,7 +80,8 @@ contract RedPacket {
     payable(receiver).transfer(claimAmount);
 
     claimedCount += 1;
-    claimedAmounts[msg.sender] = claimAmount;
+    claimedAmounts[receiver] = claimAmount;
+    claimers[msg.sender] = true;
 
     emit PacketClaimed(msg.sender, claimAmount);
 
