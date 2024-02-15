@@ -6,7 +6,7 @@ import { REDPACKET_ABI } from 'lib/constants'
 import { useParams, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { encodeFunctionData, type Address } from 'viem'
-import { useEstimateFeesPerGas } from 'wagmi'
+import { useAccount, useEstimateFeesPerGas } from 'wagmi'
 
 export function useClaimPacket() {
   const { push } = useRouter()
@@ -18,14 +18,15 @@ export function useClaimPacket() {
     contractAddress,
   })
 
-  const { client, publicAddress } = useAlchemyClient()
+  const { address } = useAccount()
+  const { client } = useAlchemyClient()
   const { data: fees } = useEstimateFeesPerGas()
 
   const { mutateAsync: claim, ...rest } = useMutation({
     mutationFn: async () => {
-      if (!client || !publicAddress || !metadata) return
+      if (!client || !address || !metadata) return
 
-      console.log({ publicAddress })
+      console.log({ address })
 
       try {
         console.log({ fees })
@@ -35,7 +36,7 @@ export function useClaimPacket() {
             data: encodeFunctionData({
               abi: REDPACKET_ABI,
               functionName: 'claim',
-              args: [publicAddress],
+              args: [address],
             }),
           },
           overrides: {
@@ -48,7 +49,7 @@ export function useClaimPacket() {
         await client.waitForUserOperationTransaction({ hash })
 
         track(`Red Packet Claimed`, {
-          userAddress: publicAddress,
+          userAddress: address,
           principalAmount: Number(metadata.principal),
         })
 

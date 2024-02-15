@@ -1,10 +1,9 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import { useAlchemyClient } from 'hooks/useAlchemyClient'
 import { REDPACKET_ABI } from 'lib/constants'
 import ms from 'ms'
 import { type Address } from 'viem'
+import { useReadContract } from 'wagmi'
 
 type Params = {
   contractAddress: Address
@@ -21,29 +20,19 @@ type GetMetadataResponse = {
   isExpired: boolean
 }
 
-export function useRedPacket({ contractAddress, refetch = false }: Params) {
-  const { client, isSuccess: enabled } = useAlchemyClient()
-
-  const { data, ...rest } = useQuery({
-    queryKey: ['red-packet', contractAddress, client?.account.address],
-    queryFn: async () => {
-      const metadata = (await client!.readContract({
-        address: contractAddress,
-        abi: REDPACKET_ABI,
-        functionName: 'getMetadata',
-      })) as GetMetadataResponse
-
-      return metadata
-    },
-    ...(refetch && {
+export function useRedPacket({ contractAddress }: Params) {
+  const { data, ...rest } = useReadContract({
+    address: contractAddress,
+    abi: REDPACKET_ABI,
+    functionName: 'getMetadata',
+    query: {
       refetchInterval: ms('5s'),
       refetchIntervalInBackground: true,
-    }),
-    enabled,
+    },
   })
 
   return {
-    metadata: data!,
+    metadata: data! as GetMetadataResponse,
     ...rest,
   }
 }
