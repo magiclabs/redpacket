@@ -38,12 +38,15 @@ export function ClaimPacket() {
     }
   }, [metadata, key])
 
+  if (isError) {
+    redirect(`/claim/${key}/over`)
+  }
+
   return (
     <>
       {isRedPacketPending && (
         <Loading message="Available packets checking..." />
       )}
-      {isError && <div>Error</div>}
       {isSuccess &&
         (isPending || isClaimSuccess ? (
           <Loading message="Confirming packet details..." />
