@@ -17,10 +17,16 @@ export function ClaimPacket() {
 
   const contractAddress: Address = `0x${key}`
 
-  const { metadata, refetch, isLoading, isError, isSuccess } = useRedPacket({
+  const {
+    metadata,
+    refetch,
+    isPending: isRedPacketPending,
+    isError,
+    isSuccess,
+  } = useRedPacket({
     contractAddress,
   })
-  const { claim, isPending } = useClaimPacket()
+  const { claim, isPending, isSuccess: isClaimSuccess } = useClaimPacket()
 
   useEffect(() => {
     if (metadata?.isClaimed) {
@@ -34,10 +40,12 @@ export function ClaimPacket() {
 
   return (
     <>
-      {isLoading && <Loading message="Available packets checking..." />}
+      {isRedPacketPending && (
+        <Loading message="Available packets checking..." />
+      )}
       {isError && <div>Error</div>}
       {isSuccess &&
-        (isPending ? (
+        (isPending || isClaimSuccess ? (
           <Loading message="Confirming packet details..." />
         ) : (
           <>

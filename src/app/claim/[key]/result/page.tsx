@@ -28,7 +28,7 @@ export default function Lucky() {
   const { ethPrice } = useETHPrice()
   const {
     metadata,
-    isLoading: isRedPacketLoading,
+    isPending: isRedPacketPending,
     isError,
     isSuccess,
   } = useRedPacket({
@@ -37,17 +37,18 @@ export default function Lucky() {
 
   const { disconnect } = useDisconnect()
 
-  const { mutateAsync: handleOpenWallet, isPending } = useMutation({
-    mutationFn: async () => {
-      await magic.wallet.showUI()
-    },
-  })
+  const { mutateAsync: handleOpenWallet, isPending: isOpenWalletPending } =
+    useMutation({
+      mutationFn: async () => {
+        await magic.wallet.showUI()
+      },
+    })
 
   const [isVisible, setIsVisible] = useState(true)
 
-  const isLoading = useMemo(() => {
-    return isRedPacketLoading || isVisible
-  }, [isRedPacketLoading, isVisible])
+  const isPending = useMemo(() => {
+    return isRedPacketPending || isVisible
+  }, [isRedPacketPending, isVisible])
 
   useEffect(() => {
     setTimeout(() => {
@@ -61,7 +62,7 @@ export default function Lucky() {
 
   return (
     <AnimatePresence mode="wait">
-      {isLoading && (
+      {isPending && (
         <motion.div
           className="absolute h-full w-full"
           initial={{ opacity: 0 }}
@@ -79,7 +80,7 @@ export default function Lucky() {
         </Container>
       )}
 
-      {!isLoading && isSuccess && (
+      {!isPending && isSuccess && (
         <Container
           className="z-10 flex w-full max-w-[400px] flex-col items-center"
           initial={{ opacity: 0 }}
@@ -159,7 +160,7 @@ export default function Lucky() {
                 handleOpenWallet()
               }}
             >
-              {isPending ? (
+              {isOpenWalletPending ? (
                 <Spinner className="aspect-square h-7 w-7" />
               ) : (
                 'Open Wallet'

@@ -37,7 +37,7 @@ type FormData = z.infer<typeof formSchema>
 
 export default function Reclaim() {
   const search = useSearchParams()
-  const { isConnected, isDisconnected, connector } = useAccount()
+  const { isConnected, isDisconnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { expireRedPacket, lastTxHash } = useExpireRedPacket()
   const [remainingBalance, setRemainingBalance] = useState('')
@@ -82,7 +82,7 @@ export default function Reclaim() {
     }
   })
 
-  if (isDisconnected || connector?.type !== 'magic') {
+  if (isDisconnected) {
     redirect('/reclaim/login')
   }
 

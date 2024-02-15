@@ -33,7 +33,7 @@ export function WalletDropdown() {
 
   const { address, connector, isDisconnected } = useAccount()
   const { disconnect } = useDisconnect({})
-  const { data: balance, queryKey, isLoading } = useBalance({ address })
+  const { data: balance, queryKey, isPending } = useBalance({ address })
   useWatchBlockNumber({
     onBlockNumber: () => {
       client.invalidateQueries({ queryKey })
@@ -46,7 +46,7 @@ export function WalletDropdown() {
     return <></>
   }
 
-  if (isLoading) {
+  if (isPending) {
     return <Loader className="absolute right-4 top-4 aspect-square h-6 w-6" />
   }
 

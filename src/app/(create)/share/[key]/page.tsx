@@ -44,12 +44,10 @@ export default function Share() {
 
   const { push } = useRouter()
 
-  const { metadata, isLoading, isError, isSuccess } = useRedPacket({
+  const { metadata, isPending, isError, isSuccess } = useRedPacket({
     contractAddress,
     refetch: true,
   })
-
-  console.log({ metadata })
 
   if (isDisconnected) {
     redirect('/login')
@@ -57,7 +55,7 @@ export default function Share() {
 
   return (
     <AnimatePresence initial={true} mode="wait">
-      {isLoading && (
+      {isPending && (
         <Container
           key="loading"
           className="justify-center"
