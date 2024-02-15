@@ -12,16 +12,14 @@ import { useETHPrice } from 'hooks/useETHPrice'
 import { useRedPacket } from 'hooks/useRedPacket'
 import { ANIMATION_INTERVAL, CURRENT_CHAIN_KEY } from 'lib/constants'
 import { magic } from 'lib/magic'
-import { redirect, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { toUSD } from 'utils/toUSD'
 import { formatEther, type Address } from 'viem'
-import { useAccount, useDisconnect } from 'wagmi'
+import { useDisconnect } from 'wagmi'
 
 export default function Lucky() {
   const { key } = useParams<{ key: string }>()
-
-  const { isDisconnected } = useAccount()
 
   const contractAddress: Address = `0x${key}`
 
@@ -55,10 +53,6 @@ export default function Lucky() {
       setIsVisible(false)
     }, 3000)
   }, [])
-
-  if (isDisconnected) {
-    redirect('/claim/login?id=' + key)
-  }
 
   return (
     <AnimatePresence mode="wait">

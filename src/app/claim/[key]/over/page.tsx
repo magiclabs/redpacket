@@ -14,14 +14,7 @@ export default function Over() {
   const { push } = useRouter()
 
   const { isConnected } = useAccount()
-  const { disconnect } = useDisconnect({
-    mutation: {
-      onSettled: () => {
-        track('Logged Out')
-        push('/login')
-      },
-    },
-  })
+  const { disconnect } = useDisconnect()
 
   return (
     <>
