@@ -12,11 +12,13 @@ import { Button } from 'components/ui/button'
 import { Container } from 'components/ui/container'
 import { Input } from 'components/ui/input'
 import { Progress } from 'components/ui/progress'
+import { TypographySmall } from 'components/ui/typography'
 import { CHAINS } from 'config/client'
 import { PROD_URL } from 'config/url'
 import { AnimatePresence } from 'framer-motion'
 import { useRedPacket } from 'hooks/useRedPacket'
 import { CURRENT_CHAIN_KEY } from 'lib/constants'
+import Link from 'next/link'
 import { redirect, useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -46,6 +48,8 @@ export default function Share() {
     contractAddress,
     refetch: true,
   })
+
+  console.log({ metadata })
 
   if (isDisconnected) {
     redirect('/login')
@@ -183,6 +187,13 @@ export default function Share() {
                 </a>
               </Button>
             </div>
+
+            <Link href={`/reclaim?id=${key}`} className="mt-5 text-center ">
+              <TypographySmall className="text-sm hover:underline">
+                <b className="font-semibold text-white">Archive this link</b> to
+                reclaim your funds
+              </TypographySmall>
+            </Link>
           </div>
         </Container>
       )}

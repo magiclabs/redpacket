@@ -90,8 +90,8 @@ contract RedPacket {
   }
 
   function expire() external returns (uint256) {
-    require(!expired, 'Packet has already expired.');
-    require(creator == msg.sender, 'Only creator can expire a packet.');
+    require(!expired, 'URL has already expired.');
+    require(creator == msg.sender, 'URL was created with a different wallet.');
 
     uint256 balance = getBalance();
 
