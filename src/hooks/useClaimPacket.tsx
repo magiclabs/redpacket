@@ -14,15 +14,18 @@ export function useClaimPacket() {
   const contractAddress: Address = `0x${key}`
 
   const { address } = useAccount()
-  const { client } = useAlchemyClient()
+  const { client, isPending: isClientPending } = useAlchemyClient()
   const { data: fees } = useEstimateFeesPerGas()
 
-  const { mutateAsync: claim, ...rest } = useMutation({
+  const {
+    mutateAsync: claim,
+    isPending,
+    ...rest
+  } = useMutation({
     mutationKey: ['claim', address],
     mutationFn: async () => {
+      console.log({ client, address })
       if (!client || !address) return
-
-      console.log({ address })
 
       try {
         console.log({ fees })
@@ -60,6 +63,7 @@ export function useClaimPacket() {
 
   return {
     claim,
+    isPending: isClientPending || isPending,
     ...rest,
   }
 }

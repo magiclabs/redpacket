@@ -10,8 +10,8 @@ export const REDPACKET_ABI = RedPacket.abi
 export const ANIMATION_INTERVAL = 0.5
 
 export const ALCHEMY_GASMANAGER_POLICY_ID = {
-  base: process.env.ALCHEMY_GAS_POLICY_ID_BASE!,
-  mumbai: process.env.ALCHEMY_GAS_POLICY_ID_MUMBAI!,
+  base: process.env.NEXT_PUBLIC_ALCHEMY_GAS_POLICY_ID_BASE!,
+  mumbai: process.env.NEXT_PUBLIC_ALCHEMY_GAS_POLICY_ID_MUMBAI!,
 } as const
 
 export const ALCHEMY_RPC_URL = {
