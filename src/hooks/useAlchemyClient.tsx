@@ -1,8 +1,7 @@
 import { createLightAccountAlchemyClient } from '@alchemy/aa-alchemy'
+import { useQuery } from '@tanstack/react-query'
 // @ts-ignore
 import { MagicSigner } from '@alchemy/aa-signers/magic'
-import { useQuery } from '@tanstack/react-query'
-import { useMagicInfo } from 'app/claim/[key]/useMagicInfo'
 import {
   ALCHEMY_GASMANAGER_POLICY_ID,
   ALCHEMY_RPC_URL,
@@ -10,12 +9,13 @@ import {
   CURRENT_CHAIN_KEY,
 } from 'lib/constants'
 import { magic } from 'lib/magic'
+import { useAccount } from 'wagmi'
 
 export function useAlchemyClient() {
-  const { data: result, ...rest1 } = useMagicInfo()
+  const { address } = useAccount()
 
   const { data, ...rest } = useQuery({
-    queryKey: ['alchemyClient', result?.publicAddress],
+    queryKey: ['alchemyClient', address],
     queryFn: async () => {
       const owner = new MagicSigner({ inner: magic })
 
@@ -34,14 +34,11 @@ export function useAlchemyClient() {
 
       return client
     },
-    enabled: !!result?.publicAddress,
+    enabled: !!address,
   })
-
-  const isSuccess = !!(result?.publicAddress && data)
 
   return {
     client: data,
-    publicAddress: result?.publicAddress,
-    isSuccess,
+    ...rest,
   }
 }

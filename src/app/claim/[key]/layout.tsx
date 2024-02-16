@@ -4,21 +4,26 @@ import { last, pipe, split } from '@fxts/core'
 import { BackLanturns } from 'components/BackLanterns'
 import { RedFocus } from 'components/RedFocus'
 import { WalletDropdown } from 'components/WalletDropdown'
-import { redirect, usePathname } from 'next/navigation'
+import { redirect, useParams, usePathname } from 'next/navigation'
 import { useMemo, type PropsWithChildren } from 'react'
+import { useAccount } from 'wagmi'
 
-const DEAD_LINE = process.env.NEXT_PUBLIC_DEAD_LINE
-
-export default function CreateLayout({ children }: PropsWithChildren) {
+export default function ClaimLayout({ children }: PropsWithChildren) {
   const pathname = usePathname()
+  const { key } = useParams<{ key: string }>()
+  const { isDisconnected, connector } = useAccount()
 
   const showDropdown = useMemo(() => {
     const subpath = pipe(pathname, split('/'), last)
-    return subpath !== 'login'
+    return subpath !== 'over'
   }, [pathname])
 
-  if (pathname !== '/dead' && DEAD_LINE && new Date() > new Date(DEAD_LINE)) {
-    redirect('/dead')
+  if (isDisconnected || connector?.type !== 'magic') {
+    if (pathname.includes('/over')) {
+      redirect('/login')
+    } else {
+      redirect('/claim/login?id=' + key)
+    }
   }
 
   return (

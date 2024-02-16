@@ -13,11 +13,11 @@ import {
 import { redirect } from 'next/navigation'
 import { useAccount } from 'wagmi'
 
-export default function CreateLogin() {
+export default function ReclaimLogin() {
   const { isConnected } = useAccount()
 
   if (isConnected) {
-    redirect('/create')
+    redirect('/reclaim')
   }
 
   return (
@@ -25,10 +25,10 @@ export default function CreateLogin() {
       <RedPacket />
 
       <div className="mt-8 flex flex-col gap-5">
-        <MotionHeadline>Happy Lunar New Year</MotionHeadline>
+        <MotionHeadline>Collect unclaimed ETH</MotionHeadline>
         <TypographyBody>
-          Celebrate the Year of the Dragon by creating digital red packets
-          (红包) filled with ETH
+          Connect your wallet to archive a packet collection and reclaim any
+          available ETH
         </TypographyBody>
       </div>
 

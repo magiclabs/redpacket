@@ -1,8 +1,6 @@
 'use client'
 
 import { track } from '@vercel/analytics/react'
-import { BackLanturns } from 'app/claim/BackLanterns'
-import { RedFocus } from 'app/claim/RedFocus'
 import { RedLantern } from 'app/claim/[key]/over/RedLantern'
 import { Button } from 'components/ui/button'
 import { Container } from 'components/ui/container'
@@ -16,20 +14,10 @@ export default function Over() {
   const { push } = useRouter()
 
   const { isConnected } = useAccount()
-  const { disconnect } = useDisconnect({
-    mutation: {
-      onSettled: () => {
-        track('Logged Out')
-        push('/login')
-      },
-    },
-  })
+  const { disconnect } = useDisconnect()
 
   return (
     <>
-      <BackLanturns />
-      <RedFocus />
-
       <Container>
         <RedLantern />
 
