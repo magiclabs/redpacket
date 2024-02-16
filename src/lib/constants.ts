@@ -1,6 +1,5 @@
 import RedPacket from 'contracts/RedPacket.sol/RedPacket.json'
 import RedPacketFactory from 'contracts/RedPacketFactory.sol/RedPacketFactory.json'
-import { getBaseURL } from 'utils/getBaseURL'
 import { isProd } from 'utils/isProd'
 import { base, polygonMumbai } from 'viem/chains'
 
@@ -14,9 +13,12 @@ export const ALCHEMY_GASMANAGER_POLICY_ID = {
   mumbai: process.env.ALCHEMY_GAS_POLICY_ID_MUMBAI!,
 } as const
 
+const ALCHEMY_RPC_BASE_MAINNET = process.env.ALCHEMY_RPC_BASE_MAINNET
+const ALCHEMY_RPC_POLYGON_TESTNET = process.env.ALCHEMY_RPC_POLYGON_TESTNET
+
 export const ALCHEMY_RPC_URL = {
-  base: `${getBaseURL()}/rpc/base`,
-  mumbai: `${getBaseURL()}/rpc/mumbai`,
+  base: ALCHEMY_RPC_BASE_MAINNET,
+  mumbai: ALCHEMY_RPC_POLYGON_TESTNET,
 } as const
 
 export const CURRENT_CHAIN_KEY = isProd() ? 'base' : 'mumbai'
