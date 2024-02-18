@@ -135,6 +135,7 @@ export function CreatePacketsForm() {
         userAddress: publicAddress as string,
         packets,
         eth,
+        message: e instanceof Error ? e.message : JSON.stringify(e),
       })
     }
   })
