@@ -127,7 +127,7 @@ export function CreatePacketsForm() {
 
       push(`/share/${address.slice(2)}`)
       toast.success(`Red packets created successfully!`)
-    } catch (e) {
+    } catch (e: any) {
       toast.error('Failed to create red packets, please try again.')
       console.error(e)
 
@@ -135,7 +135,7 @@ export function CreatePacketsForm() {
         userAddress: publicAddress as string,
         packets,
         eth,
-        message: e instanceof Error ? e.message : JSON.stringify(e),
+        message: e?.shortMessage || e?.name || e?.message,
       })
     }
   })
