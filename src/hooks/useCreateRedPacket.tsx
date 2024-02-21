@@ -8,7 +8,7 @@ import { publicClient } from 'lib/viem/publicClient'
 import ms from 'ms'
 import { useState } from 'react'
 import { decodeEventLog, parseEther, type Address } from 'viem'
-import { useAccount, useWriteContract } from 'wagmi'
+import { useAccount, useEstimateFeesPerGas, useWriteContract } from 'wagmi'
 
 type Params = {
   totalClaimCount: number
@@ -36,6 +36,7 @@ export function useCreateRedPacket() {
 
   const { address } = useAccount()
   const { writeContractAsync } = useWriteContract()
+  const { data: fees } = useEstimateFeesPerGas()
 
   const { mutateAsync: createRedPacket, isSuccess } = useMutation({
     mutationFn: ({ totalClaimCount, principal }: Params) => {
@@ -88,6 +89,8 @@ export function useCreateRedPacket() {
             functionName: 'createRedPacket',
             args: [totalClaimCount],
             value: parseEther(principal.toString()),
+            maxFeePerGas: fees?.maxFeePerGas,
+            maxPriorityFeePerGas: fees?.maxPriorityFeePerGas,
           })
 
           setStatus(CREATE_RED_PACKET_STATUS.WAITING_APPROVAL)
