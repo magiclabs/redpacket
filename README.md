@@ -4,7 +4,8 @@ This repo contains a set of code, including EVM smart contract files and a NextJ
 
 Magic Link Red Packet is a Next.js web application that allows users to send and receive cryptocurrency "red packets" via EVM smart contracts on Base blockchain. With Magic wallets, users can create red packets with a specified amount of cryptocurrency and share them with others via a unique share link.
 
-Features
+## Features
+
 Create Red Packets: Users can create digital red packets with a specified amount of cryptocurrency.
 Share via Link URL: Each red packet generates a unique link that can be shared with friends or family.
 Claim Red Packets: Recipients can claim their share by accessing the magic link. This creates a new Magic wallet for the email used, and all of the claim processes and blockchain transactions are gas-subsidized by Alchemy's Account Abstraction + Paymaster
